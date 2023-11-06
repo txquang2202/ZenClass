@@ -4,7 +4,7 @@ import { Container, Typography, Button, Grid } from "@mui/material";
 
 function LandingPage() {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" className="pt-[10px]">
       <Grid
         container
         spacing={2}

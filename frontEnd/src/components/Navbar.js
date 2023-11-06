@@ -7,24 +7,25 @@ const NavBar = () => {
   const [user, setUser] = useState(null);
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Link to="/" className="text-white text-2xl flex-grow">
+    <AppBar position="static" className="bg-[#10375C]  ">
+      <Toolbar className=" w-full max-w-[calc(100%-12rem)] mx-auto">
+        <Link to="/" className="text-white text-2xl flex-grow font-bold">
           <IconButton edge="start" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          Home
+          Home.
         </Link>
         {user ? (
           <>
-            <Typography variant="h6" className="text-white">
-              Hi, <span className="font-bold">{user}</span>
+            <Typography variant="h6" className="text-white text-base">
+              Hi, <span className="text-base">{user}</span>
             </Typography>
             <Button
-              variant="outlined"
+              className="text-white ml-4 bg-[#2E80CE] rounded-full capitalize"
+              variant="contained"
               color="inherit"
               component={Link}
-              to="/logout"
+              to="/signup"
             >
               Log out
             </Button>
@@ -32,20 +33,22 @@ const NavBar = () => {
         ) : (
           <>
             <Button
-              variant="outlined"
+              className="capitalize"
+              variant="text"
               color="inherit"
               component={Link}
               to="/signin"
             >
-              Login
+              Log In
             </Button>
             <Button
-              variant="outlined"
+              className="text-white ml-4 bg-[#2E80CE] rounded-full capitalize"
+              variant="contained"
               color="inherit"
               component={Link}
               to="/signup"
             >
-              Register
+              Sign Up
             </Button>
           </>
         )}

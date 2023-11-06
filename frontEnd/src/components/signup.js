@@ -25,7 +25,7 @@ function SignUpPage() {
       });
       if (response.status === 200) {
         alert("Registered successfully");
-        navigate("/singin");
+        navigate("/signin");
       }
     } catch (error) {
       if (error.response.status === 400)
