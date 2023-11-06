@@ -1,57 +1,71 @@
-import { Paper, Grid, Avatar, TextField } from "@material-ui/core";
-import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// Trong SignUpPage.js
+import React from "react";
+import { Link } from "react-router-dom";
+import { Container, Paper, Typography, TextField, Button } from "@mui/material";
 
-const Signup = () => {
-  const paperStyle = {
-    height: "70vh",
-    padding: "30px 20px",
-    width: 300,
-    margin: "20px auto",
-  };
-  const headersStyle = {
-    margin: 0,
-  };
-  const avatarStyle = {
-    backgroundColor: "#1bbd7e",
-  };
-  const btnstyle = {
-    color: "#fff",
-    backgroundColor: "#1bbd7e",
-    margin: "14px 0",
-  };
+function SignUpPage() {
   return (
-    <Grid>
-      <Paper elevation={20} style={paperStyle}>
-        <Grid align="center">
-          <Avatar style={avatarStyle}>
-            <AddCircleOutlineIcon />
-          </Avatar>
-
-          <h2 style={headersStyle}>Sign Up</h2>
-          <Typography variant="caption" gutterBottom>
-            Please fill this form to create an account!
-          </Typography>
-        </Grid>
+    <Container
+      maxWidth="sm"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
+      }}
+    >
+      <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+        <Typography variant="h4" gutterBottom>
+          Sign Up
+        </Typography>
         <form>
-          <TextField fullWidth label="Name" placeholder="Enter your name" />
-          <TextField fullWidth label="Email" />
-          <TextField fullWidth label="Phone Number" />
-          <TextField fullWidth label="Password" />
-          <TextField fullWidth label="Confirm Password" />
-          <Button
-            type="submit"
-            variant="variant"
-            color="primary"
-            style={btnstyle}
-          >
-            Sign up
-          </Button>
+          <TextField
+            label="User name"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            type="password"
+          />
+          <TextField
+            label="Confirm Password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            type="password"
+          />
+          <Link to="/signin">
+            <Button
+              className="bg-blue-500 hover:bg-blue-600 mt-2 text-white font-bold py-2 px-4 rounded-blue"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+            >
+              Sign Up
+            </Button>
+          </Link>
         </form>
+        <Typography variant="body1" style={{ marginTop: "20px" }}>
+          Already have an account?{" "}
+          <Link to="/signin" className="text-blue-400">
+            Sign in here.
+          </Link>
+        </Typography>
       </Paper>
-    </Grid>
+    </Container>
   );
-};
+}
 
-export default Signup;
+export default SignUpPage;
