@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import env from "dotenv";
-import { loginValid } from "../api/userAPI.js";
+import { loginValid } from "../controller/authController.js";
 
 env.config();
 const secretKey = process.env.SECRET_KEY || "your_secret_key";

@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, Paper, Typography, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignUpPage() {
   const [username, setUsername] = useState("");
@@ -13,8 +15,20 @@ function SignUpPage() {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
+    if (!username) {
+      toast.error("Please enter your username");
+      return;
+    }
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    if (!password) {
+      toast.error("Please enter your password");
+      return;
+    }
     if (password !== repassword) {
-      alert("Confirm password does not match!!");
+      toast.error("Confirm password does not match!!");
       return;
     }
     try {
@@ -24,13 +38,15 @@ function SignUpPage() {
         email: email,
       });
       if (response.status === 200) {
-        alert("Registered successfully");
-        navigate("/signin");
+        toast.success("Register successful");
+        setTimeout(() => {
+          navigate("/signin");
+        }, 1000);
       }
     } catch (error) {
-      if (error.response.status === 400)
-        alert("Username or email already exists!");
-      else console.error("Error while sending registration failed", error);
+      if (error.response.status === 400) {
+        toast.error(error.response.data.message);
+      } else console.error("Error while sending registration failed", error);
     }
   };
   return (
@@ -94,6 +110,18 @@ function SignUpPage() {
           </Typography>
         </Paper>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

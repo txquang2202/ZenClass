@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Button, Typography, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const NavBar = () => {
-  const [user, setUser] = useState("duy");
+  const [user, setUser] = useState(null);
 
   return (
     <AppBar position="static" className="bg-[#10375C]  ">

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Paper, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignInPage() {
   const [username, setUsername] = useState("");
@@ -10,19 +12,32 @@ function SignInPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!username) {
+      toast.error("Please enter your username or phone number");
+      return;
+    }
+    if (!password) {
+      toast.error("Please enter your password");
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:3000/login", {
         username: username,
         password: password,
       });
       if (response.status === 200) {
-        console.log("Login successful");
+        toast.success("Login successful");
         setLoggedIn(true);
-        navigate("/home");
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
       }
     } catch (error) {
       if (error.response.status === 401) {
-        alert("Username or password incorrect");
+        console.log("pass");
+        toast.error("Username or password incorrect");
+        return;
       } else console.error("Error sending login request", error);
     }
   };
@@ -70,6 +85,18 @@ function SignInPage() {
           </Typography>
         </Paper>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
