@@ -4,12 +4,15 @@ import { AppBar, Toolbar, Button, Typography, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const NavBar = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("duy");
 
   return (
     <AppBar position="static" className="bg-[#10375C]  ">
-      <Toolbar className=" w-full max-w-[calc(100%-12rem)] mx-auto">
-        <Link to="/" className="text-white text-2xl flex-grow font-bold">
+      <Toolbar className="w-full lg:max-w-[calc(100%-12rem)] mx-auto">
+        <Link
+          to="/"
+          className="text-white text-2xl lg:text-3xl flex-grow font-bold"
+        >
           <IconButton edge="start" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
@@ -17,15 +20,18 @@ const NavBar = () => {
         </Link>
         {user ? (
           <>
-            <Typography variant="h6" className="text-white text-base">
+            <Typography
+              variant="h6"
+              className="text-white text-base lg:text-lg"
+            >
               Hi, <span className="text-base">{user}</span>
             </Typography>
             <Button
               className="text-white ml-4 bg-[#2E80CE] rounded-full capitalize"
               variant="contained"
               color="inherit"
-              component={Link}
-              to="/signup"
+              // component={Link}
+              // to="/signup"
             >
               Log out
             </Button>

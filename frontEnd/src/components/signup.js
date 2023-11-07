@@ -34,73 +34,67 @@ function SignUpPage() {
     }
   };
   return (
-    <Container
-      maxWidth="sm"
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80vh",
-      }}
-    >
-      <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-        <Typography variant="h4" gutterBottom>
-          Sign Up
-        </Typography>
-        <form>
-          <TextField
-            label="User name"
-            variant="outlined"
-            fullWidth
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            label="Confirm Password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            type="password"
-            value={repassword}
-            onChange={(e) => setrePassword(e.target.value)}
-          />
-          <Button
-            onClick={handleSignUp}
-            className="bg-blue-500 hover:bg-blue-600 mt-2 text-white font-bold py-2 px-4 rounded-blue"
-            variant="contained"
-            color="primary"
-            fullWidth
-            size="large"
-          >
+    <div className="flex justify-center min-h-screen bg-gray-100">
+      <Container maxWidth="sm">
+        <Paper elevation={3} style={{ padding: "40px", marginTop: "50px" }}>
+          <Typography variant="h4" className="mb-2 text-center" gutterBottom>
             Sign Up
-          </Button>
-        </form>
-        <Typography variant="body1" style={{ marginTop: "20px" }}>
-          Already have an account?{" "}
-          <Link to="/signin" className="text-blue-400">
-            Sign in here.
-          </Link>
-        </Typography>
-      </Paper>
-    </Container>
+          </Typography>
+          <form>
+            <TextField
+              label="User name"
+              variant="outlined"
+              fullWidth
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              margin="normal"
+            />
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              label="Confirm Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="password"
+              value={repassword}
+              onChange={(e) => setrePassword(e.target.value)}
+            />
+            <Button
+              onClick={handleSignUp}
+              className="bg-blue-500 hover:bg-blue-600 mt-2 text-white font-bold py-2 px-4 rounded-blue"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+            >
+              Sign Up
+            </Button>
+          </form>
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            Already have an account?{" "}
+            <Link to="/signin" className="text-blue-400">
+              Sign in here.
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
+    </div>
   );
 }
 

@@ -28,17 +28,10 @@ function SignInPage() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "60vh",
-      }}
-    >
+    <div className="flex justify-center  min-h-screen bg-gray-100">
       <Container maxWidth="sm">
-        <Paper elevation={3} style={{ padding: "20px" }}>
-          <Typography variant="h4" gutterBottom>
+        <Paper elevation={3} style={{ padding: "40px", marginTop: "50px" }}>
+          <Typography variant="h4" className="mb-2 text-center" gutterBottom>
             Sign In
           </Typography>
           <form>
@@ -61,16 +54,15 @@ function SignInPage() {
             />
             <Button
               onClick={handleLogin}
-              className="bg-blue-500 hover-bg-blue-600 mt-2 text-white font-bold py-2 px-4 rounded-blue"
+              className="bg-blue-500 hover:bg-blue-600 mt-4 text-white font-bold py-2 px-4 rounded-blue"
               variant="contained"
               color="primary"
               fullWidth
-              size="large"
             >
               Sign In
             </Button>
           </form>
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
+          <Typography variant="body1" className="mt-4">
             Don't have an account?{" "}
             <Link to="/signup" className="text-blue-400">
               Sign up here.
