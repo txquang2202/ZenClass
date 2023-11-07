@@ -19,8 +19,21 @@ function SignUpPage() {
       toast.error("Please enter your username");
       return;
     }
+    if (!username || username.length < 3) {
+      toast.error("Please enter a valid username with at least 3 characters");
+      return;
+    }
     if (!email) {
       toast.error("Please enter your email address");
+      return;
+    }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email || !email.match(emailRegex)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (!password || password.length < 6) {
+      toast.error("Please enter a valid password with at least 6 characters");
       return;
     }
     if (!password) {
