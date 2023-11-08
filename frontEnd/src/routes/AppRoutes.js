@@ -4,17 +4,20 @@ import SignInPage from "../components/SignIn";
 import HomePage from "../components/HomePage";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
+import NavBar from "../components/Navbar";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/signin" element={<SignInPage />} />
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/home" element={<HomePage />} />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/home" element={<HomePage />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 

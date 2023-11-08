@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes } from "react-router-dom";
 import NavBar from "./components/Navbar";
 import AppRoutes from "./routes/AppRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
+import UserRoutes from "./routes/UserRoutes";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       {/* <Sidebar /> */}
       <div className="Container">
         <AppRoutes />
+        <UserRoutes />
       </div>
     </Router>
   );
