@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 function SignInPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -28,7 +27,11 @@ function SignInPage() {
       });
       if (response.status === 200) {
         toast.success("Login successful");
-        setLoggedIn(true);
+        let data = {
+          isLoggedIn: true,
+          token: response.data.token,
+        };
+        sessionStorage.setItem("account", JSON.stringify(data));
         setTimeout(() => {
           navigate("/home");
         }, 1000);
@@ -41,7 +44,11 @@ function SignInPage() {
       } else console.error("Error sending login request", error);
     }
   };
-
+  const handlePressEnter = (e) => {
+    if (e.charCode === 13 && e.code === "Enter") {
+      handleLogin();
+    }
+  };
   return (
     <div className="flex justify-center  min-h-screen bg-gray-100">
       <Container maxWidth="sm">
@@ -66,6 +73,7 @@ function SignInPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={(e) => handlePressEnter(e)}
             />
             <Button
               onClick={handleLogin}

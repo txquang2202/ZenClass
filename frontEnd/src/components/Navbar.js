@@ -13,7 +13,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 const NavBar = () => {
-  const [user, setUser] = useState("null");
+  const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuClick = (event) => {
@@ -28,7 +28,7 @@ const NavBar = () => {
     <AppBar position="static" className="bg-[#10375C] pt-2">
       <Toolbar className="w-full lg:max-w-[calc(100%-12rem)] mx-auto">
         <Link
-          to="/"
+          to="/home"
           className="text-white text-2xl lg:text-3xl flex-grow font-bold"
         >
           <IconButton edge="start" color="inherit" aria-label="menu">

@@ -62,6 +62,11 @@ function SignUpPage() {
       } else console.error("Error while sending registration failed", error);
     }
   };
+  const handlePressEnter = (e) => {
+    if (e.charCode === 13 && e.code === "Enter") {
+      handleSignUp();
+    }
+  };
   return (
     <div className="flex justify-center min-h-screen bg-gray-100">
       <Container maxWidth="sm">
@@ -103,6 +108,7 @@ function SignUpPage() {
               type="password"
               value={repassword}
               onChange={(e) => setrePassword(e.target.value)}
+              onKeyPress={(e) => handlePressEnter(e)}
             />
             <Button
               onClick={handleSignUp}
