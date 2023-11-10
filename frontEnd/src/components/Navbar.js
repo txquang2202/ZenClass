@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const NavBar = () => {
-  const [user, setUser] = useState("null");
+  const [user, setUser] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 

@@ -15,6 +15,7 @@ const createUser = async (req, res) => {
       username,
       password: hashedPassword,
       email,
+      role: 0,
       img: "Example",
     });
 

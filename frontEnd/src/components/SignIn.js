@@ -27,11 +27,9 @@ function SignInPage() {
       });
       if (response.status === 200) {
         toast.success("Login successful");
-        let data = {
-          isLoggedIn: true,
-          token: response.data.token,
-        };
+        let data = response.data;
         sessionStorage.setItem("account", JSON.stringify(data));
+
         setTimeout(() => {
           navigate("/home");
         }, 1000);

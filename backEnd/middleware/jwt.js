@@ -1,23 +1,28 @@
-import express from "express";
 import jwt from "jsonwebtoken";
 import env from "dotenv";
-import { loginValid } from "../controller/authController.js";
 
 env.config();
-const secretKey = process.env.SECRET_KEY || "your_secret_key";
 
-const app = express();
-
-const authenticateJWT = (req, res, next) => {
+const CreateToken = (user) => {
+  const secretKey = process.env.SECRET_KEY;
+  let token = null;
   try {
-    var token = req.cookies.token;
-    var verify = jwt.verify(token, process.env.SECRET_KEY || "mysecretkey");
-    if (verify) {
-      next();
-    }
+    token = jwt.sign(user.toJSON(), secretKey, { expiresIn: 604800 });
   } catch (error) {
-    res.json("Bạn đéo có quyền truy cập");
+    console.log(error);
   }
+  return token;
 };
 
-export { authenticateJWT };
+const authenticateJWT = (token) => {
+  var data = null;
+  try {
+    let decoded = jwt.verify(token, process.env.SECRET_KEY);
+    data = decoded;
+  } catch (error) {
+    console.log(error.message);
+  }
+  return data;
+};
+
+export { CreateToken, authenticateJWT };
