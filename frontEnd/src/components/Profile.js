@@ -21,10 +21,49 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import Avatar from "@mui/material/Avatar";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import { DatePicker } from "@mui/lab";
+import { Facebook, Google } from "@mui/icons-material";
 import { useState } from "react";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Autocomplete from "@mui/material/Autocomplete";
+import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 
-const drawerWidth = 240;
+const drawerWidth = 210;
+
+const options = ["Male", "Female", "Other"];
+
+function ControllableStates() {
+  const [value, setValue] = React.useState(options[0]);
+  const [inputValue, setInputValue] = React.useState("");
+
+  return (
+    <div>
+      <Autocomplete
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        id="controllable-states-demo"
+        options={options}
+        renderInput={(params) => <TextField {...params} label="Gender" />}
+      />
+    </div>
+  );
+}
 
 function ResponsiveDrawer(props) {
   const { window } = props;
@@ -123,7 +162,7 @@ function ResponsiveDrawer(props) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", background: "#f5f6fa", height: "100vh" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -132,7 +171,7 @@ function ResponsiveDrawer(props) {
           ml: { sm: `${drawerWidth}px` },
           boxShadow: "none",
         }}
-        className="bg-blue-500 bg-opacity-50"
+        className="bg-blue-500 bg-opacity-0"
       >
         <Toolbar>
           <IconButton
@@ -194,79 +233,192 @@ function ResponsiveDrawer(props) {
       >
         <Toolbar />
         {/* EDIT PROFILE */}
-        <Container
-          component="main"
-          maxWidth="xs"
-          className="grid grid-flow-row-dense grid-cols-3 w-full lg:max-w-[calc(100%-6rem)] mx-auto gap-4 mt-[100px]"
-        >
-          <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-            <label htmlFor="avatarInput" className="block cursor-pointer">
-              <Avatar
-                alt="Avatar"
-                src={avatar || "/path/to/default-avatar.jpg"}
-                className="w-40 h-40 object-cover mx-auto max-w-full max-h-full mt-[-100px] border-2 border-white-500 rounded-full shadow-md "
-              />
-              <input
-                type="file"
-                accept="image/*"
-                id="avatarInput"
-                name="avatar"
-                onChange={handleAvatarChange}
-                className="hidden"
-              />
-              <div className="mt-6 text-blue-500 font-semibold text-lg">
-                Yuki Hayashi
-              </div>
-            </label>
-          </div>
+        <Container className="w-full lg:max-w-[calc(100%-6rem)] mx-auto">
+          <Grid container spacing={3}>
+            {/* Left Grid */}
+            <Grid item xs={12} sm={12} md={3}>
+              <Paper
+                elevation={3}
+                style={{ height: "100%", padding: "26px 34px" }}
+              >
+                <div className="account-settings">
+                  <div className="user-profile mx-0 mb-1 pb-1 text-center">
+                    <div className="user-avatar mb-1">
+                      <label
+                        htmlFor="avatarInput"
+                        className="block cursor-pointer"
+                      >
+                        <Avatar
+                          alt="Avatar"
+                          src={avatar || "/path/to/default-avatar.jpg"}
+                          className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
+                        />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id="avatarInput"
+                          name="avatar"
+                          onChange={handleAvatarChange}
+                          className="hidden" // Ẩn thẻ input mặc định
+                        />
+                      </label>
+                    </div>
+                    <Typography
+                      variant="h6"
+                      className="user-name mt-2 mb-0 font-semibold text-[#10375C]"
+                    >
+                      Yuki Hayashi
+                    </Typography>
+                    <Typography
+                      variant="h8"
+                      className="user-email text-sm font-normal text-gray-600"
+                    >
+                      yuki@Maxwell.com
+                    </Typography>
+                  </div>
+                  <div className="about mt-8 text-center">
+                    <Typography
+                      variant="h5"
+                      className="mb-4 text-[#10375C] font-semibold text-[22px]"
+                    >
+                      About
+                    </Typography>
+                    <Typography variant="body1" className="text-[16px]">
+                      I'm Yuki. Full Stack Designer I enjoy creating
+                      user-centric, delightful and human experiences.
+                    </Typography>
+                    <div className="text-center mt-5">
+                      <Facebook
+                        fontSize="large"
+                        className="cursor-pointer text-blue-600 hover:text-blue-800 mx-2"
+                      />
+                      <Google
+                        fontSize="large"
+                        className="cursor-pointer text-red-600 hover:text-red-800 mx-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Paper>
+            </Grid>
 
-          <div class="col-span-2 bg-white p-8 rounded-lg shadow-lg">
-            <form noValidate onSubmit={handleSubmit}>
-              <div className="mt-4">
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  margin="normal"
-                  label="First Name"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mt-4">
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  margin="normal"
-                  label="Last Name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mt-4">
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  margin="normal"
-                  label="Email Address"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mt-6">
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Save
-                </Button>
-              </div>
-            </form>
-          </div>
+            {/* Right Grid */}
+            <Grid item xs={12} sm={12} md={9}>
+              <Paper elevation={3} style={{ height: "100%", padding: "30px" }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      className="text-primary text-[#10375C]"
+                    >
+                      Personal Details
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="fullName"
+                      label="Full Name"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter full name"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="lastName"
+                      label="Last Name"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter last name"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="birthdate"
+                      label="Date of Birth"
+                      variant="outlined"
+                      fullWidth
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <ControllableStates />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="phone"
+                      label="Phone"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter phone number"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="mail"
+                      label="Mail"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter mail"
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      className="mt-6 text-primary text-[#10375C]"
+                    >
+                      Address
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="Street"
+                      label="Street"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter Street"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="ciTy"
+                      label="City"
+                      variant="outlined"
+                      fullWidth
+                      placeholder="Enter City"
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={4} className="mt-1">
+                  <Grid item xs={12}>
+                    <div className="text-right">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ marginRight: "10px", borderRadius: "5px" }}
+                        className="bg-red-700 hover:bg-red-600 text-white rounded-md px-4 py-2 mr-2"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ borderRadius: "5px" }}
+                        className="bg-[#10375C] hover:bg-[#10375C]-100 text-white rounded-md px-4 py-2"
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
     </Box>
