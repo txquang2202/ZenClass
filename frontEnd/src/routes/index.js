@@ -1,21 +1,21 @@
-import LandingPage from "../components/LandingPage";
-import SignUpPage from "../components/SignUp";
-import SignInPage from "../components/SignIn";
-import HomePage from "../components/HomePage";
-import NotFound from "../components/NotFound";
+import LandingPage from "../Pages/LandingPage/LandingPage";
+import SignUpPage from "../components/SignUp/SignUp";
+import SignInPage from "../components/SignIn/SignIn";
+import HomePage from "../Pages/HomePage/HomePage";
+import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import ResponsiveDrawer from "../components/Profile";
 
 const routes = [
   {
     path: "/signin",
     page: SignInPage,
-    isShowHeader: true,
+    isShowHeader: false,
     isProtected: false,
   },
   {
     path: "/signup",
     page: SignUpPage,
-    isShowHeader: true,
+    isShowHeader: false,
     isProtected: false,
   },
   {
@@ -38,7 +38,7 @@ const routes = [
   },
   {
     path: "*",
-    page: NotFound,
+    page: NotFoundPage,
     isShowHeader: false,
     isProtected: false,
   },

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import routes from "./routes";
-import Default from "./components/Default";
+import Default from "./components/Default/Default";
 import ProtectedRoute from "./routes/ProtectedRoute";
 //import AdminRoutes from "./routes/AdminRoutes";
 //import UserRoutes from "./routes/UserRoutes";
