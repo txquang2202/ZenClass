@@ -5,7 +5,7 @@ env.config();
 
 const createToken = (user) => {
   const { _id, username, email, role } = user;
-  console.log(user);
+  //console.log(user);
   const secretKey = process.env.SECRET_KEY;
 
   try {
@@ -28,5 +28,25 @@ const authenticateJWT = (token) => {
     return null;
   }
 };
+const checkUserToken = (req, res, next) => {
+  let cookies;
+  cookies = req.cookies;
+  if (cookies && cookies.token) {
+    let token = cookies.token;
+    let decoded = authenticateJWT(token);
+    if (decoded) {
+      next();
+    } else {
+      res.status(401).json({
+        message: "Not authenticated user",
+      });
+    }
+  } else {
+    res.status(401).json({
+      message: "Not authenticated user",
+    });
+  }
+  console.log(cookies.token);
+};
 
-export { createToken, authenticateJWT };
+export { createToken, authenticateJWT, checkUserToken };

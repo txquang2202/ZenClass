@@ -29,7 +29,7 @@ const handleLogin = async (req, res) => {
     }
 
     const token = createToken(user);
-    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 30 });
+    res.cookie("token", token, { httpOnly: true, maxAge: 3600 * 20 });
 
     const userData = authenticateJWT(token);
     // console.log(userData);

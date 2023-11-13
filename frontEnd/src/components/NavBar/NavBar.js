@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -14,7 +14,17 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  useEffect(() => {
+    const userData = JSON.parse(sessionStorage.getItem("account"));
+    if (userData) {
+      setUser(true);
+    }
+  }, []);
+  const handleLogout = () => {
+    sessionStorage.removeItem("account");
+    setUser(false);
+    setAnchorEl(null);
+  };
   return (
     <nav className="bg-[#10375C] pt-4 pb-3 font-sans sticky top-0 z-10">
       <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto">
@@ -65,7 +75,7 @@ const Navbar = () => {
                 >
                   <MenuItem onClick={handleClose}>Profile</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
             ) : (
