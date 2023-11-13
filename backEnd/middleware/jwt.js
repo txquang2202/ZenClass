@@ -3,26 +3,30 @@ import env from "dotenv";
 
 env.config();
 
-const CreateToken = (user) => {
+const createToken = (user) => {
+  const { _id, username, email, role } = user;
+  console.log(user);
   const secretKey = process.env.SECRET_KEY;
-  let token = null;
+
   try {
-    token = jwt.sign(user.toJSON(), secretKey, { expiresIn: 604800 });
+    const token = jwt.sign({ _id, username, email, role }, secretKey, {
+      expiresIn: "1w",
+    });
+    return token;
   } catch (error) {
-    console.log(error);
+    console.error("Error creating token:", error);
+    return null;
   }
-  return token;
 };
 
 const authenticateJWT = (token) => {
-  var data = null;
   try {
-    let decoded = jwt.verify(token, process.env.SECRET_KEY);
-    data = decoded;
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    return decoded;
   } catch (error) {
-    console.log(error.message);
+    console.error("Error authenticating token:", error.message);
+    return null;
   }
-  return data;
 };
 
-export { CreateToken, authenticateJWT };
+export { createToken, authenticateJWT };
