@@ -70,10 +70,16 @@ const SignIn = ({ handleChange }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/login",
+        {
+          username: username,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Login successful");
