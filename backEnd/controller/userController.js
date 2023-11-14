@@ -58,6 +58,7 @@ const editUser = async (req, res) => {
     user.city = city || user.city;
     console.log(req.file);
     if (req.file) {
+      console.log(req.file);
       user.img = req.file.filename;
     }
 
@@ -69,4 +70,22 @@ const editUser = async (req, res) => {
     res.status(500).send("Error while updating profile");
   }
 };
-export { createUser, editUser };
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+    //console.log(user);
+
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching user profile");
+  }
+};
+
+export { createUser, editUser, getUserProfile };

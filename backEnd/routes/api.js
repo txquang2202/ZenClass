@@ -1,9 +1,12 @@
-import { createUser } from "../controller/userController.js";
+import {
+  createUser,
+  editUser,
+  getUserProfile,
+} from "../controller/userController.js";
 import { handleLogin } from "../controller/authController.js";
 import { authenticateJWT } from "../middleware/jwt.js";
 import express from "express";
 import { checkUserToken } from "../middleware/jwt.js";
-import { editUser } from "../controller/userController.js";
 import upload from "../middleware/multer.js";
 
 const router = express.Router();
@@ -23,7 +26,7 @@ const initApi = (app) => {
   router.post("/login", handleLogin);
   router.get("/home", checkUserToken);
   router.post("/protected", authenticateJWT);
-  router.get("/test", checkUserToken);
+  router.get("/getprofile/:id", getUserProfile);
   router.put("/editprofile/:id", upload.single("img"), editUser);
 
   return app.use("/api/v1/", router);
