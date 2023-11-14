@@ -2,8 +2,8 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="footer pt-20 bg-[#10375C] text-white font-open-sans mt-auto">
-      <div class="container mx-auto max-w-[calc(100%-20rem)] w-full lg:max-w-[calc(100%-20rem)]">
+    <footer className="footer pt-20 bg-[#10375C] text-white font-open-sans mt-auto flex flex-col justify-between min-h-screen">
+      <div class="container mx-auto max-w-[calc(100%-20rem)] w-max lg:max-w-[calc(100%-20rem)] ">
         <div class="grid grid-cols-1 lg:grid-cols-4">
           <div class="col-span-1">
             {/* <!-- Logo --> */}
@@ -13,8 +13,8 @@ const Footer = () => {
               </div>
             </a>
             <p class="footer__desc mt-5 w-48 text-[#A9B3BB] font-open-sans text-base font-normal leading-[28px]">
-              Exceptional dental care for all ages. Your great smile begins with
-              a great dentist.
+              Explore a unique online learning hub for teachers and students to
+              share knowledge interactively
             </p>
           </div>
           <div class="col-span-1">

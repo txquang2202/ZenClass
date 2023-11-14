@@ -1,6 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -114,18 +114,20 @@ function ResponsiveDrawer(props) {
     <div className="bg-[#10375C] h-screen text-white">
       <List className="text-center  bg-[#10375C]">
         <ListItem>
-          <ListItemButton>
-            <ListItemIcon>
-              <HomeIcon className="text-white" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Home"
-              primaryTypographyProps={{
-                fontSize: "sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl", // Responsive font size
-                fontWeight: "bold",
-              }}
-            />
-          </ListItemButton>
+          <Link to="/home">
+            <ListItemButton>
+              <ListItemIcon>
+                <HomeIcon className="text-white" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Home"
+                primaryTypographyProps={{
+                  fontSize: "sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl", // Responsive font size
+                  fontWeight: "bold",
+                }}
+              />
+            </ListItemButton>
+          </Link>
         </ListItem>
         <Divider className="bg-white-200" />
         <ListItem>
@@ -133,7 +135,7 @@ function ResponsiveDrawer(props) {
             <ListItemIcon>
               <AccountCircleIcon className="text-white" />
             </ListItemIcon>
-            <ListItemText primary="Profile" />
+            <ListItemText primary="Profile" className="text-blue-400" />
           </ListItemButton>
         </ListItem>
         <ListItem>

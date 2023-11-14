@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Typography, Button, Grid, Paper } from "@mui/material";
+import { Grid} from "@mui/material";
 import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import { Avatar } from "@material-ui/core";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -9,11 +10,15 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
+import { styled } from "@mui/material/styles";
+
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 function HomePage() {
+  const userData = JSON.parse(sessionStorage.getItem("account"));
+
   return (
-    <div className="mt-3 container w-full lg:max-w-[calc(100%-20rem)] mx-auto max-w-4xl">
+    <div className="mt-3 container w-full lg:max-w-[calc(100%-20rem)] mx-auto max-w-4xl pb-10">
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
@@ -52,166 +57,149 @@ function HomePage() {
         </SwiperSlide>
       </Swiper>
 
-      <div className="flex justify-center items-center  w-[1170px]  pt-[50px] pb-[50px]">
-        <Grid
-          container
-          spacing={{ sx: 0, sm: 0, md: 1, lg: 2 }}
-          className="flex justify-center items-center"
-        >
-          <Grid item xs={12} sm={12} md={6} lg={3}>
-            <section class="group mt-[15px] relative border-solid border-[1.5px] border-[#DADCE0] rounded-[10px] w-[280px] h-[350px] hover:translate-y-[-16px] hover:rounded-[10px] hover:shadow-xl hover:duration-[0.25s]">
-              <img
-                src="./assets/imgs/river.jpg"
-                className="absolute w-[100%] h-[120px] z-[-1] rounded-t-[10px]"
+      {/* COURSES */}
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={3}>
+          <section class="group mt-3 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
+            <img
+              src="./assets/imgs/river.jpg"
+              class="w-full h-32 object-cover"
+              alt="River Image"
+            />
+            <div class="flex items-center justify-end pr-2 -mt-14">
+              <Avatar
+                alt="User Avatar"
+                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
-              <img
-                src="./assets/imgs/profile1.png"
-                className="absolute w-[50px] h-[50px] rounded-[50%] right-[10px] mt-[95px] "
-              />
-              <h3 class="absolute text-white mt-[20px] pl-[15px] pr-[15px] text-[1.2rem] font-[600]  ">
-                Search doctor
-              </h3>
-              <p class="mt-[50px] pl-[15px] pr-[10px] text-white text-[0.7rem] font-[250]  ">
-                Search a doctor by education, qualifications or
-                experience-contact for inquiry.
-              </p>
-              <a
-                href="#!"
-                class="inline-block mt-[5px] pl-[15px] text-white text-[0.9rem] font-[450] "
-              >
+            </div>
+            <div class="p-4">
+              <h3 class=" text-lg font-semibold mb-2">ReactJS</h3>
+
+              <a href="#!" class=" text-sm font-medium mb-2">
                 Phan Le Minh Hieu
               </a>
-              <div className="absolute mt-[30px] pl-[15px]">
-                <h1 className="text-[1.3rem] font-[500]">Due monday</h1>
-                <p className="text-[1rem] font-[400]">Homework 5</p>
+              <div class="mt-2">
+                <h1 class=" text-md font-semibold mb-2">Due Monday</h1>
+                <p class=" text-sm font-light">Homework 5</p>
               </div>
-              <hr class="h-[1.5px] mt-[180px] bg-[#DADCE0] border-0 dark:bg-[#DADCE0] group-hover:shadow-xl" />
-              <div className="absolute right-0 flex mt-[4px] mr-[10px]">
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <AccountBoxOutlinedIcon className=" w-[25px] h-[25px] " />
-                </div>
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <FolderOpenIcon className=" w-[25px] h-[25px] " />
-                </div>
+            </div>
+            <hr class="border-t border-gray-300 dark:border-gray-600" />
+            <div class="flex justify-end p-2">
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full mr-2">
+                <AccountBoxOutlinedIcon class="w-5 h-5" />
               </div>
-            </section>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
-            <section class="group mt-[15px] relative border-solid border-[1.5px] border-[#DADCE0] rounded-[10px] w-[280px] h-[350px] hover:translate-y-[-16px] hover:rounded-[10px] hover:shadow-xl hover:duration-[0.25s]">
-              <img
-                src="./assets/imgs/river.jpg"
-                className="absolute w-[100%] h-[120px] z-[-1] rounded-t-[10px]"
-              />
-              <img
-                src="./assets/imgs/profile1.png"
-                className="absolute w-[50px] h-[50px] rounded-[50%] right-[10px] mt-[95px] "
-              />
-              <h3 class="absolute text-white mt-[20px] pl-[15px] pr-[15px] text-[1.2rem] font-[600]  ">
-                Search doctor
-              </h3>
-              <p class="mt-[50px] pl-[15px] pr-[10px] text-white text-[0.7rem] font-[250]  ">
-                Search a doctor by education, qualifications or
-                experience-contact for inquiry.
-              </p>
-              <a
-                href="#!"
-                class="inline-block mt-[5px] pl-[15px] text-white text-[0.9rem] font-[450] "
-              >
-                Phan Le Minh Hieu
-              </a>
-              <div className="absolute mt-[30px] pl-[15px]">
-                <h1 className="text-[1.3rem] font-[500]">Due monday</h1>
-                <p className="text-[1rem] font-[400]">Homework 5</p>
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full">
+                <FolderOpenIcon class="w-5 h-5" />
               </div>
-              <hr class="h-[1.5px] mt-[180px] bg-[#DADCE0] border-0 dark:bg-[#DADCE0] group-hover:shadow-xl" />
-              <div className="absolute right-0 flex mt-[4px] mr-[10px]">
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <AccountBoxOutlinedIcon className=" w-[25px] h-[25px] " />
-                </div>
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <FolderOpenIcon className=" w-[25px] h-[25px] " />
-                </div>
-              </div>
-            </section>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
-            <section class="group mt-[15px] relative border-solid border-[1.5px] border-[#DADCE0] rounded-[10px] w-[280px] h-[350px] hover:translate-y-[-16px] hover:rounded-[10px] hover:shadow-xl hover:duration-[0.25s]">
-              <img
-                src="./assets/imgs/river.jpg"
-                className="absolute w-[100%] h-[120px] z-[-1] rounded-t-[10px]"
-              />
-              <img
-                src="./assets/imgs/profile1.png"
-                className="absolute w-[50px] h-[50px] rounded-[50%] right-[10px] mt-[95px] "
-              />
-              <h3 class="absolute text-white mt-[20px] pl-[15px] pr-[15px] text-[1.2rem] font-[600]  ">
-                Search doctor
-              </h3>
-              <p class="mt-[50px] pl-[15px] pr-[10px] text-white text-[0.7rem] font-[250]  ">
-                Search a doctor by education, qualifications or
-                experience-contact for inquiry.
-              </p>
-              <a
-                href="#!"
-                class="inline-block mt-[5px] pl-[15px] text-white text-[0.9rem] font-[450] "
-              >
-                Phan Le Minh Hieu
-              </a>
-              <div className="absolute mt-[30px] pl-[15px]">
-                <h1 className="text-[1.3rem] font-[500]">Due monday</h1>
-                <p className="text-[1rem] font-[400]">Homework 5</p>
-              </div>
-              <hr class="h-[1.5px] mt-[180px] bg-[#DADCE0] border-0 dark:bg-[#DADCE0] group-hover:shadow-xl" />
-              <div className="absolute right-0 flex mt-[4px] mr-[10px]">
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <AccountBoxOutlinedIcon className=" w-[25px] h-[25px] " />
-                </div>
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <FolderOpenIcon className=" w-[25px] h-[25px] " />
-                </div>
-              </div>
-            </section>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
-            <section class="group mt-[15px] relative border-solid border-[1.5px] border-[#DADCE0] rounded-[10px] w-[280px] h-[350px] hover:translate-y-[-16px] hover:rounded-[10px] hover:shadow-xl hover:duration-[0.25s]">
-              <img
-                src="./assets/imgs/river.jpg"
-                className="absolute w-[100%] h-[120px] z-[-1] rounded-t-[10px]"
-              />
-              <img
-                src="./assets/imgs/profile1.png"
-                className="absolute w-[50px] h-[50px] rounded-[50%] right-[10px] mt-[95px] "
-              />
-              <h3 class="absolute text-white mt-[20px] pl-[15px] pr-[15px] text-[1.2rem] font-[600]  ">
-                Search doctor
-              </h3>
-              <p class="mt-[50px] pl-[15px] pr-[10px] text-white text-[0.7rem] font-[250]  ">
-                Search a doctor by education, qualifications or
-                experience-contact for inquiry.
-              </p>
-              <a
-                href="#!"
-                class="inline-block mt-[5px] pl-[15px] text-white text-[0.9rem] font-[450] "
-              >
-                Phan Le Minh Hieu
-              </a>
-              <div className="absolute mt-[30px] pl-[15px]">
-                <h1 className="text-[1.3rem] font-[500]">Due monday</h1>
-                <p className="text-[1rem] font-[400]">Homework 5</p>
-              </div>
-              <hr class="h-[1.5px] mt-[180px] bg-[#DADCE0] border-0 dark:bg-[#DADCE0] group-hover:shadow-xl" />
-              <div className="absolute right-0 flex mt-[4px] mr-[10px]">
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <AccountBoxOutlinedIcon className=" w-[25px] h-[25px] " />
-                </div>
-                <div className="w-[50px] h-[50px] border-solid hover:bg-[#E0E0E0] hover:duration-[0.5s] flex items-center justify-center rounded-[50%]">
-                  <FolderOpenIcon className=" w-[25px] h-[25px] " />
-                </div>
-              </div>
-            </section>
-          </Grid>
+            </div>
+          </section>
         </Grid>
-      </div>
+        <Grid item xs={3}>
+          <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
+            <img
+              src="./assets/imgs/river.jpg"
+              class="w-full h-32 object-cover"
+              alt="River Image"
+            />
+            <div class="flex items-center justify-end pr-2 -mt-14">
+              <Avatar
+                alt="User Avatar"
+                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+              />
+            </div>
+            <div class="p-4">
+              <h3 class=" text-lg font-semibold mb-2">ReactJS</h3>
+
+              <a href="#!" class=" text-sm font-medium mb-2">
+                Phan Le Minh Hieu
+              </a>
+              <div class="mt-2">
+                <h1 class=" text-md font-semibold mb-2">Due Monday</h1>
+                <p class=" text-sm font-light">Homework 5</p>
+              </div>
+            </div>
+            <hr class="border-t border-gray-300 dark:border-gray-600" />
+            <div class="flex justify-end p-2">
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full mr-2">
+                <AccountBoxOutlinedIcon class="w-5 h-5" />
+              </div>
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full">
+                <FolderOpenIcon class="w-5 h-5" />
+              </div>
+            </div>
+          </section>
+        </Grid>
+        <Grid item xs={3}>
+          <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
+            <img
+              src="./assets/imgs/river.jpg"
+              class="w-full h-32 object-cover"
+              alt="River Image"
+            />
+            <div class="flex items-center justify-end pr-2 -mt-14">
+              <Avatar
+                alt="User Avatar"
+                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+              />
+            </div>
+            <div class="p-4">
+              <h3 class=" text-lg font-semibold mb-2">ReactJS</h3>
+
+              <a href="#!" class=" text-sm font-medium mb-2">
+                Phan Le Minh Hieu
+              </a>
+              <div class="mt-2">
+                <h1 class=" text-md font-semibold mb-2">Due Monday</h1>
+                <p class=" text-sm font-light">Homework 5</p>
+              </div>
+            </div>
+            <hr class="border-t border-gray-300 dark:border-gray-600" />
+            <div class="flex justify-end p-2">
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full mr-2">
+                <AccountBoxOutlinedIcon class="w-5 h-5" />
+              </div>
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full">
+                <FolderOpenIcon class="w-5 h-5" />
+              </div>
+            </div>
+          </section>
+        </Grid>
+        <Grid item xs={3}>
+          <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
+            <img
+              src="./assets/imgs/river.jpg"
+              class="w-full h-32 object-cover"
+              alt="River Image"
+            />
+            <div class="flex items-center justify-end pr-2 -mt-14">
+              <Avatar
+                alt="User Avatar"
+                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+              />
+            </div>
+            <div class="p-4">
+              <h3 class=" text-lg font-semibold mb-2">ReactJS</h3>
+
+              <a href="#!" class=" text-sm font-medium mb-2">
+                Phan Le Minh Hieu
+              </a>
+              <div class="mt-2">
+                <h1 class=" text-md font-semibold mb-2">Due Monday</h1>
+                <p class=" text-sm font-light">Homework 5</p>
+              </div>
+            </div>
+            <hr class="border-t border-gray-300 dark:border-gray-600" />
+            <div class="flex justify-end p-2">
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full mr-2">
+                <AccountBoxOutlinedIcon class="w-5 h-5" />
+              </div>
+              <div class="w-10 h-10 border border-gray-300 hover:bg-gray-200 hover:duration-500 flex items-center justify-center rounded-full">
+                <FolderOpenIcon class="w-5 h-5" />
+              </div>
+            </div>
+          </section>
+        </Grid>
+      </Grid>
     </div>
   );
 }

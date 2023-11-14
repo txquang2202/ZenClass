@@ -30,7 +30,7 @@ const HeroSection = () => {
     <>
       {/* HERO */}
       <section className="hero bg-[#10375C] pt-[76px] pb-[170px]">
-        <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto flex flex-col lg:flex-row items-center justify-between">
+        <div className="container w-max lg:max-w-[calc(100%-20rem)] mx-auto flex flex-col lg:flex-row items-center justify-between">
           {/* Hero content */}
           <section className="hero__content text-white flex-shrink-0 lg:w-[44%] lg:order-1 mb-8 lg:mb-0">
             <h1 className="hero__heading text-white text-4xl lg:text-7xl font-semibold leading-tight mb-4">
@@ -74,7 +74,7 @@ const HeroSection = () => {
 
       {/* WORK */}
       <section className="work pt-[170px] pb-[170px] bg-[#F6FBFF]">
-        <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto">
+        <div className="container w-max  lg:max-w-[calc(100%-20rem)] mx-auto">
           <h2 className="section-heading font-semibold text-5xl leading-[1.2] tracking-tight text-[#10375c]">
             How it works
           </h2>
@@ -155,8 +155,8 @@ const HeroSection = () => {
 
       {/* FEATURES */}
       <section className="feature pt-[170px] pb-[170px]">
-        <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto">
-          <div className="feature__inner flex flex-col md:flex-row items-center gap-4 md:gap-8 lg:gap-12">
+        <div className="container w-max lg:max-w-[calc(100%-20rem)] mx-auto ">
+          <div className="feature__inner flex flex-col md:flex-row items-center gap-4 md:gap-8 lg:gap-36">
             <div className="feature__media w-full md:w-2/3 lg:w-3/5">
               <figure className="feature__images relative">
                 <img
@@ -187,7 +187,7 @@ const HeroSection = () => {
 
       {/* MEMBER */}
       <section className="member pt-[170px] pb-[170px] text-center">
-        <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto">
+        <div className="container w-max lg:max-w-[calc(100%-20rem)] mx-auto">
           <header className="member-header flex flex-col items-center">
             <h2 className="section-heading text-[#10375C] text-center font-sora font-semibold text-5xl leading-14 tracking-tight">
               About Our Team
