@@ -69,6 +69,12 @@ function ControllableStates() {
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [avatar, setAvatar] = useState(null);
   const Navigate = useNavigate();
 
   const handleDrawerToggle = () => {
@@ -78,6 +84,28 @@ function ResponsiveDrawer(props) {
     sessionStorage.removeItem("account");
     Navigate("/");
   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(formData, avatar);
+  };
+
+  //sidebar
   const drawer = (
     <div className="bg-[#10375C] h-screen text-white">
       <List className="text-center  bg-[#10375C]">
@@ -133,38 +161,8 @@ function ResponsiveDrawer(props) {
     </div>
   );
 
-  // Remove this const when copying and pasting into your project.
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
-
-  const [avatar, setAvatar] = useState(null); // State để lưu trữ hình ảnh avatar
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setAvatar(URL.createObjectURL(file)); // Lưu hình ảnh avatar vào state
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Xử lý logic gửi biểu mẫu ở đây, bao gồm cả hình ảnh avatar (trong state `avatar`)
-    console.log(formData, avatar);
-  };
 
   return (
     <Box sx={{ display: "flex", background: "#f5f6fa", height: "100vh" }}>

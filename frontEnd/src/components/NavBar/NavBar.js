@@ -6,6 +6,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
+
+  const [name, setName] = useState("");
+  const [avt, setAvt] = useState("");
   const Navigate = useNavigate();
 
   const handleMenu = (event) => {
@@ -18,6 +21,16 @@ const Navbar = () => {
   useEffect(() => {
     const userData = JSON.parse(sessionStorage.getItem("account"));
     if (userData) {
+      console.log(userData);
+      const storedName = userData.userData.username;
+      const storedAvt = userData.userData.img;
+      if (storedName) {
+        setName(storedName);
+      }
+
+      if (storedAvt) {
+        setAvt(storedAvt);
+      }
       setUser(true);
     }
   }, []);
@@ -31,11 +44,11 @@ const Navbar = () => {
     <nav className="bg-[#10375C] pt-4 pb-3 font-sans sticky top-0 z-10">
       <div className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto">
         <div className="flex items-center justify-between">
-          <Link to="#" className="text-white text-lg">
+          <Link to="/" className="text-white text-lg">
             ZenClass
           </Link>
           <div className="flex items-center space-x-4 gap-12">
-            <Link to="#!" className="text-white">
+            <Link to="/home" className="text-white">
               Home
             </Link>
             <Link to="#!" className="text-white">
@@ -51,10 +64,10 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <span className="text-white cursor-pointer">Name</span>
+                <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
-                  src="URL_TO_USER_AVATAR"
+                  src={avt}
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
@@ -66,16 +79,16 @@ const Navbar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                   anchorOrigin={{
-                    // vertical: "bottom", // Chỉnh đỉnh menu xuất hiện ở phía dưới người dùng
-                    horizontal: "left", // Chỉnh menu xuất hiện từ phía trái
+                    horizontal: "left",
                   }}
                   transformOrigin={{
-                    vertical: "top", // Chỉnh đỉnh menu xuất hiện ở phía trên người dùng
-                    // horizontal: "right", // Chỉnh menu xuất hiện từ phía phải
+                    vertical: "top",
                   }}
                   className="mt-12"
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <Link to="/profile">
+                    <MenuItem>Profile</MenuItem>
+                  </Link>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
