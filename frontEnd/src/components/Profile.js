@@ -7,13 +7,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,58 +21,26 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { DatePicker } from "@mui/lab";
 import { Facebook, Google } from "@mui/icons-material";
 import { useState } from "react";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Autocomplete from "@mui/material/Autocomplete";
 import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 
 const drawerWidth = 210;
-
-const options = ["Male", "Female", "Other"];
-
-function ControllableStates() {
-  const [value, setValue] = React.useState(options[0]);
-  const [inputValue, setInputValue] = React.useState("");
-
-  return (
-    <div>
-      <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        id="controllable-states-demo"
-        options={options}
-        renderInput={(params) => <TextField {...params} label="Gender" />}
-      />
-    </div>
-  );
-}
-
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
+    fullName: "",
     lastName: "",
-    email: "",
+    birthdate: "",
+    gender: "",
+    phone: "",
+    mail: "",
+    street: "",
+    city: "",
   });
   const [avatar, setAvatar] = useState(null);
+  const [isEditMode, setEditMode] = useState(true);
   const Navigate = useNavigate();
 
   const handleDrawerToggle = () => {
@@ -86,10 +52,10 @@ function ResponsiveDrawer(props) {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
   const handleAvatarChange = (e) => {
@@ -320,26 +286,36 @@ function ResponsiveDrawer(props) {
                   <Grid item xs={6}>
                     <TextField
                       id="fullName"
-                      label="Full Name"
-                      variant="outlined"
-                      fullWidth
+                      type="text"
                       placeholder="Enter full name"
+                      variant="outlined"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      disabled={!isEditMode}
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
                       id="lastName"
-                      label="Last Name"
-                      variant="outlined"
-                      fullWidth
+                      type="text"
                       placeholder="Enter last name"
+                      variant="outlined"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      disabled={!isEditMode}
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
                       id="birthdate"
+                      name="birthdate" // add name attribute
                       label="Date of Birth"
                       variant="outlined"
+                      value={formData.birthdate}
+                      onChange={handleChange}
+                      disabled={!isEditMode}
                       fullWidth
                       type="date"
                       InputLabelProps={{
@@ -348,15 +324,30 @@ function ResponsiveDrawer(props) {
                     />
                   </Grid>
                   <Grid item xs={6}>
-                    <ControllableStates />
+                    <select
+                      id="gender"
+                      name="gender" // add name attribute
+                      className="border-2 p-[16px] w-full rounded-md"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      disabled={!isEditMode}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
                       id="phone"
-                      label="Phone"
-                      variant="outlined"
-                      fullWidth
+                      type="text"
                       placeholder="Enter phone number"
+                      variant="outlined"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      disabled={!isEditMode}
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -364,8 +355,12 @@ function ResponsiveDrawer(props) {
                       id="mail"
                       label="Mail"
                       variant="outlined"
-                      fullWidth
                       placeholder="Enter mail"
+                      className="bg-gray-200"
+                      value={formData.mail}
+                      onChange={handleChange}
+                      disabled
+                      fullWidth
                     />
                   </Grid>
                 </Grid>
@@ -383,6 +378,8 @@ function ResponsiveDrawer(props) {
                       id="Street"
                       label="Street"
                       variant="outlined"
+                      value={formData.street}
+                      onChange={handleChange}
                       fullWidth
                       placeholder="Enter Street"
                     />
@@ -392,11 +389,15 @@ function ResponsiveDrawer(props) {
                       id="ciTy"
                       label="City"
                       variant="outlined"
+                      value={formData.city}
+                      onChange={handleChange}
                       fullWidth
                       placeholder="Enter City"
                     />
                   </Grid>
                 </Grid>
+
+                {/* BUTTON */}
                 <Grid container spacing={4} className="mt-1">
                   <Grid item xs={12}>
                     <div className="text-right">
@@ -429,10 +430,6 @@ function ResponsiveDrawer(props) {
 }
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window: PropTypes.func,
 };
 
