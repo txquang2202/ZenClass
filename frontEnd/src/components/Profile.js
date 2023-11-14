@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -68,11 +69,15 @@ function ControllableStates() {
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const Navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  const handleLogout = () => {
+    sessionStorage.removeItem("account");
+    Navigate("/");
+  };
   const drawer = (
     <div className="bg-[#10375C] h-screen text-white">
       <List className="text-center  bg-[#10375C]">
@@ -121,7 +126,7 @@ function ResponsiveDrawer(props) {
             <ListItemIcon>
               <ExitToAppIcon className="text-white" />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Logout" onClick={handleLogout} />
           </ListItemButton>
         </ListItem>
       </List>

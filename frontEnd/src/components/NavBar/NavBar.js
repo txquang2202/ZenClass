@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
+  const Navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +25,7 @@ const Navbar = () => {
     sessionStorage.removeItem("account");
     setUser(false);
     setAnchorEl(null);
+    Navigate("/");
   };
   return (
     <nav className="bg-[#10375C] pt-4 pb-3 font-sans sticky top-0 z-10">
