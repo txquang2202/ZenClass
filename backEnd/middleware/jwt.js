@@ -4,14 +4,42 @@ import env from "dotenv";
 env.config();
 
 const createToken = (user) => {
-  const { _id, username, email, role } = user;
+  const {
+    _id,
+    username,
+    email,
+    role,
+    img,
+    fullname,
+    birthdate,
+    gender,
+    phone,
+    street,
+    city,
+  } = user;
   //console.log(user);
   const secretKey = process.env.SECRET_KEY;
 
   try {
-    const token = jwt.sign({ _id, username, email, role }, secretKey, {
-      expiresIn: "1w",
-    });
+    const token = jwt.sign(
+      {
+        _id,
+        username,
+        email,
+        role,
+        img,
+        fullname,
+        birthdate,
+        gender,
+        phone,
+        street,
+        city,
+      },
+      secretKey,
+      {
+        expiresIn: "1w",
+      }
+    );
     return token;
   } catch (error) {
     console.error("Error creating token:", error);

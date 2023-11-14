@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema({
   email: String,
   role: Number,
   img: String,
+  fullname: String,
+  birthdate: Date,
+  phone: String,
+  gender: String,
+  street: String,
+  city: String,
 });
 
 // Tạo một Model từ Schema

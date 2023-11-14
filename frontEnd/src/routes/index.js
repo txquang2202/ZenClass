@@ -25,7 +25,7 @@ const routes = [
     isProtected: true,
   },
   {
-    path: "/profile",
+    path: "/profile/:id",
     page: ResponsiveDrawer,
     isShowHeader: false,
     isProtected: true,

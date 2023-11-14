@@ -22,26 +22,34 @@ import LockResetIcon from "@mui/icons-material/LockReset";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { Facebook, Google } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Container, Typography, Paper } from "@mui/material";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const drawerWidth = 210;
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    lastName: "",
-    birthdate: "",
-    gender: "",
-    phone: "",
-    mail: "",
-    street: "",
-    city: "",
-  });
+  const userData = JSON.parse(sessionStorage.getItem("account"));
   const [avatar, setAvatar] = useState(null);
-  const [isEditMode, setEditMode] = useState(true);
+  const date = new Date(userData.userData.birthdate)
+    .toISOString()
+    .split("T")[0];
+  const [formData, setFormData] = useState({
+    fullname: userData.userData.fullname,
+    username: userData.userData.username,
+    birthdate: date,
+    gender: userData.userData.gender,
+    phone: userData.userData.phone,
+    mail: userData.userData.email,
+    street: userData.userData.street,
+    city: userData.userData.city,
+    img: userData.userData.img,
+  });
+
   const Navigate = useNavigate();
+  const { id } = useParams();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -50,25 +58,55 @@ function ResponsiveDrawer(props) {
     sessionStorage.removeItem("account");
     Navigate("/");
   };
+  const handleCancel = () => {};
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
-      setAvatar(URL.createObjectURL(file));
+      //setAvatar(URL.createObjectURL(file));
+      setAvatar(file);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    console.log(formData, avatar);
+  //   console.log(formData, avatar);
+  // };
+  const handleEditProfile = async () => {
+    try {
+      const data = new FormData();
+
+      // Append text fields to FormData
+      data.append("fullname", formData.fullname);
+      data.append("username", formData.username);
+      data.append("birthdate", formData.birthdate);
+      data.append("gender", formData.gender);
+      data.append("phone", formData.phone);
+      data.append("mail", formData.mail);
+      data.append("street", formData.street);
+      data.append("city", formData.city);
+      data.append("img", avatar);
+
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/editprofile/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error editing profile:", error);
+    }
   };
 
   //sidebar
@@ -129,6 +167,20 @@ function ResponsiveDrawer(props) {
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
+  // useEffect(() => {
+  //   const userData = JSON.parse(sessionStorage.getItem("account"));
+  //   console.log(formData);
+  //   if (userData) {
+  //     const storedName = userData.userData.username;
+  //     const storedEmail = userData.userData.email;
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       username: storedName,
+  //       mail: storedEmail,
+  //     }));
+  //     console.log(formData);
+  //   }
+  // }, []);
 
   return (
     <Box sx={{ display: "flex", background: "#f5f6fa", height: "100vh" }}>
@@ -236,13 +288,13 @@ function ResponsiveDrawer(props) {
                       variant="h6"
                       className="user-name mt-2 mb-0 font-semibold text-[#10375C]"
                     >
-                      Yuki Hayashi
+                      {formData.username}
                     </Typography>
                     <Typography
                       variant="h8"
                       className="user-email text-sm font-normal text-gray-600"
                     >
-                      yuki@Maxwell.com
+                      {formData.mail}
                     </Typography>
                   </div>
                   <div className="about mt-8 text-center">
@@ -253,8 +305,8 @@ function ResponsiveDrawer(props) {
                       About
                     </Typography>
                     <Typography variant="body1" className="text-[16px]">
-                      I'm Yuki. Full Stack Designer I enjoy creating
-                      user-centric, delightful and human experiences.
+                      I'm {formData.username}. Full Stack Designer I enjoy
+                      creating user-centric, delightful and human experiences.
                     </Typography>
                     <div className="text-center mt-5">
                       <Facebook
@@ -285,26 +337,24 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="fullName"
+                      id="fullname"
                       type="text"
                       placeholder="Enter full name"
                       variant="outlined"
-                      value={formData.fullName}
+                      value={formData.fullname}
                       onChange={handleChange}
-                      disabled={!isEditMode}
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="lastName"
-                      type="text"
-                      placeholder="Enter last name"
+                      id="username"
+                      disabled
+                      placeholder="Username"
                       variant="outlined"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      disabled={!isEditMode}
+                      value={formData.username}
                       fullWidth
+                      className="bg-gray-200"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -315,7 +365,6 @@ function ResponsiveDrawer(props) {
                       variant="outlined"
                       value={formData.birthdate}
                       onChange={handleChange}
-                      disabled={!isEditMode}
                       fullWidth
                       type="date"
                       InputLabelProps={{
@@ -330,7 +379,6 @@ function ResponsiveDrawer(props) {
                       className="border-2 p-[16px] w-full rounded-md"
                       value={formData.gender}
                       onChange={handleChange}
-                      disabled={!isEditMode}
                     >
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>
@@ -346,19 +394,16 @@ function ResponsiveDrawer(props) {
                       variant="outlined"
                       value={formData.phone}
                       onChange={handleChange}
-                      disabled={!isEditMode}
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
                       id="mail"
-                      label="Mail"
                       variant="outlined"
                       placeholder="Enter mail"
                       className="bg-gray-200"
                       value={formData.mail}
-                      onChange={handleChange}
                       disabled
                       fullWidth
                     />
@@ -375,7 +420,7 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="Street"
+                      id="street"
                       label="Street"
                       variant="outlined"
                       value={formData.street}
@@ -386,7 +431,7 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="ciTy"
+                      id="city"
                       label="City"
                       variant="outlined"
                       value={formData.city}
@@ -406,6 +451,7 @@ function ResponsiveDrawer(props) {
                         color="secondary"
                         style={{ marginRight: "10px", borderRadius: "5px" }}
                         className="bg-red-700 hover:bg-red-600 text-white rounded-md px-4 py-2 mr-2"
+                        onClick={handleCancel}
                       >
                         Cancel
                       </Button>
@@ -414,6 +460,7 @@ function ResponsiveDrawer(props) {
                         color="primary"
                         style={{ borderRadius: "5px" }}
                         className="bg-[#10375C] hover:bg-[#10375C]-100 text-white rounded-md px-4 py-2"
+                        onClick={handleEditProfile}
                       >
                         Update
                       </Button>

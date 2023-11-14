@@ -6,7 +6,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
-
+  const [id, setId] = useState(null);
   const [name, setName] = useState("");
   const [avt, setAvt] = useState("");
   const Navigate = useNavigate();
@@ -24,12 +24,16 @@ const Navbar = () => {
       console.log(userData);
       const storedName = userData.userData.username;
       const storedAvt = userData.userData.img;
+      const storedId = userData.userData._id;
       if (storedName) {
         setName(storedName);
       }
 
       if (storedAvt) {
         setAvt(storedAvt);
+      }
+      if (storedId) {
+        setId(storedId);
       }
       setUser(true);
     }
@@ -86,7 +90,7 @@ const Navbar = () => {
                   }}
                   className="mt-12"
                 >
-                  <Link to="/profile">
+                  <Link to={`/profile/${id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
