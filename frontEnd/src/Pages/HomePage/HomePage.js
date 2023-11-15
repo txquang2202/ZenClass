@@ -3,30 +3,40 @@ import { Grid } from "@mui/material";
 import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Avatar } from "@material-ui/core";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
 import { styled } from "@mui/material/styles";
-
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function HomePage() {
-  const [avt, setAvt] = useState("");
+  const [avt, setAvt] = useState(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userData = JSON.parse(sessionStorage.getItem("account"));
-    if (userData) {
-      const storedAvt = userData.userData.img;
-
-      if (storedAvt) {
-        setAvt(storedAvt);
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/v1/getprofile/${id}`
+        );
+        const userData = response.data.user;
+        if (userData.img) {
+          setAvt(userData.img);
+        } else {
+          setAvt(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        navigate("/NotFound");
       }
-    }
-  }, []);
+    };
+
+    fetchUserData();
+  }, [id]);
   return (
     <div className="mt-3 container w-full lg:max-w-[calc(100%-20rem)] mx-auto max-w-4xl pb-10">
       <Swiper
@@ -47,21 +57,21 @@ function HomePage() {
         <SwiperSlide className="text-center text-lg flex justify-center items-center">
           <img
             className="block w-full h-64 object-cover"
-            src="./assets/imgs/slide-01.jpg"
+            src="/assets/imgs/slide-01.jpg"
             alt="Slide 1"
           />
         </SwiperSlide>
         <SwiperSlide className="text-center text-lg flex justify-center items-center">
           <img
             className="block w-full h-64 object-cover"
-            src="./assets/imgs/class-02.jpg"
+            src="/assets/imgs/class-02.jpg"
             alt="Slide 2"
           />
         </SwiperSlide>
         <SwiperSlide className="text-center text-lg flex justify-center items-center">
           <img
             className="block w-full h-64 object-cover"
-            src="./assets/imgs/slide-03.jpg"
+            src="/assets/imgs/slide-03.jpg"
             alt="Slide 3"
           />
         </SwiperSlide>
@@ -72,13 +82,13 @@ function HomePage() {
         <Grid item xs={3}>
           <section class="group mt-3 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
             <img
-              src="./assets/imgs/river.jpg"
+              src="/assets/imgs/river.jpg"
               class="w-full h-32 object-cover"
               alt="River Image"
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
-                src={`./assets/imgs/${avt}`}
+                src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -108,13 +118,13 @@ function HomePage() {
         <Grid item xs={3}>
           <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
             <img
-              src="./assets/imgs/river.jpg"
+              src="/assets/imgs/river.jpg"
               class="w-full h-32 object-cover"
               alt="River Image"
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
-                src={`./assets/imgs/${avt}`}
+                src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -144,13 +154,13 @@ function HomePage() {
         <Grid item xs={3}>
           <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
             <img
-              src="./assets/imgs/river.jpg"
+              src="/assets/imgs/river.jpg"
               class="w-full h-32 object-cover"
               alt="River Image"
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
-                src={`./assets/imgs/${avt}`}
+                src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -180,13 +190,13 @@ function HomePage() {
         <Grid item xs={3}>
           <section class="group mt-5 md:mt-10 lg:mt-15 border border-gray-300 rounded-lg overflow-hidden transition-transform transform hover:translate-y-[-16px] hover:rounded-lg hover:shadow-xl hover:duration-300">
             <img
-              src="./assets/imgs/river.jpg"
+              src="/assets/imgs/river.jpg"
               class="w-full h-32 object-cover"
               alt="River Image"
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
-                src={`./assets/imgs/${avt}`}
+                src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />

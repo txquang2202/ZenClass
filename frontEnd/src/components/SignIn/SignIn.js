@@ -84,9 +84,9 @@ const SignIn = ({ handleChange }) => {
       if (response.status === 200) {
         toast.success("Login successful");
         sessionStorage.setItem("account", JSON.stringify(response.data));
-
+        console.log(response.data);
         setTimeout(() => {
-          navigate("/home");
+          navigate(`/home/${response.data.userData._id}`);
         }, 1000);
       }
     } catch (error) {

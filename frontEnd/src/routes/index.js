@@ -19,7 +19,7 @@ const routes = [
     isProtected: false,
   },
   {
-    path: "/home",
+    path: "/home/:id",
     page: HomePage,
     isShowHeader: true,
     isProtected: true,

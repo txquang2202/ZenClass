@@ -45,8 +45,8 @@ function ResponsiveDrawer(props) {
   const [avatar, setAvatar] = React.useState(null);
   const [avatarPreview, setavatarPreview] = React.useState(null);
   const Navigate = useNavigate();
-  const { id } = useParams();
 
+  const { id } = useParams();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -138,7 +138,7 @@ function ResponsiveDrawer(props) {
     <div className="bg-[#10375C] h-screen text-white">
       <List className="text-center  bg-[#10375C]">
         <ListItem>
-          <Link to="/home">
+          <Link to={`/home/${id}`}>
             <ListItemButton>
               <ListItemIcon>
                 <HomeIcon className="text-white" />
