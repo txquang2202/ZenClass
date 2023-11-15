@@ -7,7 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { styled } from "@mui/material/styles";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -31,7 +30,13 @@ function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        navigate("/NotFound");
+        const session = JSON.parse(sessionStorage.getItem("account"));
+
+        if (!session || !session.userData) {
+          navigate("/signin");
+        } else {
+          navigate("/NotFound");
+        }
       }
     };
 

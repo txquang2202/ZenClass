@@ -58,7 +58,7 @@ const editUser = async (req, res) => {
     user.city = city || user.city;
     console.log(req.file);
     if (req.file) {
-      console.log(req.file);
+      //  console.log(req.file);
       user.img = req.file.filename;
     }
 

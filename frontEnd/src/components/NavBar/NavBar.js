@@ -13,6 +13,7 @@ const Navbar = () => {
   const [user, setUser] = useState(false);
   const [name, setName] = useState("");
   const [avt, setAvt] = useState("");
+  const [id, setId] = useState("");
   const Navigate = useNavigate();
 
   const handleMenu = (event) => {
@@ -23,23 +24,31 @@ const Navbar = () => {
     setAnchorEl(null);
   };
   const navigate = useNavigate();
-  const session = JSON.parse(sessionStorage.getItem("account"));
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const session = JSON.parse(sessionStorage.getItem("account"));
+
+        if (!session || !session.userData) {
+          setUser(false);
+          return;
+        }
+        setId(session.userData._id);
         const response = await axios.get(
           `http://localhost:8080/api/v1/getprofile/${session.userData._id}`
         );
         const userData = response.data.user;
+
         if (userData) {
           setUser(true);
         }
+
         if (userData.img) {
           setAvt(userData.img);
         } else {
           setAvt(null);
         }
+
         if (userData.username) {
           setName(userData.username);
         }
@@ -50,7 +59,8 @@ const Navbar = () => {
     };
 
     fetchUserData();
-  }, [session.userData._id]);
+  }, [id]);
+
   // useEffect(() => {
   //   const userData = JSON.parse(sessionStorage.getItem("account"));
   //   if (userData) {
@@ -86,7 +96,7 @@ const Navbar = () => {
             ZenClass
           </Link>
           <div className="flex items-center space-x-4 gap-12">
-            <Link to={`/home/${session.userData._id}`} className="text-white">
+            <Link to={`/home/${id}`} className="text-white">
               Home
             </Link>
             <Link to="#!" className="text-white">
@@ -124,7 +134,7 @@ const Navbar = () => {
                   }}
                   className="mt-12"
                 >
-                  <Link to={`/profile/${session.userData._id}`}>
+                  <Link to={`/profile/${id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
