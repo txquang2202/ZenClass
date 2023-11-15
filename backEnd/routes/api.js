@@ -12,15 +12,6 @@ import upload from "../middleware/multer.js";
 const router = express.Router();
 // @param {*} app: express app
 
-const checkLogin = (req, res, next) => {
-  const nonSecurePath = ["/", "/signup", "/signin"];
-  if (nonSecurePath.includes(req.path)) return next();
-
-  if (user) {
-    next();
-  } else {
-  }
-};
 const initApi = (app) => {
   router.post("/signUp", createUser);
   router.post("/login", handleLogin);
