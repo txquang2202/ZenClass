@@ -91,11 +91,18 @@ function HomePage() {
               class="w-full h-32 object-cover"
               alt="River Image"
             />
-            <div class="flex items-center justify-end pr-2 -mt-14">
+            <div class="flex items-center justify-end pr-2 -mt-14 ">
               <Avatar
                 src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
-                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+                style={{
+                  width: "84px",
+                  height: "84px",
+                  borderRadius: "50%",
+                  backgroundColor: "#bdbdbd",
+                  textAlign: "center",
+                  color: "#fafafa",
+                }}
               />
             </div>
             <div class="p-4">
@@ -131,7 +138,14 @@ function HomePage() {
               <Avatar
                 src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
-                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+                style={{
+                  width: "84px",
+                  height: "84px",
+                  borderRadius: "50%",
+                  backgroundColor: "#bdbdbd",
+                  textAlign: "center",
+                  color: "#fafafa",
+                }}
               />
             </div>
             <div class="p-4">
@@ -167,7 +181,14 @@ function HomePage() {
               <Avatar
                 src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
-                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+                style={{
+                  width: "84px",
+                  height: "84px",
+                  borderRadius: "50%",
+                  backgroundColor: "#bdbdbd",
+                  textAlign: "center",
+                  color: "#fafafa",
+                }}
               />
             </div>
             <div class="p-4">
@@ -203,7 +224,14 @@ function HomePage() {
               <Avatar
                 src={`/assets/imgs/${avt}`}
                 alt="User Avatar"
-                class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
+                style={{
+                  width: "84px",
+                  height: "84px",
+                  borderRadius: "50%",
+                  backgroundColor: "#bdbdbd",
+                  textAlign: "center",
+                  color: "#fafafa",
+                }}
               />
             </div>
             <div class="p-4">

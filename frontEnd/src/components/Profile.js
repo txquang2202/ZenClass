@@ -22,7 +22,7 @@ import LockResetIcon from "@mui/icons-material/LockReset";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { Facebook, Google } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -45,8 +45,9 @@ function ResponsiveDrawer(props) {
   const [avatar, setAvatar] = React.useState(null);
   const [avatarPreview, setavatarPreview] = React.useState(null);
   const Navigate = useNavigate();
-
   const { id } = useParams();
+  const todayDate = new Date().toISOString().split("T")[0];
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -87,19 +88,14 @@ function ResponsiveDrawer(props) {
     Navigate("/");
   };
 
-  const handleCancel = () => {
-    // Add any logic needed when canceling the form
-  };
+  // const handleCancel = () => {
+  //   // Add any logic needed when canceling the form
+  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  // const handleAvatarChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setAvatar(URL.createObjectURL(file)); // Lưu hình ảnh avatar vào state
-  //   }
-  // };
+
   const handleAvatarChange = (e) => {
     const file = e?.target?.files[0];
     const file1 = e?.target?.files[0];
@@ -386,6 +382,9 @@ function ResponsiveDrawer(props) {
                         InputLabelProps={{
                           shrink: true,
                         }}
+                        inputProps={{
+                          max: todayDate, // Set the maximum allowed date
+                        }}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -462,7 +461,7 @@ function ResponsiveDrawer(props) {
                   <Grid container spacing={4} className="mt-1">
                     <Grid item xs={12}>
                       <div className="text-right">
-                        <Button
+                        {/* <Button
                           variant="contained"
                           color="secondary"
                           style={{ marginRight: "10px", borderRadius: "5px" }}
@@ -470,7 +469,7 @@ function ResponsiveDrawer(props) {
                           onClick={handleCancel}
                         >
                           Cancel
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="contained"
                           color="primary"
