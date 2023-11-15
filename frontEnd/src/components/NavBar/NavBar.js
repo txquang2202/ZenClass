@@ -24,6 +24,7 @@ const Navbar = () => {
       const storedName = userData.userData.username;
       const storedAvt = userData.userData.img;
       const storedId = userData.userData._id;
+
       if (storedName) {
         setName(storedName);
       }
@@ -70,7 +71,7 @@ const Navbar = () => {
                 <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
-                  src={avt}
+                  src={`./assets/imgs/${avt}`}
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"

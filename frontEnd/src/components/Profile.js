@@ -43,7 +43,7 @@ function ResponsiveDrawer(props) {
     city: "",
   });
   const [avatar, setAvatar] = React.useState(null);
-  console.log(avatar);
+  const [avatarPreview, setavatarPreview] = React.useState(null);
   const Navigate = useNavigate();
   const { id } = useParams();
 
@@ -65,12 +65,11 @@ function ResponsiveDrawer(props) {
           street: userData.street || "",
           city: userData.city || "",
         });
-        // Set the avatar only if the user has an image
-        // if (userData.img) {
-        //   setImage(userData.img);
-        // } else {
-        //   setImage(null);
-        // }
+        if (userData.img) {
+          setAvatar(userData.img);
+        } else {
+          setAvatar(null);
+        }
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }
@@ -95,24 +94,22 @@ function ResponsiveDrawer(props) {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
+  // const handleAvatarChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setAvatar(URL.createObjectURL(file)); // Lưu hình ảnh avatar vào state
+  //   }
+  // };
   const handleAvatarChange = (e) => {
     const file = e?.target?.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Here, you can set the preview of the selected image if needed
-        // For example, you can use this.setState to update the state and show a preview
-        // this.setState({ previewImage: reader.result });
-      };
-      reader.readAsDataURL(file);
-
-      // Set the selected file to the avatar state
+    const file1 = e?.target?.files[0];
+    console.log(file1);
+    if (file && file1) {
       setAvatar(file);
+      setavatarPreview(URL.createObjectURL(file1));
     }
   };
-
+  console.log(avatarPreview);
   const handleEditProfile = async () => {
     try {
       const data = new FormData();
@@ -285,10 +282,11 @@ function ResponsiveDrawer(props) {
                           className="block cursor-pointer"
                         >
                           <Avatar
+                            src={avatarPreview || `/assets/imgs/${avatar}`}
                             alt="Avatar"
-                            src={avatar || "/path/to/default-avatar.jpg"}
                             className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
                           />
+
                           <input
                             type="file"
                             accept="image/*"

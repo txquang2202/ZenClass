@@ -1,5 +1,5 @@
-import React from "react";
-import { Grid} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Grid } from "@mui/material";
 import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Avatar } from "@material-ui/core";
@@ -15,8 +15,18 @@ import { styled } from "@mui/material/styles";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 function HomePage() {
-  const userData = JSON.parse(sessionStorage.getItem("account"));
+  const [avt, setAvt] = useState("");
 
+  useEffect(() => {
+    const userData = JSON.parse(sessionStorage.getItem("account"));
+    if (userData) {
+      const storedAvt = userData.userData.img;
+
+      if (storedAvt) {
+        setAvt(storedAvt);
+      }
+    }
+  }, []);
   return (
     <div className="mt-3 container w-full lg:max-w-[calc(100%-20rem)] mx-auto max-w-4xl pb-10">
       <Swiper
@@ -68,6 +78,7 @@ function HomePage() {
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
+                src={`./assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -103,6 +114,7 @@ function HomePage() {
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
+                src={`./assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -138,6 +150,7 @@ function HomePage() {
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
+                src={`./assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
@@ -173,6 +186,7 @@ function HomePage() {
             />
             <div class="flex items-center justify-end pr-2 -mt-14">
               <Avatar
+                src={`./assets/imgs/${avt}`}
                 alt="User Avatar"
                 class="w-[84px] h-[84px] rounded-full bg-[#bdbdbd] text-center text-[#fafafa]"
               />
