@@ -17,6 +17,8 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 const SignIn = ({ handleChange }) => {
   // LAYOUT
@@ -173,12 +175,39 @@ const SignIn = ({ handleChange }) => {
           >
             Sign in
           </Button>
+          <Grid container spacing={1} className="text-center mt-2 pb-[10px]">
+            <Grid item xs={6}>
+              <Button
+                color="inherit"
+                variant="text"
+                style={{ backgroundColor: "#F5F5F5" }}
+                fullWidth
+              >
+                <GoogleIcon style={{ fontSize: "28px", color: "#F44336" }} />
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                color="inherit"
+                variant="text"
+                style={{ backgroundColor: "#F5F5F5" }}
+                fullWidth
+              >
+                <FacebookIcon style={{ fontSize: "28px", color: "#3B5998" }} />
+              </Button>
+            </Grid>
+          </Grid>
         </form>
         <Typography>
-          <Link href="#">Forgot password?</Link>
+          <Link href="#" className="text-[#3B5998]">
+            Forgot password?
+          </Link>
         </Typography>
         <Typography>
-          Do you have an account? <Link to="/signup">Sign Up</Link>
+          Do you have an account?{" "}
+          <Link to="/signup" className="text-[#3B5998]">
+            Sign Up
+          </Link>
         </Typography>
       </Paper>
       <ToastContainer

@@ -9,7 +9,6 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 function App() {
   return (
     <Router>
-      {/* <Sidebar /> */}
       <div className="Container">
         <Routes>
           {routes.map((route) => {
