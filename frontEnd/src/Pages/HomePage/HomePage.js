@@ -111,12 +111,12 @@ function HomePage() {
 
       {/* Main content */}
       <div className="w-11/12 pl-6 flex-1">
-        {/* <DetailPage /> */}
-        {activeLink === "main" && (
+        <DetailPage />
+        {/* {activeLink === "main" && (
           <MainPage myClasses={myClasses} courses={courses} />
         )}
         {activeLink === "classes" && <ClassPage myClasses={myClasses} />}
-        {activeLink === "courses" && <CoursePage courses={courses} />}
+        {activeLink === "courses" && <CoursePage courses={courses} />} */}
       </div>
     </div>
   );
