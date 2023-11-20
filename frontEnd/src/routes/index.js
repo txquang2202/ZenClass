@@ -4,57 +4,71 @@ import SignInPage from "../components/SignIn/SignIn";
 import HomePage from "../Pages/HomePage/HomePage";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import ResponsiveDrawer from "../components/Profile";
-import MainPage from "../Pages/MainPage/MainPage";
+import HomeLayout from "../layouts/HomeLayout/HomeLayout";
+import DetailLayout from "../layouts/DetailLayout/DetailLayout";
+import ClassPage from "../Pages/ClassPage/ClassPage";
+import CoursePage from "../Pages/CoursePage/CoursePage";
+import DetailPage from "../Pages/DetailPage/DetailPage";
 
 const routes = [
   {
     path: "/signin",
     page: SignInPage,
-    isShowHeader: false,
+    layout: null,
     isProtected: false,
-    isShowSideBar: false,
   },
   {
     path: "/signup",
     page: SignUpPage,
-    isShowHeader: false,
+    layout: null,
     isProtected: false,
-    isShowSideBar: false,
   },
   {
     path: "/home/:id",
     page: HomePage,
-    isShowHeader: true,
+    layout: HomeLayout,
     isProtected: true,
-    isShowSideBar: true,
   },
   {
-    path: "/home/main/:id",
-    page: MainPage,
-    isShowHeader: true,
+    path: "/home/classes/:id",
+    page: ClassPage,
+    layout: HomeLayout,
     isProtected: true,
-    isShowSideBar: true,
+  },
+  {
+    path: "/home/courses/:id",
+    page: CoursePage,
+    layout: HomeLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/:id",
+    page: DetailPage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/",
+    page: HomePage,
+    layout: HomeLayout,
+    isProtected: true,
   },
   {
     path: "/profile/:id",
     page: ResponsiveDrawer,
-    isShowHeader: false,
+    layout: null,
     isProtected: true,
-    isShowSideBar: false,
   },
   {
     path: "/",
     page: LandingPage,
-    isShowHeader: true,
     isProtected: false,
-    isShowSideBar: false,
   },
   {
     path: "*",
     page: NotFoundPage,
-    isShowHeader: false,
+    layout: null,
     isProtected: false,
-    isShowSideBar: false,
   },
 ];
 

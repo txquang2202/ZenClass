@@ -1,10 +1,8 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import routes from "./routes";
-import Default from "./components/Default/Default";
+import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
-//import AdminRoutes from "./routes/AdminRoutes";
-//import UserRoutes from "./routes/UserRoutes";
 
 function App() {
   return (
@@ -13,8 +11,17 @@ function App() {
         <Routes>
           {routes.map((route) => {
             const Page = route.page;
-            const Layout = route.isShowHeader ? Default : Fragment;
+            // const Layout = route.isShowHeader ? DefaultLayout : Fragment;
             const Protect = route.isProtected ? ProtectedRoute : Fragment;
+
+            let Layout = DefaultLayout;
+
+            if (route.layout) {
+              Layout = route.layout;
+            } else if (route.layout === null) {
+              Layout = Fragment;
+            }
+
             return (
               <Route
                 path={route.path}

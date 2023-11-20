@@ -1,28 +1,13 @@
 import React from "react";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import NavDetail from "../../components/NavDetail/NavDetail";
 
 function DetailPage(props) {
   return (
     <>
       {/* NAVIGATION */}
-      <nav>
-        <div className="container mx-auto flex justify-between items-center">
-          {/* Các liên kết điều hướng */}
-          <div className="space-x-20 p-2 px-10 text-sm">
-            <Link to="/general" className="">
-              General
-            </Link>
-            <Link to="/people" className="">
-              People
-            </Link>
-            <Link to="/homework" className="">
-              Homework
-            </Link>
-          </div>
-        </div>
-        <hr />
-      </nav>
+      {/* <NavDetail /> */}
 
       {/* MAIN CONTENT */}
       <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">

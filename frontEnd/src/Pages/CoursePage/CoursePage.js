@@ -1,7 +1,8 @@
+// CoursePage.js
 import React from "react";
 import { Grid } from "@mui/material";
 
-function CoursePage({ courses }) {
+function CoursePage({}) {
   return (
     <>
       <div>
@@ -42,5 +43,58 @@ function CoursePage({ courses }) {
     </>
   );
 }
+
+const courses = [
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+  {
+    title: "Angular",
+    author: "Quoc Duy",
+    class: "KTPM 2",
+  },
+];
 
 export default CoursePage;
