@@ -10,6 +10,7 @@ import MainPage from "../MainPage/MainPage";
 import ClassPage from "../ClassPage/ClassPage";
 import CoursePage from "../CoursePage/CoursePage";
 import DetailPage from "../DetailPage/DetailPage";
+import Sidebar from "../../components/SideBar/SideBar";
 
 function HomePage() {
   const [avt, setAvt] = useState(null);
@@ -50,73 +51,17 @@ function HomePage() {
 
   return (
     <div className="mt-10 container w-full lg:max-w-[calc(100%-7rem)] mx-auto max-w-4xl pb-10 flex min-h-96">
-      <div className="w-1/5 md:w-1/6 lg:w-1/12 p-4 rounded-lg border border-solid border-gray-200 ">
-        {/* Sidebar content */}
-        <ul className="space-y-8 text-center">
-          <li className="">
-            <button
-              className={`btn bg-[#2E80CE] text-white px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl ${
-                activeLink === "main" ? "active" : ""
-              }`}
-              onClick={() => handleLinkClick("main")}
-            >
-              +
-            </button>
-          </li>
-          <li>
-            <a
-              href="#!"
-              onClick={() => handleLinkClick("main")}
-              className={`flex flex-col items-center text-gray-700 hover:text-gray-900   text-xs ${
-                activeLink === "main" ? "text-[#4E94E5]" : ""
-              }`}
-            >
-              <span className="w-8 h-8">
-                <HomeIcon className="w-full h-full" />
-              </span>
-              <span className="mt-1">Main Page</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#!"
-              onClick={() => handleLinkClick("classes")}
-              className={`flex flex-col items-center text-gray-700 hover:text-gray-900   text-xs ${
-                activeLink === "classes" ? "text-[#4E94E5]" : ""
-              }`}
-            >
-              <span className="w-8 h-8">
-                <SchoolIcon className="w-full h-full" />
-              </span>
-              <span className="mt-1">Classes</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#!"
-              onClick={() => handleLinkClick("courses")}
-              className={`flex flex-col items-center text-gray-700 hover:text-gray-900   text-xs ${
-                activeLink === "courses" ? "text-[#4E94E5]" : ""
-              }`}
-            >
-              <span className="w-8 h-8">
-                <AutoStoriesIcon className="w-full h-full" />
-              </span>
-              <span className="mt-1">Courses</span>
-            </a>
-          </li>
-          {/* Add more items as needed */}
-        </ul>
-      </div>
+      {/* Sidebar content */}
+      <Sidebar activeLink={activeLink} handleLinkClick={handleLinkClick} />
 
       {/* Main content */}
       <div className="w-11/12 pl-6 flex-1">
-        <DetailPage />
-        {/* {activeLink === "main" && (
+        {/* <DetailPage /> */}
+        {activeLink === "main" && (
           <MainPage myClasses={myClasses} courses={courses} />
         )}
         {activeLink === "classes" && <ClassPage myClasses={myClasses} />}
-        {activeLink === "courses" && <CoursePage courses={courses} />} */}
+        {activeLink === "courses" && <CoursePage courses={courses} />}
       </div>
     </div>
   );
