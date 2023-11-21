@@ -9,6 +9,9 @@ import DetailLayout from "../layouts/DetailLayout/DetailLayout";
 import ClassPage from "../Pages/ClassPage/ClassPage";
 import CoursePage from "../Pages/CoursePage/CoursePage";
 import DetailPage from "../Pages/DetailPage/DetailPage";
+import PeoplePage from "../Pages/PeoplePage/PeoplePage";
+import HomeWorkPage from "../Pages/HomeWorkPage/HomeWorkPage";
+import ServerErrorPage from "../Pages/ServerErrorPage/ServerErrorPage";
 
 const routes = [
   {
@@ -48,6 +51,18 @@ const routes = [
     isProtected: true,
   },
   {
+    path: "/home/classes/detail/people/:id",
+    page: PeoplePage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/homework/:id",
+    page: HomeWorkPage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
     path: "/home/",
     page: HomePage,
     layout: HomeLayout,
@@ -67,6 +82,12 @@ const routes = [
   {
     path: "*",
     page: NotFoundPage,
+    layout: null,
+    isProtected: false,
+  },
+  {
+    path: "500",
+    page: ServerErrorPage,
     layout: null,
     isProtected: false,
   },

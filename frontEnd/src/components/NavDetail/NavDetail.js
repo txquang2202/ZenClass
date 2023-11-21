@@ -1,22 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 function NavDetail(props) {
+  const [activeLink, setActiveLink] = useState("general");
+  const { id } = useParams();
+
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
+  };
+
   return (
     <div>
       <nav>
         <div className="container mx-auto flex justify-between items-center">
           {/* Các liên kết điều hướng */}
-          <div className="space-x-20 p-2 px-10 text-sm">
-            <Link to="/general" className="">
+          <div className="space-x-20 p-[10px] px-10 text-sm">
+            <Link
+              to={`/home/classes/detail/${id}`}
+              className={`${
+                activeLink === "general"
+                  ? "text-[#2E80CE]  border-b-2 border-[#2E80CE] pb-3"
+                  : ""
+              }`}
+              onClick={() => handleLinkClick("general")}
+            >
               General
             </Link>
-            <Link to="/people" className="">
+            <Link
+              to={`/home/classes/detail/people/${id}`}
+              className={` ${
+                activeLink === "people"
+                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-3"
+                  : ""
+              }`}
+              onClick={() => handleLinkClick("people")}
+            >
               People
             </Link>
-            <Link to="/homework" className="">
+            {/* <Link
+              to="#!"
+              className={` ${
+                activeLink === "homework"
+                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-3"
+                  : ""
+              }`}
+              onClick={() => handleLinkClick("homework")}
+            >
               Homework
-            </Link>
+            </Link> */}
           </div>
         </div>
         <hr />

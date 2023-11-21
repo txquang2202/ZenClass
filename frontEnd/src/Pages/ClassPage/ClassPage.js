@@ -1,7 +1,7 @@
 // ClassPage.js
 import React from "react";
 import { Grid } from "@mui/material";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function ClassPage({}) {
   const { id } = useParams();
@@ -21,7 +21,7 @@ function ClassPage({}) {
           >
             {myClasses.map((myClass, index) => (
               <Grid item xs={3} key={index}>
-                <section className="work-item  bg-white  border-[10px] border-[#EAF6FF] rounded-md transition-transform hover:translate-y-[-10px] hover:border-blue-400 cursor-pointer">
+                <section className="work-item bg-white border-[10px] border-[#EAF6FF] rounded-md transition-transform hover:translate-y-[-10px] hover:border-blue-400 cursor-pointer">
                   <div className="p-5">
                     <Link to={`/home/classes/detail/${id}`}>
                       <h2 className="font-semibold text-2xl leading-[1.38] text-[#10375c]  mb-3">
@@ -36,10 +36,7 @@ function ClassPage({}) {
                       </p>
                       <p className="  text-[#575F66] font-sora text-base font-light leading-[28px]">
                         Class:
-                        <span className=" text-[#2E80CE]">
-                          {" "}
-                          {myClass.class}
-                        </span>
+                        <span className=" text-[#2E80CE]">{myClass.class}</span>
                       </p>
                     </Link>
                   </div>

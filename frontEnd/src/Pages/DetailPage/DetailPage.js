@@ -1,14 +1,11 @@
 import React from "react";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
-// import { Link } from "react-router-dom";
-import NavDetail from "../../components/NavDetail/NavDetail";
+import { Link, useParams } from "react-router-dom";
 
 function DetailPage(props) {
+  const { id } = useParams();
   return (
     <>
-      {/* NAVIGATION */}
-      {/* <NavDetail /> */}
-
       {/* MAIN CONTENT */}
       <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">
         {/* Hero media */}
@@ -42,59 +39,59 @@ function DetailPage(props) {
           </article>
           {/* RIGHT */}
           <article className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
-            <section className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-              <div className="rounded-full p-2 bg-blue-400">
-                <ClassOutlinedIcon
-                  style={{ color: "white" }}
-                  fontSize="medium"
-                />
-              </div>
-              <div>
-                <a href="#!">
-                  <h2>
-                    Syllabus - CSC13114 Advanced Web Application DevelopmentFile
-                  </h2>
-                  <span className="text-gray-400 text-sm">16 thg 11</span>
-                </a>
-              </div>
-            </section>
-            <section className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-              <div className="rounded-full p-2 bg-blue-400">
-                <ClassOutlinedIcon
-                  style={{ color: "white" }}
-                  fontSize="medium"
-                />
-              </div>
-              <div>
-                <a href="#!">
-                  <h2>
-                    Syllabus - CSC13114 Advanced Web Application DevelopmentFile
-                  </h2>
-                  <span className="text-gray-400 text-sm">16 thg 11</span>
-                </a>
-              </div>
-            </section>
-            <section className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-              <div className="rounded-full p-2 bg-blue-400">
-                <ClassOutlinedIcon
-                  style={{ color: "white" }}
-                  fontSize="medium"
-                />
-              </div>
-              <div>
-                <a href="#!">
-                  <h2>
-                    Syllabus - CSC13114 Advanced Web Application DevelopmentFile
-                  </h2>
-                  <span className="text-gray-400 text-sm">16 thg 11</span>
-                </a>
-              </div>
-            </section>
+            {data.map((item, index) => (
+              <Link to={`/home/classes/detail/homework/${id}`}>
+                <section
+                  key={index}
+                  className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="rounded-full p-2 bg-blue-400">
+                    <ClassOutlinedIcon
+                      style={{ color: "white" }}
+                      fontSize="medium"
+                    />
+                  </div>
+                  <div>
+                    <a href="#!">
+                      <h2>{item.title}</h2>
+                      <span className="text-gray-400 text-sm">{item.date}</span>
+                    </a>
+                  </div>
+                </section>
+              </Link>
+            ))}
           </article>
         </section>
       </section>
     </>
   );
 }
+
+const data = [
+  {
+    title: "Syllabus - CSC13114 Advanced Web Application",
+    date: "16 thg 11",
+  },
+  {
+    title: "L01 - Course IntroductionFile",
+    date: "12 thg 10",
+  },
+  {
+    title: "Assignment Class Diagram",
+    date: "20 thg 9",
+  },
+  {
+    title: "Syllabus - CSC13114 Advanced Web Application",
+    date: "16 thg 11",
+  },
+  {
+    title: "L01 - Course IntroductionFile",
+    date: "12 thg 10",
+  },
+  {
+    title: "Assignment Class Diagram",
+    date: "20 thg 9",
+  },
+];
 
 export default DetailPage;

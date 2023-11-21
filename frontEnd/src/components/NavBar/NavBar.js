@@ -114,6 +114,7 @@ const Navbar = () => {
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
+                  className="cursor-pointer"
                 />
                 <Menu
                   id="simple-menu"
