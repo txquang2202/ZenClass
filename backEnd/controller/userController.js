@@ -87,5 +87,19 @@ const getUserProfile = async (req, res) => {
     res.status(500).send("Error while fetching user profile");
   }
 };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
 
-export { createUser, editUser, getUserProfile };
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "No users found!" });
+    }
+
+    res.json({ users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching users");
+  }
+};
+
+export { createUser, editUser, getUserProfile, getAllUsers };

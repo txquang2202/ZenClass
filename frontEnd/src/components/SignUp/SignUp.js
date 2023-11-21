@@ -18,6 +18,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { registerUser } from "../../services/userServices";
 
 const SignUp = () => {
   // LAYOUT
@@ -92,11 +93,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/signUp", {
-        username,
-        email,
-        password,
-      });
+      const response = await registerUser(username, email, password);
 
       if (response.status === 200) {
         toast.success("Register successful");
@@ -109,6 +106,7 @@ const SignUp = () => {
         toast.error(error.response.data.message);
       } else {
         console.error("Error while sending registration failed", error);
+        navigate("/NotFound");
       }
     }
   };

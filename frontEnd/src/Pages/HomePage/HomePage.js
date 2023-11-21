@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClassPage from "../ClassPage/ClassPage";
 import CoursePage from "../CoursePage/CoursePage";
+import { getUserID } from "../../services/userServices";
 
 function HomePage() {
   const [avt, setAvt] = useState(null);
@@ -14,9 +15,7 @@ function HomePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/getprofile/${id}`
-        );
+        const response = await getUserID(id);
         const userData = response.data.user;
         if (userData.img) {
           setAvt(userData.img);

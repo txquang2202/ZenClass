@@ -14,11 +14,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import { loginUser } from "../../services/userServices";
 
 const SignIn = ({ handleChange }) => {
   // LAYOUT
@@ -72,21 +72,12 @@ const SignIn = ({ handleChange }) => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/login",
-        {
-          username: username,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await loginUser(username, password);
 
       if (response.status === 200) {
         toast.success("Login successful");
         sessionStorage.setItem("account", JSON.stringify(response.data));
-        console.log(response.data);
+
         setTimeout(() => {
           navigate(`/home/${response.data.userData._id}`);
         }, 1000);
@@ -96,6 +87,7 @@ const SignIn = ({ handleChange }) => {
         toast.error("Username or password incorrect");
       } else {
         console.error("Error sending login request", error);
+        toast.error(error.message);
       }
     }
   };

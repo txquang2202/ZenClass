@@ -24,9 +24,9 @@ import Grid from "@mui/material/Grid";
 import { Facebook, Google } from "@mui/icons-material";
 import { useEffect } from "react";
 import { TextField, Button, Container, Typography, Paper } from "@mui/material";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { getUserID, updateUser } from "../services/userServices";
 
 const drawerWidth = 210;
 function ResponsiveDrawer(props) {
@@ -51,9 +51,7 @@ function ResponsiveDrawer(props) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/getprofile/${id}`
-        );
+        const response = await getUserID(id);
         const userData = response.data.user;
         const date = new Date(userData.birthdate).toISOString().split("T")[0];
         setFormData({
@@ -73,6 +71,7 @@ function ResponsiveDrawer(props) {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        Navigate("/NotFound");
       }
     };
 
@@ -118,14 +117,12 @@ function ResponsiveDrawer(props) {
       }
 
       // Make a PUT request with the FormData
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/editprofile/${id}`,
-        data
-      );
+      const response = await updateUser(id, data);
       toast.success("Update successful");
       console.log(response.data);
     } catch (error) {
       console.error("Error editing profile:", error);
+      Navigate("/NotFound");
     }
   };
 

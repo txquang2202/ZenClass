@@ -2,6 +2,7 @@ import {
   createUser,
   editUser,
   getUserProfile,
+  getAllUsers,
 } from "../controller/userController.js";
 import { handleLogin } from "../controller/authController.js";
 import { authenticateJWT } from "../middleware/jwt.js";
@@ -19,6 +20,7 @@ const initApi = (app) => {
   router.post("/protected", authenticateJWT);
   router.get("/getprofile/:id", getUserProfile);
   router.put("/editprofile/:id", upload.single("img"), editUser);
+  router.get("/getallusers", getAllUsers);
 
   return app.use("/api/v1/", router);
 };
