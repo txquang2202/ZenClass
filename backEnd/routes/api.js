@@ -16,7 +16,7 @@ const router = express.Router();
 const initApi = (app) => {
   router.post("/signUp", createUser);
   router.post("/login", handleLogin);
-  router.get("/home", checkUserToken);
+  router.get("/home", checkUserToken, getAllUsers);
   router.post("/protected", authenticateJWT);
   router.get("/getprofile/:id", getUserProfile);
   router.put("/editprofile/:id", upload.single("img"), editUser);

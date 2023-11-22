@@ -1,23 +1,13 @@
-import jwt from "jsonwebtoken";
-import env from "dotenv";
+import jwt, { decode } from "jsonwebtoken";
+import env, { decrypt } from "dotenv";
+import express from "express";
 
 env.config();
 
+const app = express();
+
 const createToken = (user) => {
-  const {
-    _id,
-    username,
-    email,
-    role,
-    img,
-    fullname,
-    birthdate,
-    gender,
-    phone,
-    street,
-    city,
-  } = user;
-  //console.log(user);
+  const { _id, username, role } = user;
   const secretKey = process.env.SECRET_KEY;
 
   try {
@@ -25,19 +15,11 @@ const createToken = (user) => {
       {
         _id,
         username,
-        email,
         role,
-        img,
-        fullname,
-        birthdate,
-        gender,
-        phone,
-        street,
-        city,
       },
       secretKey,
       {
-        expiresIn: "1w",
+        expiresIn: "1h",
       }
     );
     return token;
@@ -50,6 +32,7 @@ const createToken = (user) => {
 const authenticateJWT = (token) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
     return decoded;
   } catch (error) {
     console.error("Error authenticating token:", error.message);
@@ -74,7 +57,6 @@ const checkUserToken = (req, res, next) => {
       message: "Not authenticated user",
     });
   }
-  console.log(cookies.token);
 };
 
 export { createToken, authenticateJWT, checkUserToken };

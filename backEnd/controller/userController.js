@@ -44,7 +44,6 @@ const editUser = async (req, res) => {
   try {
     const { fullname, birthdate, phone, gender, street, city, img } = req.body;
     const userId = req.params.id;
-    console.log(req.body);
     const user = await User.findById(userId);
 
     if (!user) {
@@ -56,9 +55,7 @@ const editUser = async (req, res) => {
     user.gender = gender || user.gender;
     user.street = street || user.street;
     user.city = city || user.city;
-    console.log(req.file);
     if (req.file) {
-      //  console.log(req.file);
       user.img = req.file.filename;
     }
 
@@ -79,7 +76,6 @@ const getUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
-    //console.log(user);
 
     res.json({ user });
   } catch (error) {
@@ -89,6 +85,7 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
+    console.log(req.cookies);
     const users = await User.find();
 
     if (!users || users.length === 0) {

@@ -1,16 +1,10 @@
 import axios from "../setup/axios";
 
 const loginUser = (username, password) => {
-  return axios.post(
-    "/api/v1/login",
-    {
-      username: username,
-      password: password,
-    },
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post("/api/v1/login", {
+    username: username,
+    password: password,
+  });
 };
 const registerUser = (username, email, password) => {
   return axios.post("/api/v1/signUp", {

@@ -104,7 +104,6 @@ function ResponsiveDrawer(props) {
       setavatarPreview(URL.createObjectURL(file1));
     }
   };
-  console.log(avatarPreview);
   const handleEditProfile = async () => {
     try {
       const data = new FormData();
