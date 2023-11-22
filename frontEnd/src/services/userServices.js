@@ -7,7 +7,7 @@ const loginUser = (username, password) => {
   });
 };
 const registerUser = (username, email, password) => {
-  return axios.post("/api/v1/signUp", {
+  return axios.post("/api/v1/register", {
     username,
     email,
     password,

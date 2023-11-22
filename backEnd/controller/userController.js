@@ -1,11 +1,11 @@
 import User from "../models/user.js";
+import Comment from "../models/comments.js";
 import env from "dotenv";
 import bcrypt from "bcrypt";
 
 env.config();
 const createUser = async (req, res) => {
   try {
-    console.log(req.body);
     const { username, password, email, fullname, birthdate, phone, gender } =
       req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -98,5 +98,42 @@ const getAllUsers = async (req, res) => {
     res.status(500).send("Error while fetching users");
   }
 };
+const addComment = async (req, res) => {
+  try {
+    const { username, content, avt } = req.body;
+    const newComment = new Comment({
+      username,
+      content,
+      avt,
+      date: 1111,
+    });
 
-export { createUser, editUser, getUserProfile, getAllUsers };
+    await newComment.save();
+    res.json({ message: "Adding succesfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+const getAllUsersComments = async (req, res) => {
+  try {
+    const comments = await Comment.find();
+
+    if (!comments || comments.length === 0) {
+      return res.status(404).json({ message: "No comments found!" });
+    }
+
+    res.json({ comments });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching users");
+  }
+};
+export {
+  createUser,
+  editUser,
+  getUserProfile,
+  getAllUsers,
+  getAllUsersComments,
+  addComment,
+};
