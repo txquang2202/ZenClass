@@ -4,13 +4,17 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StyledEngineProvider } from "@mui/styled-engine";
+import { store } from "./redux/store"; // Import Redux store
+import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <App />
-    </StyledEngineProvider>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <App />
+      </StyledEngineProvider>
+    </Provider>
   </React.StrictMode>
 );
 

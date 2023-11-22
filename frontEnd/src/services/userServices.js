@@ -23,4 +23,19 @@ const getAllUsers = () => {
   return axios.get("/api/v1/getallusers");
 };
 
-export { loginUser, registerUser, updateUser, getUserID, getAllUsers };
+const postComment = () => {
+  return axios.post(`/api/v1/addComments`);
+};
+const getComments = () => {
+  return axios.get("/api/v1/getComments");
+};
+
+export {
+  loginUser,
+  registerUser,
+  updateUser,
+  getUserID,
+  getAllUsers,
+  postComment,
+  getComments,
+};
