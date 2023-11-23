@@ -1,35 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Comment from "../../components/Comment/Comment";
 import SendIcon from "@mui/icons-material/Send";
+import { getComments, postComment } from "../../services/userServices";
 
 function HomeWorkPage(props) {
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState([
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Lê Ngọc Như Ý",
-      content: "Great post! Thanks for sharing.",
-      date: "11/21/2023",
-    },
-  ]);
+  const [comments, setComments] = useState([]);
+  const data = JSON.parse(sessionStorage.getItem("account"));
+  const username = data.userData.username;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getComments();
+        setComments(response.data.comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() !== "") {
       const newCommentObj = {
-        avatarSrc: "/static/images/avatar/2.jpg",
-        name: "New Commenter",
+        username: username,
         content: newComment,
-        date: new Date().toLocaleDateString(),
+        avatarSrc: "/static/images/avatar/2.jpg",
+        date: new Date(),
       };
+      try {
+        const response = await postComment(newCommentObj);
 
-      setComments([...comments, newCommentObj]);
-      setNewComment("");
+        setComments([...comments, response.data]);
+        setNewComment("");
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
     }
   };
   return (
@@ -66,8 +80,6 @@ function HomeWorkPage(props) {
           {/* Add a form for adding new comments */}
           <form onSubmit={handleCommentSubmit} className="mt-6 flex">
             <Avatar
-              //   alt={username || "Default User"}
-              //   src={userAvatarSrc || "/path/to/default/avatar.jpg"}
               alt={"Default User"}
               src={"/path/to/default/avatar.jpg"}
               className="mr-3"

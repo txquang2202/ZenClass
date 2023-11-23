@@ -14,6 +14,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
+import { sendEmail } from "../../services/userServices";
 
 function ForgotPassword(props) {
   // LAYOUT
@@ -50,31 +51,30 @@ function ForgotPassword(props) {
   };
 
   const handleEmail = async () => {
-    // const { email } = credentials;
+    const { email } = credentials;
 
-    // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    // if (!email || !email.match(emailRegex)) {
-    //   toast.error("Please enter a valid email address");
-    //   return;
-    // }
-
-    // try {
-    //   const response = await registerUser(email);
-
-    //   if (response.status === 200) {
-    //     toast.success("Send reset code successful");
-    //     setTimeout(() => {
-    //       navigate("/signin");
-    //     }, 1000);
-    //   }
-    // } catch (error) {
-    //   if (error.response.status === 400) {
-    //     toast.error(error.response.data.message);
-    //   } else {
-    //     console.error("Error while sending registration failed", error);
-    //     navigate("/NotFound");
-    //   }
-    // }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email || !email.match(emailRegex)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    console.log(email);
+    try {
+      const response = await sendEmail({ email: email });
+      if (response.status === 200) {
+        toast.success("Send reset code successful");
+        setTimeout(() => {
+          navigate("/signin");
+        }, 1000);
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Error while sending email", error);
+        navigate("/NotFound");
+      }
+    }
   };
 
   const handleKeyPress = (e) => {

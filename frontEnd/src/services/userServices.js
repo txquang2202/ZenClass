@@ -22,14 +22,15 @@ const getUserID = (id) => {
 const getAllUsers = () => {
   return axios.get("/api/v1/getallusers");
 };
-
-const postComment = () => {
-  return axios.post(`/api/v1/addComments`);
+const postComment = (data) => {
+  return axios.post(`/api/v1/addComments`, data);
 };
 const getComments = () => {
   return axios.get("/api/v1/getComments");
 };
-
+const sendEmail = (data) => {
+  return axios.post("/api/v1/sendMail", data);
+};
 export {
   loginUser,
   registerUser,
@@ -38,4 +39,5 @@ export {
   getAllUsers,
   postComment,
   getComments,
+  sendEmail,
 };
