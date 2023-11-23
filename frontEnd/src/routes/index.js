@@ -12,6 +12,7 @@ import DetailPage from "../Pages/DetailPage/DetailPage";
 import PeoplePage from "../Pages/PeoplePage/PeoplePage";
 import HomeWorkPage from "../Pages/HomeWorkPage/HomeWorkPage";
 import ServerErrorPage from "../Pages/ServerErrorPage/ServerErrorPage";
+import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 
 const routes = [
   {
@@ -23,6 +24,12 @@ const routes = [
   {
     path: "/signup",
     page: SignUpPage,
+    layout: null,
+    isProtected: false,
+  },
+  {
+    path: "/forgot-password",
+    page: ForgotPassword,
     layout: null,
     isProtected: false,
   },

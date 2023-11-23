@@ -191,7 +191,7 @@ const SignIn = ({ handleChange }) => {
           </Grid>
         </form>
         <Typography>
-          <Link href="#" className="text-[#3B5998]">
+          <Link to="/forgot-password" className="text-[#3B5998]">
             Forgot password?
           </Link>
         </Typography>
