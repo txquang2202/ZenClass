@@ -22,7 +22,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const session = JSON.parse(sessionStorage.getItem("account"));
+        const session = JSON.parse(localStorage.getItem("account"));
 
         if (!session || !session.userData) {
           setUser(false);
@@ -78,7 +78,7 @@ const Navbar = () => {
   //   }
   // }, []);
   const handleLogout = () => {
-    sessionStorage.removeItem("account");
+    localStorage.removeItem("account");
     setUser(false);
     setAnchorEl(null);
     Navigate("/");

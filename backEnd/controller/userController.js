@@ -2,37 +2,32 @@ import User from "../models/user.js";
 import Comment from "../models/comments.js";
 import env from "dotenv";
 import bcrypt from "bcrypt";
-import transporter from "../middleware/nodemailer.js";
-
+import {
+  sendEmail,
+  verifyEmail,
+  generateUniqueToken,
+} from "./authController.js";
 env.config();
-const sendEmail = async (req, res) => {
-  const mailOptions = {
-    from: "Zen Class Corporation stellaron758@gmail.com",
-    to: req.body.email,
-    subject: "[Verification Email]",
-    text: "Your verification code is: " + req.body.email,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    } else {
-      console.log("Email sent: " + info.response);
-      res.status(200).send("Email sent successfully!!");
-    }
-  });
-};
 
 const createUser = async (req, res) => {
   try {
     const { username, password, email, fullname, birthdate, phone, gender } =
       req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Generate a verification token
+    const verificationToken = generateUniqueToken();
+
     const newUser = new User({
       username,
       password: hashedPassword,
       email,
+      verificationToken,
+      isVerified: false,
+      role: 0,
+      img: "",
+      fullname,
+      birthdate,
       role: 0,
       img: "",
       fullname: "",
@@ -54,12 +49,18 @@ const createUser = async (req, res) => {
     }
 
     await newUser.save();
-    res.json({ message: "Đăng ký thành công" });
+
+    await sendEmail(email, verificationToken);
+
+    res.json({
+      message: "Register successfully, check your email",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Đã xảy ra lỗi.");
   }
 };
+
 const editUser = async (req, res) => {
   try {
     const { fullname, birthdate, phone, gender, street, city, img } = req.body;
@@ -158,4 +159,5 @@ export {
   getAllUsersComments,
   addComment,
   sendEmail,
+  verifyEmail,
 };

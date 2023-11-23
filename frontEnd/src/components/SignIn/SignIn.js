@@ -75,9 +75,10 @@ const SignIn = ({ handleChange }) => {
       const response = await loginUser(username, password);
 
       if (response.status === 200) {
-        toast.success("Login successful");
-        sessionStorage.setItem("account", JSON.stringify(response.data));
-
+        if (response.data.userData.isVerified) {
+          localStorage.setItem("account", JSON.stringify(response.data));
+          toast.success("Login successful");
+        } else toast.error("This email has not been verified");
         setTimeout(() => {
           navigate(`/home/${response.data.userData._id}`);
         }, 1000);

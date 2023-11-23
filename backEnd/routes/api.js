@@ -7,7 +7,7 @@ import {
   addComment,
   sendEmail,
 } from "../controller/userController.js";
-import { handleLogin } from "../controller/authController.js";
+import { handleLogin, verifyEmail } from "../controller/authController.js";
 import { authenticateJWT } from "../middleware/jwt.js";
 import express from "express";
 import { checkUserToken } from "../middleware/jwt.js";
@@ -26,8 +26,8 @@ const initApi = (app) => {
   router.get("/getallusers", getAllUsers);
   router.get("/getComments", getAllUsersComments);
   router.post("/addComments", addComment);
-  router.post("/sendMail", sendEmail);
-
+  // router.post("/sendMail", sendEmail);
+  router.get("/verify", verifyEmail);
   return app.use("/api/v1/", router);
 };
 

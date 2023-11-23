@@ -52,7 +52,6 @@ function ForgotPassword(props) {
 
   const handleEmail = async () => {
     const { email } = credentials;
-
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email || !email.match(emailRegex)) {
       toast.error("Please enter a valid email address");
@@ -124,6 +123,7 @@ function ForgotPassword(props) {
             fullWidth
             onClick={handleEmail}
             className="text-xl"
+            onKeyPress={handleKeyPress}
           >
             Send Reset Code
           </Button>

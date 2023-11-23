@@ -7,18 +7,20 @@ import cors from "cors";
 import initApi from "./routes/api.js";
 
 const app = express();
+//environment
+env.config();
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.BASE_URL,
     credentials: true,
   })
 );
-//environment
-env.config();
-const port = process.env.PORT || 3000;
+
+const port = process.env.PORT;
 app.use("/assets", express.static("../frontend/assets"));
 //connect to database
 connect();
