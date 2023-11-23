@@ -29,7 +29,7 @@ function ClassPage({}) {
                       </h2>
                       <hr className="border-t border-gray-200 dark:border-[#575F66] mb-3" />
                       <p className=" text-[#575F66] font-sora text-base font-light leading-[28px]">
-                        Teacher:
+                        Teacher: 
                         <span className=" text-[#2E80CE]">
                           {myClass.author}
                         </span>

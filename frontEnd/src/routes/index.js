@@ -3,7 +3,7 @@ import SignUpPage from "../components/SignUp/SignUp";
 import SignInPage from "../components/SignIn/SignIn";
 import HomePage from "../Pages/HomePage/HomePage";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
-import ResponsiveDrawer from "../components/Profile";
+import ResponsiveDrawer from "../Pages/ProfilePage/ProfilePage";
 import HomeLayout from "../layouts/HomeLayout/HomeLayout";
 import DetailLayout from "../layouts/DetailLayout/DetailLayout";
 import ClassPage from "../Pages/ClassPage/ClassPage";
@@ -16,6 +16,7 @@ import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import GradePage from "../Pages/GradePage/GradePage";
 import SendMailSuccessPage from "../Pages/SendMailSuccessPage/SendMailSuccessPage";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
+import UserLayout from "../layouts/UserLayout/UserLayout";
 
 const routes = [
   {
@@ -99,7 +100,7 @@ const routes = [
   {
     path: "/profile/:id",
     page: ResponsiveDrawer,
-    layout: null,
+    layout: UserLayout,
     isProtected: true,
   },
   {
