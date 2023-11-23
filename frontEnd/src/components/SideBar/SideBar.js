@@ -14,7 +14,7 @@ function SideBar() {
 
   return (
     <div className="w-1/5 md:w-1/6 lg:w-1/12 p-4 rounded-lg border border-solid border-gray-200 pb-96">
-      <ul className="space-y-8 text-center">
+      <ul className="space-y-8 text-center ">
         <li className="">
           <button className="btn bg-[#2E80CE] text-white px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl">
             +
@@ -24,7 +24,7 @@ function SideBar() {
           <Link
             to={`/home/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "main" ? "text-[#2E80CE]" : ""
+              activeLink === "main" ? "text-blue-300" : ""
             }`}
             onClick={() => handleLinkClick("main")}
           >
@@ -38,7 +38,7 @@ function SideBar() {
           <Link
             to={`/home/classes/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "classes" ? "text-[#2E80CE]" : ""
+              activeLink === "classes" ? "text-blue-300" : ""
             }`}
             onClick={() => handleLinkClick("classes")}
           >
@@ -52,7 +52,7 @@ function SideBar() {
           <Link
             to={`/home/courses/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "courses" ? "text-[#2E80CE]" : ""
+              activeLink === "courses" ? "text-blue-300" : ""
             }`}
             onClick={() => handleLinkClick("courses")}
           >

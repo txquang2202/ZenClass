@@ -12,7 +12,7 @@ function ClassPage({}) {
           My Classes
         </h1>
         {myClasses.length === 0 ? (
-          <p className="text-gray-400  mb-10">No course available</p>
+          <p className="text-gray-400 mb-10">No course available</p>
         ) : (
           <Grid
             container
@@ -29,14 +29,18 @@ function ClassPage({}) {
                       </h2>
                       <hr className="border-t border-gray-200 dark:border-[#575F66] mb-3" />
                       <p className=" text-[#575F66] font-sora text-base font-light leading-[28px]">
-                        Teacher: 
+                        Teacher:
                         <span className=" text-[#2E80CE]">
+                          {" "}
                           {myClass.author}
                         </span>
                       </p>
                       <p className="  text-[#575F66] font-sora text-base font-light leading-[28px]">
                         Class:
-                        <span className=" text-[#2E80CE]">{myClass.class}</span>
+                        <span className=" text-[#2E80CE]">
+                          {" "}
+                          {myClass.class}
+                        </span>
                       </p>
                     </Link>
                   </div>

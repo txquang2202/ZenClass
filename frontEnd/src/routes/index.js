@@ -50,6 +50,12 @@ const routes = [
     isProtected: false,
   },
   {
+    path: "/profile/reset-password/:id",
+    page: ResetPassword,
+    layout: UserLayout,
+    isProtected: false,
+  },
+  {
     path: "/home/:id",
     page: HomePage,
     layout: HomeLayout,

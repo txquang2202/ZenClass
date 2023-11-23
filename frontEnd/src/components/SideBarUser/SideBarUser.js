@@ -1,27 +1,9 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
 import HomeIcon from "@mui/icons-material/Home";
-import SettingsIcon from "@mui/icons-material/Settings";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { useParams } from "react-router-dom";
-import SchoolIcon from "@mui/icons-material/School";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import { Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Sidebar = () => {
@@ -35,7 +17,7 @@ const Sidebar = () => {
   const Navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("account");
+    localStorage.removeItem("account");
     Navigate("/");
   };
 
@@ -59,7 +41,7 @@ const Sidebar = () => {
         </li>
         <li>
           <Link
-            to={`/home/profile/${id}`}
+            to={`/profile/${id}`}
             className="block py-6 px-8 text-white text-lg"
             style={{
               color: activeLink === "profile" ? "#2E80CE" : "white",
@@ -75,7 +57,7 @@ const Sidebar = () => {
 
         <li>
           <Link
-            to={`/home/courses/${id}`}
+            to={`/profile/reset-password/${id}`}
             className="block py-6 px-8 text-white text-lg"
             style={{
               color: activeLink === "courses" ? "#2E80CE" : "white",
@@ -91,7 +73,7 @@ const Sidebar = () => {
 
         <li>
           <span
-            to={`/home/courses/${id}`}
+            // to={`/home/courses/${id}`}
             className="block py-6 px-8 cursor-pointer text-white text-lg"
             style={{
               color:

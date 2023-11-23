@@ -11,7 +11,7 @@ function Default({ children }) {
           <SideBarUser />
         </div>
         {/* Main content */}
-        <div className="basis-11/12">{children}</div>
+        <div className="basis-11/12 bg-white">{children}</div>
       </div>
     </div>
   );

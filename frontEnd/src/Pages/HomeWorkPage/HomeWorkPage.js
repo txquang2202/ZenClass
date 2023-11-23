@@ -7,9 +7,11 @@ import { getComments, postComment } from "../../services/userServices";
 function HomeWorkPage(props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
-  const data = JSON.parse(sessionStorage.getItem("account"));
+  const data = JSON.parse(localStorage.getItem("account"));
   const username = data.userData.username;
-
+  /////////////////////////////////////////////////////////////////////////
+  /////////////////            CHUA FIX COMMENT          //////////////////
+  /////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     const fetchData = async () => {
       try {
