@@ -64,7 +64,7 @@ function ForgotPassword(props) {
       if (response.status === 200) {
         toast.success("Send reset code successful");
         setTimeout(() => {
-          navigate("/signin");
+          navigate("/send-mail-success");
         }, 1000);
       }
     } catch (error) {

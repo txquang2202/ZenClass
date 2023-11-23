@@ -37,17 +37,17 @@ function NavDetail(props) {
             >
               People
             </Link>
-            {/* <Link
-              to="#!"
+            <Link
+              to={`/home/classes/detail/grade/${id}`}
               className={` ${
-                activeLink === "homework"
+                activeLink === "grade"
                   ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-3"
                   : ""
               }`}
-              onClick={() => handleLinkClick("homework")}
+              onClick={() => handleLinkClick("grade")}
             >
-              Homework
-            </Link> */}
+              Grade
+            </Link>
           </div>
         </div>
         <hr />
