@@ -13,6 +13,9 @@ import PeoplePage from "../Pages/PeoplePage/PeoplePage";
 import HomeWorkPage from "../Pages/HomeWorkPage/HomeWorkPage";
 import ServerErrorPage from "../Pages/ServerErrorPage/ServerErrorPage";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
+import GradePage from "../Pages/GradePage/GradePage";
+import SendMailSuccessPage from "../Pages/SendMailSuccessPage/SendMailSuccessPage";
+import ResetPassword from "../components/ResetPassword/ResetPassword";
 
 const routes = [
   {
@@ -30,6 +33,18 @@ const routes = [
   {
     path: "/forgot-password",
     page: ForgotPassword,
+    layout: null,
+    isProtected: false,
+  },
+  {
+    path: "/send-mail-success",
+    page: SendMailSuccessPage,
+    layout: null,
+    isProtected: false,
+  },
+  {
+    path: "/reset-password",
+    page: ResetPassword,
     layout: null,
     isProtected: false,
   },
@@ -60,6 +75,12 @@ const routes = [
   {
     path: "/home/classes/detail/people/:id",
     page: PeoplePage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/grade/:id",
+    page: GradePage,
     layout: DetailLayout,
     isProtected: true,
   },
