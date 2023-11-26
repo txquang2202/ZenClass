@@ -46,7 +46,7 @@ function NavDetail(props) {
               }`}
               onClick={() => handleLinkClick("grade")}
             >
-              Grade
+              Grade structure
             </Link>
           </div>
         </div>
