@@ -86,8 +86,8 @@ function ResetPassword(props) {
             fullWidth
             label="New Password"
             placeholder="Enter your new password"
-            type="new password"
-            name="newPassword"
+            type="password"
+            name="password"
             value={userDetails.password}
             onChange={handleInputChange}
           />
