@@ -1,29 +1,11 @@
-// StudentTable.js
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
+import { GradeContext } from "../../context/GradeContext";
 
-const StudentTable = () => {
-  const [grades, setGrades] = useState([
-    {
-      id: 1,
-      gradeCode: "GR001",
-      topic: "Assignments",
-      ratio: 30,
-    },
-    {
-      id: 2,
-      gradeCode: "GR002",
-      topic: "Projects",
-      ratio: 30,
-    },
-    {
-      id: 3,
-      gradeCode: "GR003",
-      topic: "Exams",
-      ratio: 40,
-    },
-  ]);
+const GradeStructure = () => {
+  const { grades, setGrades } = useContext(GradeContext); // Use the shared state from GradeContext
 
+  // ... (rest of the code remains unchanged)
   const [edit, setEdit] = useState(null);
   const [tempRatio, setTempRatio] = useState(0);
   const [tempTopic, setTempTopic] = useState("New Grade");
@@ -111,6 +93,7 @@ const StudentTable = () => {
       <h1 className="text-2xl text-[#10375c] font-bold mb-4">
         Grade structure
       </h1>
+      {/* ... (rest of the code remains unchanged) */}
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr>
@@ -229,4 +212,4 @@ const StudentTable = () => {
   );
 };
 
-export default StudentTable;
+export default GradeStructure;

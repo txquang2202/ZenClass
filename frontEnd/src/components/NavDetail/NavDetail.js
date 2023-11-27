@@ -38,13 +38,24 @@ function NavDetail(props) {
               People
             </Link>
             <Link
-              to={`/home/classes/detail/grade/${id}`}
+              to={`/home/classes/detail/grade-board/${id}`}
               className={` ${
-                activeLink === "grade"
+                activeLink === "grade-board"
                   ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-3"
                   : ""
               }`}
-              onClick={() => handleLinkClick("grade")}
+              onClick={() => handleLinkClick("grade-board")}
+            >
+              Grade board
+            </Link>
+            <Link
+              to={`/home/classes/detail/grade-structure/${id}`}
+              className={` ${
+                activeLink === "grade-structure"
+                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-3"
+                  : ""
+              }`}
+              onClick={() => handleLinkClick("grade-structure")}
             >
               Grade structure
             </Link>

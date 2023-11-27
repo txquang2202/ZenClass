@@ -155,6 +155,7 @@ const SignUp = () => {
             label="User name"
             placeholder="Enter your name"
             name="username"
+            variant="standard"
             value={userDetails.username}
             onChange={handleInputChange}
           />
@@ -163,6 +164,7 @@ const SignUp = () => {
             label="Email"
             placeholder="Enter your email"
             name="email"
+            variant="standard"
             value={userDetails.email}
             onChange={handleInputChange}
           />
@@ -172,6 +174,7 @@ const SignUp = () => {
             placeholder="Enter your password"
             type="password"
             name="password"
+            variant="standard"
             value={userDetails.password}
             onChange={handleInputChange}
           />
@@ -181,6 +184,7 @@ const SignUp = () => {
             placeholder="Confirm your password"
             type="password"
             name="confirmPassword"
+            variant="standard"
             value={userDetails.confirmPassword}
             onChange={handleInputChange}
             onKeyPress={(e) =>

@@ -84,7 +84,7 @@ const Navbar = () => {
     Navigate("/");
   };
   return (
-    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
+    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10 ">
       <div className="container w-full lg:max-w-[calc(100%-7rem)] mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-white text-lg">

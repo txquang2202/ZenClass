@@ -137,6 +137,7 @@ const SignIn = ({ handleChange }) => {
           <TextField
             label="Username"
             placeholder="Enter username"
+            variant="standard"
             fullWidth
             required
             name="username"
@@ -147,6 +148,7 @@ const SignIn = ({ handleChange }) => {
             label="Password"
             placeholder="Enter password"
             type="password"
+            variant="standard"
             fullWidth
             required
             name="password"

@@ -80,6 +80,7 @@ function ResetPassword(props) {
             type="password"
             name="password"
             value={userDetails.password}
+            variant="standard"
             onChange={handleInputChange}
           />
           <TextField
@@ -88,6 +89,7 @@ function ResetPassword(props) {
             placeholder="Confirm your password"
             type="password"
             name="confirmPassword"
+            variant="standard"
             value={userDetails.confirmPassword}
             onChange={handleInputChange}
             onKeyPress={(e) =>

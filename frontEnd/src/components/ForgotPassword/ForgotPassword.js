@@ -112,6 +112,7 @@ function ForgotPassword(props) {
             label="Email"
             placeholder="Enter your email"
             name="email"
+            variant="standard"
             value={credentials.email}
             className="text-2xl"
             onChange={handleInputChange}

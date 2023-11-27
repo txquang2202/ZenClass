@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="footer pt-20 bg-[#10375C] text-white font-open-sans mt-auto flex flex-col justify-between min-h-screen">
+    <footer className="footer pt-20 bg-[#10375C] text-white font-open-sans mt-auto flex flex-col justify-between min-h-screen ">
       <div class="container mx-auto max-w-[calc(100%-20rem)] w-max lg:max-w-[calc(100%-7rem)] ">
         <div class="grid grid-cols-1 lg:grid-cols-4">
           <div class="col-span-1">
