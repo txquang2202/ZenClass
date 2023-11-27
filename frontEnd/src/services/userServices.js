@@ -28,8 +28,11 @@ const postComment = (data) => {
 const getComments = () => {
   return axios.get("/api/v1/getComments");
 };
-const sendEmail = (data) => {
-  return axios.post("/api/v1/sendMail", data);
+const resetPassword = (data) => {
+  return axios.post("/api/v1/resetPassword", data);
+};
+const updatePassword = (id, data) => {
+  return axios.post(`/api/v1/updatePassword/${id}`, data);
 };
 export {
   loginUser,
@@ -39,5 +42,6 @@ export {
   getAllUsers,
   postComment,
   getComments,
-  sendEmail,
+  resetPassword,
+  updatePassword,
 };

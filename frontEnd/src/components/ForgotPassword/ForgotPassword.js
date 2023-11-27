@@ -14,7 +14,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
-import { sendEmail } from "../../services/userServices";
+import { resetPassword } from "../../services/userServices";
 
 function ForgotPassword(props) {
   // LAYOUT
@@ -57,14 +57,16 @@ function ForgotPassword(props) {
       toast.error("Please enter a valid email address");
       return;
     }
-    console.log(email);
     try {
-      const response = await sendEmail({ email: email });
+      const response = await resetPassword({ email: email });
+      // console.log(response.data);
       if (response.status === 200) {
         toast.success("Send reset code successful");
         setTimeout(() => {
           navigate("/send-mail-success");
         }, 1000);
+      } else if (response.status === 400) {
+        toast.error(response.data.message);
       }
     } catch (error) {
       if (error.response.status === 400) {

@@ -96,9 +96,9 @@ const SignUp = () => {
       const response = await registerUser(username, email, password);
 
       if (response.status === 200) {
-        toast.success("Register successful");
+        toast.success("Please verify your email address");
         setTimeout(() => {
-          navigate("/signin");
+          navigate("/send-mail-success");
         }, 1000);
       }
     } catch (error) {

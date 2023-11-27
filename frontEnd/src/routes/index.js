@@ -44,7 +44,7 @@ const routes = [
     isProtected: false,
   },
   {
-    path: "/reset-password",
+    path: "/reset-password/:id",
     page: ResetPassword,
     layout: null,
     isProtected: false,
