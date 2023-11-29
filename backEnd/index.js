@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: process.env.BASE_URL,
-    credentials: false,
+    credentials: true,
   })
 );
 
