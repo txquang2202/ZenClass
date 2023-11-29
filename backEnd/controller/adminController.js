@@ -106,7 +106,6 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    console.log(req.cookies);
     const users = await User.find({role: [0]});
 
     if (!users || users.length === 0) {
@@ -133,6 +132,23 @@ const getAllUsersComments = async (req, res) => {
     res.status(500).send("Error while fetching users");
   }
 };
+
+const deleteUsersbyID = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching user profile");
+  }
+};
 export {
   createUser,
   editUser,
@@ -141,4 +157,5 @@ export {
   getAllUsersComments,
   sendEmail,
   verifyEmail,
+  deleteUsersbyID
 };

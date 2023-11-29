@@ -36,6 +36,7 @@ const createUser = async (req, res) => {
       gender: "",
       street: "",
       city: "",
+      status: "Normal",
     });
 
     const existUsername = await User.findOne({ username });

@@ -6,7 +6,7 @@ import transporter from "../middleware/nodemailer.js";
 import crypto from "crypto";
 import User from "../models/user.js";
 import { ChildProcess } from "child_process";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 env.config();
 
