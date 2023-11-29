@@ -5,7 +5,6 @@ import { createToken, authenticateJWT } from "../middleware/jwt.js";
 import transporter from "../middleware/nodemailer.js";
 import crypto from "crypto";
 import User from "../models/user.js";
-import { ChildProcess } from "child_process";
 import bcrypt from "bcrypt";
 
 env.config();
@@ -27,6 +26,13 @@ const handleLogin = (req, res, next) => {
     return res.json({ userData: user });
   })(req, res, next);
 };
+//google
+const initGG = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+const authenticateGG = passport.authenticate("google", {
+  failureRedirect: `${process.env.BASE_URL}/login`,
+});
 const generateUniqueToken = () => {
   const token = crypto.randomBytes(16).toString("hex");
   return token;
@@ -141,4 +147,6 @@ export {
   resetPassword,
   verifyReset,
   updatePassword,
+  initGG,
+  authenticateGG,
 };

@@ -18,7 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import { loginUser } from "../../services/userServices";
+import { loginUser, googleAuth } from "../../services/userServices";
 
 const SignIn = ({ handleChange }) => {
   // LAYOUT
@@ -99,6 +99,15 @@ const SignIn = ({ handleChange }) => {
         console.error("Error sending login request", error);
         toast.error(error.message);
       }
+    }
+  };
+  const handleGoogleLogin = async () => {
+    try {
+      const response = await googleAuth();
+      console.log(response.data);
+      window.location.href = response.data.redirectUrl;
+    } catch (error) {
+      console.error("Error during Google login:", error);
     }
   };
 
@@ -186,6 +195,11 @@ const SignIn = ({ handleChange }) => {
                 variant="text"
                 style={{ backgroundColor: "#F5F5F5" }}
                 fullWidth
+                // onClick={handleGoogleLogin}
+                onClick={() => {
+                  window.location.href =
+                    "http://localhost:8080/api/v1/auth/google";
+                }}
               >
                 <GoogleIcon style={{ fontSize: "28px", color: "#F44336" }} />
               </Button>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
-import axios from "axios";
+import { getUserID } from "../../services/userServices";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,9 +29,7 @@ const Navbar = () => {
           return;
         }
         setId(session.userData._id);
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/getprofile/${session.userData._id}`
-        );
+        const response = await getUserID(session.userData._id);
         const userData = response.data.user;
 
         if (userData) {

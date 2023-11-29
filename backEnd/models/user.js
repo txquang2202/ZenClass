@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   city: String,
   verificationToken: String,
   isVerified: Boolean,
+  googleId: String,
 });
 
 // Tạo một Model từ Schema

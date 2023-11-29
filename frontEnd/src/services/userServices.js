@@ -34,6 +34,9 @@ const resetPassword = (data) => {
 const updatePassword = (id, data) => {
   return axios.post(`/api/v1/updatePassword/${id}`, data);
 };
+const googleAuth = () => {
+  return axios.get("/api/v1/auth/google");
+};
 export {
   loginUser,
   registerUser,
@@ -44,4 +47,5 @@ export {
   getComments,
   resetPassword,
   updatePassword,
+  googleAuth,
 };
