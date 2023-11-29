@@ -23,7 +23,6 @@ import ManageUser from "../Pages/Manage/ManageUser";
 import ManageClass from "../Pages/Manage/ManageClass";
 import ManageCourse from "../Pages/Manage/ManageCourse";
 
-
 const routes = [
   {
     path: "/signin",

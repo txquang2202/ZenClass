@@ -1,41 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+//import { useParams, useNavigate } from "react-router-dom";
 import ClassPage from "../ClassPage/ClassPage";
 import CoursePage from "../CoursePage/CoursePage";
-import { getUserID } from "../../services/userServices";
+// import { getUserID } from "../../services/userServices";
 
 function HomePage() {
-  const [avt, setAvt] = useState(null);
-  const { id } = useParams();
-  const navigate = useNavigate();
+  // const { id } = useParams();
   const [myClasses, setMyClasses] = useState([]);
   const [courses, setCourses] = useState([]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getUserID(id);
-        const userData = response.data.user;
-        if (userData.img) {
-          setAvt(userData.img);
-        } else {
-          setAvt(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        const session = JSON.parse(sessionStorage.getItem("account"));
-
-        if (!session || !session.userData) {
-          navigate("/signin");
-        } else {
-          navigate("/NotFound");
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [id]);
+  // useEffect(() => {
+  //   // const fetchUserData = async () => {
+  //   //   try {
+  //   //     const response = await getUserID(id);
+  //   //   } catch (error) {
+  //   //     console.error("Error fetching user profile:", error);
+  //   //     const session = JSON.parse(sessionStorage.getItem("account"));
+  //   //     if (!session || !session.userData) {
+  //   //       navigate("/signin");
+  //   //     } else {
+  //   //       navigate("/NotFound");
+  //   //     }
+  //   //   }
+  //   // };
+  //   // fetchUserData();
+  // }, [id]);
 
   return (
     <>

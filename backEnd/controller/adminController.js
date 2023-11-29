@@ -106,7 +106,8 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({role: [0]});
+    console.log(req.cookies);
+    const users = await User.find({ role: [0] });
 
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found!" });
@@ -157,5 +158,5 @@ export {
   getAllUsersComments,
   sendEmail,
   verifyEmail,
-  deleteUsersbyID
+  deleteUsersbyID,
 };

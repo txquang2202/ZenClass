@@ -55,7 +55,7 @@ function ResetPassword(props) {
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      navigate("/NotFound");
+      navigate("/500");
     }
   };
 

@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import Comment from "../models/comments.js";
 import env from "dotenv";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {
   sendEmail,
   verifyEmail,

@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { loginUser, googleAuth } from "../../services/userServices";
+import { jwtDecode } from "jwt-decode";
 
 const SignIn = ({ handleChange }) => {
   // LAYOUT
@@ -73,21 +74,22 @@ const SignIn = ({ handleChange }) => {
 
     try {
       const response = await loginUser(username, password);
+      localStorage.setItem("token", response.data.token);
 
+      const decodedToken = jwtDecode(response.data.token);
       if (response.status === 200) {
-        if (response.data.userData.isVerified) {
-          if (response.data.userData.role === 3){
-            localStorage.setItem("account", JSON.stringify(response.data));
+        if (decodedToken.isVerified) {
+          if (decodedToken.role === 3) {
+            localStorage.setItem("token", JSON.stringify(response.data));
             toast.success("Login admin successful");
             setTimeout(() => {
               navigate(`/manageusers`);
             }, 1000);
-          }
-          else{
-            localStorage.setItem("account", JSON.stringify(response.data));
+          } else {
+            localStorage.setItem("token", JSON.stringify(response.data));
             toast.success("Login successful");
             setTimeout(() => {
-              navigate(`/home/${response.data.userData._id}`);
+              navigate(`/home/${decodedToken._id}`);
             }, 1000);
           }
         } else toast.error("This email has not been verified");
@@ -101,14 +103,8 @@ const SignIn = ({ handleChange }) => {
       }
     }
   };
-  const handleGoogleLogin = async () => {
-    try {
-      const response = await googleAuth();
-      console.log(response.data);
-      window.location.href = response.data.redirectUrl;
-    } catch (error) {
-      console.error("Error during Google login:", error);
-    }
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
 
   const handleKeyPress = (e) => {
@@ -129,6 +125,8 @@ const SignIn = ({ handleChange }) => {
           to="/"
           className="absolute top-0 left-[-45px]"
         >
+          {" "}
+          ngu
           <ArrowLeftIcon />
         </IconButton>
         <Toolbar className="flex justify-around items-center ">
@@ -195,11 +193,7 @@ const SignIn = ({ handleChange }) => {
                 variant="text"
                 style={{ backgroundColor: "#F5F5F5" }}
                 fullWidth
-                // onClick={handleGoogleLogin}
-                onClick={() => {
-                  window.location.href =
-                    "http://localhost:8080/api/v1/auth/google";
-                }}
+                onClick={handleGoogleLogin}
               >
                 <GoogleIcon style={{ fontSize: "28px", color: "#F44336" }} />
               </Button>

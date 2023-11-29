@@ -73,7 +73,7 @@ function ForgotPassword(props) {
         toast.error(error.response.data.message);
       } else {
         console.error("Error while sending email", error);
-        navigate("/NotFound");
+        navigate("/500");
       }
     }
   };

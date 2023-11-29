@@ -53,7 +53,7 @@ function ResponsiveDrawer(props) {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        Navigate("/NotFound");
+        Navigate("/500");
       }
     };
 
@@ -88,7 +88,7 @@ function ResponsiveDrawer(props) {
       toast.success("Update successful");
     } catch (error) {
       console.error("Error editing profile:", error);
-      Navigate("/NotFound");
+      Navigate("/500");
     }
   };
 

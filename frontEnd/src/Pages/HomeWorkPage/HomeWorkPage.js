@@ -3,12 +3,14 @@ import Avatar from "@mui/material/Avatar";
 import Comment from "../../components/Comment/Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { getComments, postComment } from "../../services/userServices";
+import { jwtDecode } from "jwt-decode";
 
 function HomeWorkPage(props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
-  const data = JSON.parse(localStorage.getItem("account"));
-  const username = data.userData.username;
+  const data = JSON.parse(localStorage.getItem("token"));
+  const decoded = jwtDecode(data.token);
+  const username = decoded.username;
   /////////////////////////////////////////////////////////////////////////
   /////////////////            CHUA FIX COMMENT          //////////////////
   /////////////////////////////////////////////////////////////////////////
