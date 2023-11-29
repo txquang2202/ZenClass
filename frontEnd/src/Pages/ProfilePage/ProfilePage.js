@@ -86,7 +86,6 @@ function ResponsiveDrawer(props) {
       // Make a PUT request with the FormData
       const response = await updateUser(id, data);
       toast.success("Update successful");
-      console.log(response.data);
     } catch (error) {
       console.error("Error editing profile:", error);
       Navigate("/NotFound");

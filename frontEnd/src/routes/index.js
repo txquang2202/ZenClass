@@ -13,7 +13,8 @@ import PeoplePage from "../Pages/PeoplePage/PeoplePage";
 import HomeWorkPage from "../Pages/HomeWorkPage/HomeWorkPage";
 import ServerErrorPage from "../Pages/ServerErrorPage/ServerErrorPage";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
-import GradePage from "../Pages/GradePage/GradePage";
+import GradeStructurePage from "../Pages/GradeStructurePage/GradeStructurePage";
+import GradeBoardPage from "../Pages/GradeBoardPage/GradeBoardPage";
 import SendMailSuccessPage from "../Pages/SendMailSuccessPage/SendMailSuccessPage";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
 import UserLayout from "../layouts/UserLayout/UserLayout";
@@ -49,7 +50,7 @@ const routes = [
     isProtected: false,
   },
   {
-    path: "/reset-password",
+    path: "/reset-password/:id",
     page: ResetPassword,
     layout: null,
     isProtected: false,
@@ -91,8 +92,14 @@ const routes = [
     isProtected: true,
   },
   {
-    path: "/home/classes/detail/grade/:id",
-    page: GradePage,
+    path: "/home/classes/detail/grade-structure/:id",
+    page: GradeStructurePage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/grade-board/:id",
+    page: GradeBoardPage,
     layout: DetailLayout,
     isProtected: true,
   },

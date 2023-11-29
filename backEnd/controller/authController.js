@@ -5,6 +5,8 @@ import { createToken, authenticateJWT } from "../middleware/jwt.js";
 import transporter from "../middleware/nodemailer.js";
 import crypto from "crypto";
 import User from "../models/user.js";
+import { ChildProcess } from "child_process";
+import bcrypt from "bcrypt";
 
 env.config();
 
@@ -63,6 +65,80 @@ const verifyEmail = async (req, res) => {
   user.verificationToken = undefined;
   user.isVerified = true;
   await user.save();
-  res.send("Email verified successfully!");
+  res.redirect(`${process.env.BASE_URL}/signin`);
 };
-export { handleLogin, sendEmail, verifyEmail, generateUniqueToken };
+const resetPassword = async (req, res) => {
+  const verificationToken = generateUniqueToken();
+  const verificationLink = `${process.env.BA_BASE_URL}/api/v1/verifyReset?token=${verificationToken}`;
+  const email = req.body.email;
+  const existEmail = await User.findOne({ email });
+
+  if (!existEmail) {
+    return res.status(400).json({ message: "Email is not exist!" });
+  }
+
+  try {
+    await User.updateOne(
+      { email: email },
+      { $set: { verificationToken: verificationToken } }
+    );
+  } catch (error) {
+    console.error("Error saving verificationToken to database:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+
+  const mailOptions = {
+    from: "Zen Class Corporation stellaron758@gmail.com",
+    to: email,
+    subject: "[Reset Password]",
+    html: `Your reset password link is: <a href="${verificationLink}">Reset your password</a>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent");
+    return res.status(200).json({ message: "Reset email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const verifyReset = async (req, res) => {
+  const { token } = req.query;
+  console.log(token);
+  const user = await User.findOne({ verificationToken: token });
+  console.log(user.verificationToken);
+  if (!user) {
+    return res.status(400).send("Invalid verification token.");
+  }
+
+  // user.verificationToken = undefined;
+  await user.save();
+  setTimeout(() => {
+    res.redirect(`${process.env.BASE_URL}/reset-password/${user._id}`);
+  }, 3000);
+};
+const updatePassword = async (req, res) => {
+  const { id } = req.params;
+
+  const password = req.body.password;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(400).send("User not found");
+  }
+  user.password = hashedPassword;
+  await user.save();
+  res.status(200).json({ message: "Password updated." });
+};
+export {
+  handleLogin,
+  sendEmail,
+  verifyEmail,
+  generateUniqueToken,
+  resetPassword,
+  verifyReset,
+  updatePassword,
+};

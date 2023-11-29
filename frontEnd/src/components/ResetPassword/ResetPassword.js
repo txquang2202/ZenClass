@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
+import { updatePassword } from "../../services/userServices";
 
 function ResetPassword(props) {
   // LAYOUT
@@ -11,6 +12,7 @@ function ResetPassword(props) {
     password: "",
     confirmPassword: "",
   });
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const paperStyle = {
@@ -39,33 +41,22 @@ function ResetPassword(props) {
     }));
   };
 
-  const handleSignUp = async (e) => {
-    // e.preventDefault();
-    // const {password, confirmPassword } = userDetails;
-    // if (!password || password.length < 6) {
-    //   toast.error("Please enter a valid password with at least 6 characters");
-    //   return;
-    // }
-    // if (password !== confirmPassword) {
-    //   toast.error("Confirm password does not match!!");
-    //   return;
-    // }
-    // try {
-    //   const response = await registerUser(password);
-    //   if (response.status === 200) {
-    //     toast.success("Register successful");
-    //     setTimeout(() => {
-    //       navigate("/signin");
-    //     }, 1000);
-    //   }
-    // } catch (error) {
-    //   if (error.response.status === 400) {
-    //     toast.error(error.response.data.message);
-    //   } else {
-    //     console.error("Error while sending registration failed", error);
-    //     navigate("/NotFound");
-    //   }
-    // }
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await updatePassword(id, userDetails);
+      if (response.status === 200) {
+        toast.success("Update successful");
+        setTimeout(() => {
+          navigate(`/home/${id}`);
+        }, 1000);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      navigate("/NotFound");
+    }
   };
 
   return (
@@ -86,9 +77,10 @@ function ResetPassword(props) {
             fullWidth
             label="New Password"
             placeholder="Enter your new password"
-            type="new password"
-            name="newPassword"
+            type="password"
+            name="password"
             value={userDetails.password}
+            variant="standard"
             onChange={handleInputChange}
           />
           <TextField
@@ -97,10 +89,11 @@ function ResetPassword(props) {
             placeholder="Confirm your password"
             type="password"
             name="confirmPassword"
+            variant="standard"
             value={userDetails.confirmPassword}
             onChange={handleInputChange}
             onKeyPress={(e) =>
-              e.charCode === 13 && e.code === "Enter" && handleSignUp(e)
+              e.charCode === 13 && e.code === "Enter" && handleUpdate(e)
             }
           />
           <Button
@@ -109,7 +102,7 @@ function ResetPassword(props) {
             color="primary"
             style={btnstyle}
             fullWidth
-            onClick={handleSignUp}
+            onClick={handleUpdate}
           >
             CHANGE PASSWORD
           </Button>
