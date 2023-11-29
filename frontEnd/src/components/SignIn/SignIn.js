@@ -76,12 +76,21 @@ const SignIn = ({ handleChange }) => {
 
       if (response.status === 200) {
         if (response.data.userData.isVerified) {
-          localStorage.setItem("account", JSON.stringify(response.data));
-          toast.success("Login successful");
+          if (response.data.userData.role === 3){
+            localStorage.setItem("account", JSON.stringify(response.data));
+            toast.success("Login admin successful");
+            setTimeout(() => {
+              navigate(`/manageusers`);
+            }, 1000);
+          }
+          else{
+            localStorage.setItem("account", JSON.stringify(response.data));
+            toast.success("Login successful");
+            setTimeout(() => {
+              navigate(`/home/${response.data.userData._id}`);
+            }, 1000);
+          }
         } else toast.error("This email has not been verified");
-        setTimeout(() => {
-          navigate(`/home/${response.data.userData._id}`);
-        }, 1000);
       }
     } catch (error) {
       if (error.response?.status === 401) {

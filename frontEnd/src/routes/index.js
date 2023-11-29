@@ -17,6 +17,11 @@ import GradePage from "../Pages/GradePage/GradePage";
 import SendMailSuccessPage from "../Pages/SendMailSuccessPage/SendMailSuccessPage";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
 import UserLayout from "../layouts/UserLayout/UserLayout";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
+import ManageUser from "../Pages/Manage/ManageUser";
+import ManageClass from "../Pages/Manage/ManageClass";
+import ManageCourse from "../Pages/Manage/ManageCourse";
+
 
 const routes = [
   {
@@ -108,6 +113,27 @@ const routes = [
     page: ResponsiveDrawer,
     layout: UserLayout,
     isProtected: true,
+  },
+  {
+    path: "/manageusers",
+    page: ManageUser,
+    layout: AdminLayout,
+    isProtected: true,
+    roleRequired: 3,
+  },
+  {
+    path: "/manageclass",
+    page: ManageClass,
+    layout: AdminLayout,
+    isProtected: true,
+    roleRequired: 3,
+  },
+  {
+    path: "/managecourse",
+    page: ManageCourse,
+    layout: AdminLayout,
+    isProtected: true,
+    roleRequired: 3,
   },
   {
     path: "/",

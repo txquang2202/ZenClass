@@ -27,7 +27,7 @@ function App() {
                 path={route.path}
                 element={
                   <Layout>
-                    <Protect>
+                    <Protect roleRequired={route.roleRequired}>
                       <Page />
                     </Protect>
                   </Layout>

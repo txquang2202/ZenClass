@@ -2,11 +2,11 @@ import {
   createUser,
   editUser,
   getUserProfile,
-  getAllUsers,
   getAllUsersComments,
   addComment,
   sendEmail,
 } from "../controller/userController.js";
+import { getAllUsers } from "../controller/adminController.js";
 import { handleLogin, verifyEmail } from "../controller/authController.js";
 import { authenticateJWT } from "../middleware/jwt.js";
 import express from "express";
