@@ -4,6 +4,7 @@ import {
   getUserProfile,
   getAllUsersComments,
   addComment,
+  getAllUsers,
 } from "../controller/userController.js";
 import { handleLogin, verifyEmail,updatePassword, resetPassword, verifyReset} from "../controller/authController.js";
 import { authenticateJWT } from "../middleware/jwt.js";

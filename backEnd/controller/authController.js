@@ -27,6 +27,13 @@ const handleLogin = (req, res, next) => {
     return res.json({ userData: user });
   })(req, res, next);
 };
+//google
+const initGG = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+const authenticateGG = passport.authenticate("google", {
+  failureRedirect: `${process.env.BASE_URL}/login`,
+});
 const generateUniqueToken = () => {
   const token = crypto.randomBytes(16).toString("hex");
   return token;
@@ -141,4 +148,6 @@ export {
   resetPassword,
   verifyReset,
   updatePassword,
+  initGG,
+  authenticateGG,
 };

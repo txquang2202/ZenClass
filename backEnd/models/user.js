@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
   city: String,
   verificationToken: String,
   isVerified: Boolean,
+<<<<<<< HEAD
   status: String,
+=======
+  googleId: String,
+>>>>>>> 9483f0801b40dad058faaca06b162b0ee30d7dbf
 });
 
 // Tạo một Model từ Schema
