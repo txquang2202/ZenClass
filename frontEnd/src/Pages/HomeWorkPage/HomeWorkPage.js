@@ -8,8 +8,8 @@ import { jwtDecode } from "jwt-decode";
 function HomeWorkPage(props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
-  const data = JSON.parse(localStorage.getItem("token"));
-  const decoded = jwtDecode(data.token);
+  const data = localStorage.getItem("token");
+  const decoded = jwtDecode(data);
   const username = decoded.username;
   /////////////////////////////////////////////////////////////////////////
   /////////////////            CHUA FIX COMMENT          //////////////////
