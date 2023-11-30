@@ -75,18 +75,16 @@ const SignIn = ({ handleChange }) => {
     try {
       const response = await loginUser(username, password);
       localStorage.setItem("token", response.data.token);
-
       const decodedToken = jwtDecode(response.data.token);
+
       if (response.status === 200) {
         if (decodedToken.isVerified) {
           if (decodedToken.role === 3) {
-            localStorage.setItem("token", JSON.stringify(response.data));
             toast.success("Login admin successful");
             setTimeout(() => {
               navigate(`/manageusers`);
             }, 1000);
           } else {
-            localStorage.setItem("token", JSON.stringify(response.data));
             toast.success("Login successful");
             setTimeout(() => {
               navigate(`/home/${decodedToken._id}`);

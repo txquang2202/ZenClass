@@ -28,11 +28,11 @@ const Navbar = () => {
           setUser(false);
           return;
         }
-        const data = JSON.parse(localStorage.getItem("token"));
-        const session = jwtDecode(data.token);
+        const data = localStorage.getItem("token");
+        const session = jwtDecode(data);
 
         setId(session._id);
-        const response = await getUserID(session._id);
+        const response = await getUserID(session._id, data);
         const userData = response.data.user;
 
         if (userData) {

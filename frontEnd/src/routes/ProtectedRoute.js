@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children, roleRequired }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
     let session = localStorage.getItem("token");
-    const items = JSON.parse(session);
-
+    const items = session ? jwtDecode(session) : null;
     if (!session) {
       navigate("/signin");
     } else if (roleRequired && items.userData.role !== roleRequired) {
-      navigate("*"); // Chuyển hướng đến trang 404 nếu không có quyền
+      navigate("*");
     }
   }, [navigate, roleRequired]);
   return <>{children}</>;

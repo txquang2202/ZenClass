@@ -21,6 +21,7 @@ const createToken = (user) => {
       secretKey,
       {
         expiresIn: "1h",
+        algorithm: "HS256",
       }
     );
     return token;
@@ -29,35 +30,26 @@ const createToken = (user) => {
     return null;
   }
 };
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  console.log(" ");
+  console.log(authHeader);
+  console.log(" ");
+  const token = authHeader && authHeader.split(" ")[1];
 
-const authenticateJWT = (token) => {
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-    return decoded;
-  } catch (error) {
-    console.error("Error authenticating token:", error.message);
-    return null;
+  if (!token) {
+    return res.sendStatus(401);
   }
-};
-const checkUserToken = (req, res, next) => {
-  let cookies;
-  cookies = req.cookies;
-  if (cookies && cookies.token) {
-    let token = cookies.token;
-    let decoded = authenticateJWT(token);
-    if (decoded) {
-      next();
-    } else {
-      res.status(401).json({
-        message: "Not authenticated user",
-      });
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) {
+      console.error("Error verifying token:", err);
+      return res.sendStatus(403);
     }
-  } else {
-    res.status(401).json({
-      message: "Not authenticated user",
-    });
-  }
+
+    req.user = user;
+    next();
+  });
 };
 
-export { createToken, authenticateJWT, checkUserToken };
+export { createToken, authenticateToken };

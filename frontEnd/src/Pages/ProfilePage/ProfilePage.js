@@ -29,11 +29,12 @@ function ResponsiveDrawer(props) {
   const Navigate = useNavigate();
   const { id } = useParams();
   const todayDate = new Date().toISOString().split("T")[0];
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getUserID(id);
+        const response = await getUserID(id, token);
         const userData = response.data.user;
         const date = new Date(userData.birthdate).toISOString().split("T")[0];
         setFormData({
@@ -84,7 +85,7 @@ function ResponsiveDrawer(props) {
         data.append("img", avatar);
       }
       // Make a PUT request with the FormData
-      const response = await updateUser(id, data);
+      await updateUser(id, data, token);
       toast.success("Update successful");
     } catch (error) {
       console.error("Error editing profile:", error);

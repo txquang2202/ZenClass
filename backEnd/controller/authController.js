@@ -1,7 +1,7 @@
 import env from "dotenv";
 import passport from "passport";
 import "../middleware/passport.js";
-import { createToken, authenticateJWT } from "../middleware/jwt.js";
+import { createToken, authenticateToken } from "../middleware/jwt.js";
 import transporter from "../middleware/nodemailer.js";
 import crypto from "crypto";
 import User from "../models/user.js";
@@ -110,7 +110,6 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 const verifyReset = async (req, res) => {
   const { token } = req.query;
   console.log(token);
@@ -128,9 +127,7 @@ const verifyReset = async (req, res) => {
 };
 const updatePassword = async (req, res) => {
   const { id } = req.params;
-
   const password = req.body.password;
-
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.findById(id);
   if (!user) {

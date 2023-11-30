@@ -16,9 +16,8 @@ import {
   authenticateGG,
   handleAuthentication,
 } from "../controller/authController.js";
-import { authenticateJWT } from "../middleware/jwt.js";
 import express from "express";
-import { checkUserToken } from "../middleware/jwt.js";
+import { authenticateToken } from "../middleware/jwt.js";
 import upload from "../middleware/multer.js";
 import { deleteUsersbyID } from "../controller/adminController.js";
 
@@ -32,21 +31,29 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const initApi = (app) => {
+  //unprotect
   router.post("/register", createUser);
   router.post("/login", handleLogin);
-  router.get("/home", checkUserToken, getAllUsers);
-  router.post("/protected", authenticateJWT);
-  router.get("/getprofile/:id", getUserProfile);
-  router.put("/editprofile/:id", upload.single("img"), editUser);
-  router.get("/getallusers", getAllUsers);
-  router.get("/getComments", getAllUsersComments);
-  router.post("/addComments", addComment);
-  router.post("/updatePassword/:id", updatePassword);
-  router.post("/resetPassword", resetPassword);
-  router.get("/verifyReset", verifyReset);
-  router.get("/verify", verifyEmail);
+  router.get("/home", getAllUsers);
   router.get("/auth/google", initGG);
   router.get("/auth/google/callback", authenticateGG, handleAuthentication);
+  router.get("/verifyReset", verifyReset);
+  router.get("/verify", verifyEmail);
+  router.get("/getComments", getAllUsersComments);
+  router.post("/resetPassword", resetPassword);
+  router.post("/updatePassword/:id", updatePassword);
+
+  //protected api
+  router.get("/getprofile/:id", authenticateToken, getUserProfile);
+  router.put(
+    "/editprofile/:id",
+    authenticateToken,
+    upload.single("img"),
+    editUser
+  );
+  router.get("/getallusers", authenticateToken, getAllUsers);
+  router.post("/addComments", authenticateToken, addComment);
+
   return app.use("/api/v1/", router);
 };
 
