@@ -106,7 +106,7 @@ const SignUp = () => {
         toast.error(error.response.data.message);
       } else {
         console.error("Error while sending registration failed", error);
-        navigate("/NotFound");
+        navigate("/500");
       }
     }
   };

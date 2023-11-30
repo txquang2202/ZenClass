@@ -73,7 +73,7 @@ function ForgotPassword(props) {
         toast.error(error.response.data.message);
       } else {
         console.error("Error while sending email", error);
-        navigate("/NotFound");
+        navigate("/500");
       }
     }
   };
@@ -112,7 +112,6 @@ function ForgotPassword(props) {
             label="Email"
             placeholder="Enter your email"
             name="email"
-            variant="standard"
             value={credentials.email}
             className="text-2xl"
             onChange={handleInputChange}

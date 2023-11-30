@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
 import initApi from "./routes/api.js";
+import session from "express-session";
+import passport from "passport";
+import "./middleware/passport.js";
 
 const app = express();
 //environment
@@ -19,7 +22,14 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(passport.initialize());
+app.use(
+  session({
+    secret: process.env.SECRET_KEY,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 const port = process.env.PORT;
 app.use("/assets", express.static("../frontend/assets"));
 //connect to database

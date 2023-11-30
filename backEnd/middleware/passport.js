@@ -4,6 +4,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import env from "dotenv";
 import GoogleStrategy from "passport-google-oauth20";
+import { createToken } from "./jwt.js";
 
 env.config();
 
@@ -12,12 +13,12 @@ passport.use(
     try {
       const user = await User.findOne({ username: username });
       if (!user) {
-        return cb(null, false, { message: "Incorrect username or password." });
+        return cb(null, false, { message: "The user is not exist!!" });
       }
 
       const hashedPassword = await bcrypt.compare(password, user.password);
       if (!hashedPassword) {
-        return cb(null, false, { message: "Incorrect username or password." });
+        return cb(null, false, { message: "Incorrect password." });
       }
 
       return cb(null, user);
@@ -30,26 +31,25 @@ passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_ID_SECRET,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.BA_BASE_URL + "/api/v1/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        const user = await User.findOne({ googleId: profile.id });
-
+        const user = await User.findOne({ email: profile.emails[0].value });
         if (user) {
-          return cb(null, user);
+          const token = createToken(user);
+          return cb(null, { user: user, token });
         }
-        console.log("pass");
-        // Người dùng chưa tồn tại, tạo mới và lưu vào database
+
         const newUser = new User({
-          googleId: profile.id,
+          email: profile.emails[0].value,
           username: profile.displayName,
         });
 
         await newUser.save();
 
-        // Trả về người dùng mới tạo
+        // Return the newly created user
         return cb(null, newUser);
       } catch (err) {
         return cb(err);
@@ -57,3 +57,11 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});

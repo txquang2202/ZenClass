@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import axios from "axios";
-
+import { jwtDecode } from "jwt-decode";
 const AdminNavbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
@@ -22,15 +22,16 @@ const AdminNavbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const session = JSON.parse(localStorage.getItem("account"));
-
-        if (!session || !session.userData) {
+        const check = localStorage.getItem("token");
+        if (!check) {
           setUser(false);
           return;
         }
-        setId(session.userData._id);
+        const data = JSON.parse(localStorage.getItem("token"));
+        const session = jwtDecode(data.token);
+        setId(session._id);
         const response = await axios.get(
-          `http://localhost:8080/api/v1/getprofile/${session.userData._id}`
+          `http://localhost:8080/api/v1/getprofile/${session._id}`
         );
         const userData = response.data.user;
 
@@ -49,7 +50,7 @@ const AdminNavbar = () => {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        navigate("/NotFound");
+        navigate("/500");
       }
     };
 
@@ -78,7 +79,7 @@ const AdminNavbar = () => {
   //   }
   // }, []);
   const handleLogout = () => {
-    localStorage.removeItem("account");
+    localStorage.removeItem("token");
     setUser(false);
     setAnchorEl(null);
     Navigate("/");

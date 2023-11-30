@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 // Set config defaults when creating the instance
 const instance = axios.create({
@@ -7,7 +8,44 @@ const instance = axios.create({
 instance.defaults.withCredentials = true;
 // // Alter defaults after instance has been created
 // instance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+const getToken = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decodedToken = jwtDecode(token);
 
+    // Kiểm tra hết hạn token
+    if (decodedToken.exp * 1000 < Date.now()) {
+      localStorage.removeItem("token");
+      return null;
+    }
+
+    return token;
+  }
+  return null;
+};
+
+instance.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+
+      if (decodedToken.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+        console.log("Token is invalid or expired. Redirecting to login page.");
+        window.location.href = "/signin";
+      }
+
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 // Add a request interceptor
 // instance.interceptors.request.use(
 //   function (config) {

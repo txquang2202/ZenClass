@@ -1,11 +1,10 @@
 import env from "dotenv";
 import passport from "passport";
 import "../middleware/passport.js";
-import { createToken, authenticateJWT } from "../middleware/jwt.js";
+import { createToken, authenticateToken } from "../middleware/jwt.js";
 import transporter from "../middleware/nodemailer.js";
 import crypto from "crypto";
 import User from "../models/user.js";
-import { ChildProcess } from "child_process";
 import bcrypt from "bcryptjs";
 
 env.config();
@@ -22,9 +21,7 @@ const handleLogin = (req, res, next) => {
     }
 
     const token = createToken(user);
-    res.cookie("token", token, { httpOnly: true, maxAge: 3600 * 1000 });
-
-    return res.json({ userData: user });
+    return res.json({ token });
   })(req, res, next);
 };
 //google
@@ -34,6 +31,10 @@ const initGG = passport.authenticate("google", {
 const authenticateGG = passport.authenticate("google", {
   failureRedirect: `${process.env.BASE_URL}/login`,
 });
+const handleAuthentication = (req, res) => {
+  const token = req.user.token;
+  res.redirect(`${process.env.BASE_URL}?token=${token}`);
+};
 const generateUniqueToken = () => {
   const token = crypto.randomBytes(16).toString("hex");
   return token;
@@ -110,7 +111,6 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 const verifyReset = async (req, res) => {
   const { token } = req.query;
   console.log(token);
@@ -128,9 +128,7 @@ const verifyReset = async (req, res) => {
 };
 const updatePassword = async (req, res) => {
   const { id } = req.params;
-
   const password = req.body.password;
-
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.findById(id);
   if (!user) {
@@ -150,4 +148,5 @@ export {
   updatePassword,
   initGG,
   authenticateGG,
+  handleAuthentication,
 };

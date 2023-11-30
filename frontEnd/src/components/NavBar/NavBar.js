@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,14 +24,23 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const session = JSON.parse(localStorage.getItem("account"));
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
 
-        if (!session || !session.userData) {
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+
+        const check = localStorage.getItem("token");
+        if (!check) {
           setUser(false);
           return;
         }
-        setId(session.userData._id);
-        const response = await getUserID(session.userData._id);
+        const data = localStorage.getItem("token");
+        const session = jwtDecode(data);
+
+        setId(session._id);
+        const response = await getUserID(session._id, data);
         const userData = response.data.user;
 
         if (userData) {
@@ -47,36 +58,15 @@ const Navbar = () => {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        navigate("/NotFound");
+        navigate("/500");
       }
     };
 
     fetchUserData();
   }, [id]);
 
-  // useEffect(() => {
-  //   const userData = JSON.parse(sessionStorage.getItem("account"));
-  //   if (userData) {
-  //     console.log(userData);
-  //     const storedName = userData.userData.username;
-  //     const storedAvt = userData.userData.img;
-  //     const storedId = userData.userData._id;
-
-  //     if (storedName) {
-  //       setName(storedName);
-  //     }
-
-  //     if (storedAvt) {
-  //       setAvt(storedAvt);
-  //     }
-  //     if (storedId) {
-  //       setId(storedId);
-  //     }
-  //     setUser(true);
-  //   }
-  // }, []);
   const handleLogout = () => {
-    localStorage.removeItem("account");
+    localStorage.removeItem("token");
     setUser(false);
     setAnchorEl(null);
     Navigate("/");
