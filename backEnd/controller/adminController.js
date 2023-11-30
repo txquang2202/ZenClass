@@ -149,6 +149,54 @@ const deleteUsersbyID = async (req, res) => {
     res.status(500).send("Error while fetching user profile");
   }
 };
+
+
+const deleteListUsersByIds = async (req, res) => {
+  try {
+    const listIdDelete = req.body; 
+
+    if (!listIdDelete || listIdDelete.length === 0) {
+      return res.status(400).json({ message: "No user IDs provided for deletion!" });
+    }
+
+    const deletedUsers = await User.deleteMany({ _id: { $in: listIdDelete } });
+
+    if (deletedUsers.deletedCount === 0) {
+      return res.status(404).json({ message: "No users found for the provided IDs!" });
+    }
+
+    res.json({ message: "Users deleted successfully", deletedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while deleting users");
+  }
+};
+
+const blockUserbyID = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    if (user.status === "Blocked") {
+      user.status = "Normal";
+    } else {
+      user.status = "Blocked";
+    }
+
+    await user.save();
+
+    res.json({ message: "User status updated successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while updating user status");
+  }
+};
+
 export {
   createUser,
   editUser,
@@ -157,5 +205,7 @@ export {
   getAllUsersComments,
   sendEmail,
   verifyEmail,
-  deleteUsersbyID
+  deleteUsersbyID,
+  deleteListUsersByIds,
+  blockUserbyID,
 };
