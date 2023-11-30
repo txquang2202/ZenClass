@@ -4,6 +4,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import env from "dotenv";
 import GoogleStrategy from "passport-google-oauth20";
+import { createToken } from "./jwt.js";
 
 env.config();
 
@@ -36,9 +37,9 @@ passport.use(
     async (accessToken, refreshToken, profile, cb) => {
       try {
         const user = await User.findOne({ email: profile.emails[0].value });
-
         if (user) {
-          return cb(null, user);
+          const token = createToken(user);
+          return cb(null, { user: user, token });
         }
 
         const newUser = new User({

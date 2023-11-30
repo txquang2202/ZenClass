@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Paper,
@@ -18,7 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import { loginUser, googleAuth } from "../../services/userServices";
+import { loginUser } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 
 const SignIn = ({ handleChange }) => {
@@ -110,7 +110,6 @@ const SignIn = ({ handleChange }) => {
       handleLogin();
     }
   };
-
   return (
     <Grid
       className="font-sans pt-12 h-screen bg-gradient-to-br from-[#10375C] via-blue-700 to-blue-800"

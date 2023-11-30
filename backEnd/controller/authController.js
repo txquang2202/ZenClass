@@ -32,7 +32,8 @@ const authenticateGG = passport.authenticate("google", {
   failureRedirect: `${process.env.BASE_URL}/login`,
 });
 const handleAuthentication = (req, res) => {
-  res.redirect(`${process.env.BASE_URL}/`);
+  const token = req.user.token;
+  res.redirect(`${process.env.BASE_URL}?token=${token}`);
 };
 const generateUniqueToken = () => {
   const token = crypto.randomBytes(16).toString("hex");

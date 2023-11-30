@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -23,6 +24,13 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+
         const check = localStorage.getItem("token");
         if (!check) {
           setUser(false);
