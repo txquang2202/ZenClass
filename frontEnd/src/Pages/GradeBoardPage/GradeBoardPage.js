@@ -12,13 +12,24 @@ const GradeBoard = () => {
     tempValues,
     updateTempValues,
     setTempValues,
+    handleImportCSV,
   } = useContext(GradeContext);
   const [board, setBoard] = useState(initialBoard);
   const [edit, setEdit] = useState(null);
+  const [sortOrder, setSortOrder] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
 
-  // ... (rest of the code remains unchanged)
+  const studentsPerPage = 8;
+  const indexOfLastStudent = (pageNumber + 1) * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = board.slice(indexOfFirstStudent, indexOfLastStudent);
+  const shouldDisplayPagination = board.length > 8;
+
+  // FILE
   const handleExportCSV = () => {
     // Define the CSV data
+
     const csvData = [
       [
         "ID",
@@ -29,8 +40,8 @@ const GradeBoard = () => {
       ...board.map((student) => [
         student.id,
         student.name,
-        ...grades.map((item) => student[item.topic]),
-        calculateTotal(student.id), // Include the total value here
+        ...grades.map((item) => getCellValue(student, item.topic)),
+        calculateTotalForExport(student), // Include the total value here
       ]),
     ];
 
@@ -47,52 +58,67 @@ const GradeBoard = () => {
     document.body.removeChild(link);
   };
 
-  const handleImportCSV = (event) => {
+  const handleFileChange = (event) => {
     if (event.target && event.target.files && event.target.files[0]) {
-      let file = event.target.files[0];
-      if (file.type !== "text/csv") {
-        toast.error("Only accept CSV files");
-        return;
-      }
-      // Parse local CSV file
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true, // Skip empty lines in the CSV file
-        complete: function (results) {
-          let rawCSV = results.data;
-          if (rawCSV.length > 0) {
-            let importedData = rawCSV.map((item) => {
-              return {
-                id: item.ID,
-                name: item.Name,
-                ...grades.reduce((acc, grade) => {
-                  acc[grade.topic] =
-                    item[`${grade.topic} ${grade.ratio}%`] || 0;
-                  return acc;
-                }, {}),
-                total: item.Total || 0,
-              };
-            });
-
-            // Update the board state with the imported data
-            setBoard(importedData);
-
-            // Update the tempValues state based on the new board data
-            let updatedTempValues = {};
-            importedData.forEach((student) => {
-              updatedTempValues[student.id] = { ...student };
-            });
-            setTempValues(updatedTempValues);
-
-            toast.success("Import successful!");
-          } else {
-            toast.error("No data found in CSV file!");
-          }
-        },
-      });
+      const file = event.target.files[0];
+      handleImportCSV(file); // Call the handleImportCSV function from the context
     }
   };
+  // Helper function to get cell value or default to 0
+  const getCellValue = (student, topic) => {
+    return (tempValues[student.id] && tempValues[student.id][topic]) !==
+      undefined
+      ? tempValues[student.id][topic]
+      : 0;
+  };
 
+  // const handleImportCSV = (event) => {
+  //   if (event.target && event.target.files && event.target.files[0]) {
+  //     let file = event.target.files[0];
+  //     if (file.type !== "text/csv") {
+  //       toast.error("Only accept CSV files");
+  //       return;
+  //     }
+  //     // Parse local CSV file
+  //     Papa.parse(file, {
+  //       header: true,
+  //       skipEmptyLines: true, // Skip empty lines in the CSV file
+  //       complete: function (results) {
+  //         let rawCSV = results.data;
+  //         if (rawCSV.length > 0) {
+  //           let importedData = rawCSV.map((item) => {
+  //             return {
+  //               id: item.ID,
+  //               name: item.Name,
+  //               ...grades.reduce((acc, grade) => {
+  //                 acc[grade.topic] =
+  //                   item[`${grade.topic} ${grade.ratio}%`] || 0;
+  //                 return acc;
+  //               }, {}),
+  //               total: item.Total || 0,
+  //             };
+  //           });
+
+  //           // Update the board state with the imported data
+  //           setBoard(importedData);
+
+  //           // Update the tempValues state based on the new board data
+  //           let updatedTempValues = {};
+  //           importedData.forEach((student) => {
+  //             updatedTempValues[student.id] = { ...student };
+  //           });
+  //           setTempValues(updatedTempValues);
+
+  //           toast.success("Import successful!");
+  //         } else {
+  //           toast.error("No data found in CSV file!");
+  //         }
+  //       },
+  //     });
+  //   }
+  // };
+
+  // CRUD
   const handleCancel = () => {
     setEdit(null);
   };
@@ -150,6 +176,7 @@ const GradeBoard = () => {
     setEdit(null);
   };
 
+  // SUM
   const calculateTotal = (studentId) => {
     const student = tempValues[studentId];
     if (!student) return 0;
@@ -164,11 +191,112 @@ const GradeBoard = () => {
     return parseFloat(total.toFixed(2));
   };
 
+  const calculateTotalForExport = (student) => {
+    // Tính tổng giá trị nhân với ratio/100 cho từng môn học
+    const total = grades.reduce((acc, item) => {
+      const value = student[item.topic] !== undefined ? student[item.topic] : 0;
+      const weightedValue = (value * item.ratio) / 100;
+      return acc + weightedValue;
+    }, 0);
+
+    return parseFloat(total.toFixed(2));
+  };
+
+  // SORT
+  const sortColumn = (column, getValue) => {
+    const sortedBoard = [...board].sort((a, b) => {
+      const valueA = getValue(a);
+      const valueB = getValue(b);
+
+      return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+    });
+
+    setBoard(sortedBoard);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const handleSortID = () => {
+    sortColumn("ID", (student) => student.id);
+  };
+
+  const handleSortName = (sortBy) => {
+    const sortedBoard = [...board].sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a[sortBy].localeCompare(b[sortBy]);
+      } else {
+        return b[sortBy].localeCompare(a[sortBy]);
+      }
+    });
+
+    setBoard(sortedBoard);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const handleSortTotal = () => {
+    sortColumn("Total", (student) => calculateTotal(student.id));
+  };
+
+  // SEARCH
+  useEffect(() => {
+    // Step 2: Update the board based on the search text
+    const filteredBoard = initialBoard.filter((student) => {
+      const searchString = searchText.toLowerCase();
+      return (
+        String(student.id).toLowerCase().includes(searchString) ||
+        student.name.toLowerCase().includes(searchString)
+      );
+    });
+    setBoard(filteredBoard);
+  }, [initialBoard, searchText]);
+
+  // PAGINATION
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+  };
+
+  const handleNextPage = () => {
+    if (pageNumber < Math.ceil(board.length / studentsPerPage) - 1) {
+      setPageNumber(pageNumber + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pageNumber > 0) {
+      setPageNumber(pageNumber - 1);
+    }
+  };
+
   return (
     <div>
       <h2 className="mt-10 text-2xl text-[#10375c] font-bold mb-4">
         Grade Board
       </h2>
+      <div className="flex justify-center ">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="absolute w-1/6 p-1 px-3 border-b-[1px] border-gray-200 focus:outline-none shadow-md"
+          value={searchText}
+          onChange={handleFileChange}
+        />
+        <span
+          class="relative right-[-110px] input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-gray-400 dark:text-neutral-200 cursor-pointer"
+          id="basic-addon2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="h-4 w-4"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </div>
 
       <div className="flex justify-end">
         <label
@@ -196,7 +324,7 @@ const GradeBoard = () => {
           id="test"
           type="file"
           hidden
-          onChange={(event) => handleImportCSV(event)}
+          onChange={(event) => handleFileChange(event)}
         />
 
         <button
@@ -217,23 +345,36 @@ const GradeBoard = () => {
           Export
         </button>
       </div>
-      <div className="table-container overflow-x-auto max-w-full">
+      <div className="table-container overflow-x-auto max-w-full min-h-[440px]">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Name</th>
+              <th className="py-2 px-4 border-b" onClick={() => handleSortID()}>
+                ID
+                {sortOrder === "asc" ? " ▲" : " ▼"}
+              </th>
+              <th
+                className="py-2 px-4 border-b"
+                onClick={() => handleSortName("name")}
+              >
+                Name {sortOrder === "asc" ? " ▲" : " ▼"}
+              </th>
               {grades.map((item) => (
                 <th key={item.topic} className="py-2 px-4 border-b">
                   {item.topic} {item.ratio}%
                 </th>
               ))}
-              <th className="py-2 px-4 border-b">Total</th>
+              <th
+                className="py-2 px-4 border-b"
+                onClick={() => handleSortTotal()}
+              >
+                Total {sortOrder === "asc" ? " ▲" : " ▼"}
+              </th>
               <th className="py-2 px-4 border-b">Action</th>
             </tr>
           </thead>
           <tbody>
-            {board.map((student) => (
+            {currentStudents.map((student) => (
               <tr key={student.id} className="text-center">
                 <td className="py-2 px-4 border-b">{student.id}</td>
                 <td className="py-2 px-4 border-b">{student.name}</td>
@@ -244,8 +385,10 @@ const GradeBoard = () => {
                         id={`outlined-number-${item.topic}`}
                         type="number"
                         value={
-                          tempValues[student.id] &&
-                          tempValues[student.id][item.topic]
+                          (tempValues[student.id] &&
+                            tempValues[student.id][item.topic]) !== undefined
+                            ? tempValues[student.id][item.topic]
+                            : 0
                         }
                         size="small"
                         InputLabelProps={{
@@ -258,8 +401,9 @@ const GradeBoard = () => {
                       />
                     ) : (
                       // Display the updated value after saving
-                      tempValues[student.id] &&
-                      tempValues[student.id][item.topic]
+                      (tempValues[student.id] &&
+                        tempValues[student.id][item.topic]) ||
+                      0
                     )}
                   </td>
                 ))}
@@ -304,6 +448,42 @@ const GradeBoard = () => {
           </tbody>
         </table>
       </div>
+      {/* Thêm phần phân trang */}
+
+      {shouldDisplayPagination && (
+        <div className="flex justify-center mt-4 sticky top-[100vh]">
+          <button
+            className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+            onClick={handlePreviousPage}
+            disabled={pageNumber === 0}
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </button>
+          {Array.from(
+            { length: Math.ceil(board.length / studentsPerPage) },
+            (_, index) => (
+              <button
+                key={index}
+                className={`relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white ${
+                  pageNumber === index ? "bg-gray-300" : "bg-white"
+                }`}
+                onClick={() => handlePageChange(index)}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
+          <button
+            className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+            onClick={handleNextPage}
+            disabled={
+              pageNumber === Math.ceil(board.length / studentsPerPage) - 1
+            }
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </button>
+        </div>
+      )}
       <ToastContainer
         position="bottom-right"
         autoClose={1500}
