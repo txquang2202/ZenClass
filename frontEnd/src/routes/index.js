@@ -22,6 +22,8 @@ import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ManageUser from "../Pages/Manage/ManageUser";
 import ManageClass from "../Pages/Manage/ManageClass";
 import ManageCourse from "../Pages/Manage/ManageCourse";
+import NotiPage from "../Pages/NotiPage/NotiPage";
+import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
 const routes = [
   {
@@ -60,6 +62,7 @@ const routes = [
     layout: UserLayout,
     isProtected: false,
   },
+
   {
     path: "/home/:id",
     page: HomePage,
@@ -76,6 +79,12 @@ const routes = [
     path: "/home/courses/:id",
     page: CoursePage,
     layout: HomeLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/notifications/:id",
+    page: NotiPage,
+    layout: DefaultLayout,
     isProtected: true,
   },
   {

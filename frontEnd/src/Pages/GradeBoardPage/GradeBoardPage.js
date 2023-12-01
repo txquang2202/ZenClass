@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { GradeContext } from "../../context/GradeContext"; // Import the GradeContext
+import { GradeContext } from "../../context/GradeContext"; 
 import { CSVLink } from "react-csv";
 import Papa from "papaparse";
 import { toast, ToastContainer } from "react-toastify";
@@ -271,33 +271,40 @@ const GradeBoard = () => {
       <h2 className="mt-10 text-2xl text-[#10375c] font-bold mb-4">
         Grade Board
       </h2>
+
+      {/* SEARCH BAR */}
       <div className="flex justify-center ">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="absolute w-1/6 p-1 px-3 border-b-[1px] border-gray-200 focus:outline-none shadow-md"
-          value={searchText}
-          onChange={handleFileChange}
-        />
-        <span
-          class="relative right-[-110px] input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-gray-400 dark:text-neutral-200 cursor-pointer"
-          id="basic-addon2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            class="h-4 w-4"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </span>
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              class="w-4 h-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="default-search"
+            class="block w-full p-1 px-3 py-3 ps-10 text-sm border-b-[1px] border-gray-200 focus:outline-none shadow-md"
+            placeholder="Search..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            required
+          />
+        </div>
       </div>
 
+      {/* IMPORT / EXPORT */}
       <div className="flex justify-end">
         <label
           htmlFor="test"
@@ -345,8 +352,11 @@ const GradeBoard = () => {
           Export
         </button>
       </div>
+
+      {/* TABLE */}
       <div className="table-container overflow-x-auto max-w-full min-h-[440px]">
         <table className="min-w-full bg-white border border-gray-300">
+          {/* HEADER */}
           <thead>
             <tr>
               <th className="py-2 px-4 border-b" onClick={() => handleSortID()}>
@@ -373,11 +383,15 @@ const GradeBoard = () => {
               <th className="py-2 px-4 border-b">Action</th>
             </tr>
           </thead>
+
+          {/* CONTENT */}
           <tbody>
             {currentStudents.map((student) => (
               <tr key={student.id} className="text-center">
                 <td className="py-2 px-4 border-b">{student.id}</td>
                 <td className="py-2 px-4 border-b">{student.name}</td>
+
+                {/* GRADE */}
                 {grades.map((item) => (
                   <td key={item.topic} className="py-2 px-4 border-b">
                     {edit === student.id ? (
@@ -407,9 +421,13 @@ const GradeBoard = () => {
                     )}
                   </td>
                 ))}
+
+                {/* TOTAL */}
                 <td className="py-2 px-4 border-b">
                   {calculateTotal(student.id)}
                 </td>
+
+                {/* ACTION BUTTON */}
                 <td className="py-2 px-4 border-b">
                   {edit === student.id ? (
                     <>
@@ -448,8 +466,8 @@ const GradeBoard = () => {
           </tbody>
         </table>
       </div>
-      {/* Thêm phần phân trang */}
 
+      {/* PAGITNATION */}
       {shouldDisplayPagination && (
         <div className="flex justify-center mt-4 sticky top-[100vh]">
           <button
@@ -484,6 +502,8 @@ const GradeBoard = () => {
           </button>
         </div>
       )}
+
+      {/* TOAST */}
       <ToastContainer
         position="bottom-right"
         autoClose={1500}

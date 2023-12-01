@@ -125,18 +125,16 @@ const SignIn = ({ handleChange }) => {
   }, []);
   return (
     <Grid
-      className="font-sans pt-12 h-screen bg-gradient-to-br from-[#10375C] via-blue-700 to-blue-800"
+      className=" font-sans pt-12 h-screen bg-gradient-to-br from-[#10375C] via-blue-700 to-blue-800"
       style={bg}
     >
-      <Paper style={paperStyle}>
+      <Paper style={paperStyle} className="relative">
         <IconButton
           color="inherit"
           component={Link}
           to="/"
-          className="absolute top-0 left-[-45px]"
+          className="absolute top-0 left-[-1px]"
         >
-          {" "}
-          ngu
           <ArrowLeftIcon />
         </IconButton>
         <Toolbar className="flex justify-around items-center ">

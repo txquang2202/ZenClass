@@ -49,7 +49,12 @@ const Sidebar = () => {
             onClick={() => handleLinkClick("profile")}
           >
             <span className="mr-3">
-              <AccountCircleIcon className="text-white" />
+              <AccountCircleIcon
+                className="text-white"
+                style={{
+                  color: activeLink === "profile" ? "#2E80CE" : "white",
+                }}
+              />
             </span>
             Profile
           </Link>
@@ -65,7 +70,12 @@ const Sidebar = () => {
             onClick={() => handleLinkClick("courses")}
           >
             <span className="mr-3">
-              <LockResetIcon className="text-white" />
+              <LockResetIcon
+                className="text-white"
+                style={{
+                  color: activeLink === "courses" ? "#2E80CE" : "white",
+                }}
+              />
             </span>
             Password
           </Link>

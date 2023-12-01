@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
+import Noti from "../Noti/Noti";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -94,6 +95,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <Noti />
                 <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
@@ -120,7 +122,7 @@ const Navbar = () => {
                   <Link to={`/profile/${id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Settings</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>

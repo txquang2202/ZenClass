@@ -11,6 +11,7 @@ const GradeStructure = () => {
   const [tempTopic, setTempTopic] = useState("New Grade");
   const [sortOrder, setSortOrder] = useState("");
 
+  // CRUD
   const handleDelete = (id) => {
     // Display a confirmation dialog
     const isConfirmed = window.confirm(
@@ -50,6 +51,7 @@ const GradeStructure = () => {
     }
   };
 
+  // CACULATE TOTAL
   const calculateTotal = () => {
     const total = grades.reduce((acc, grade) => acc + grade.ratio, 0);
     return total;
@@ -57,6 +59,7 @@ const GradeStructure = () => {
 
   const isTotalValid = calculateTotal() === 100;
 
+  // ADD GRADE
   const handleAddGrade = () => {
     // Generate a new unique ID for the new grade
     const newId = Math.max(...grades.map((grade) => grade.id), 0) + 1;
@@ -75,6 +78,7 @@ const GradeStructure = () => {
     setEdit(newId);
   };
 
+  // SORT
   const handleSortByRatio = () => {
     const sortedGrades = [...grades].sort((a, b) => {
       if (sortOrder === "asc") {
@@ -95,6 +99,8 @@ const GradeStructure = () => {
       </h1>
       {/* ... (rest of the code remains unchanged) */}
       <table className="w-full border-collapse border border-gray-300">
+
+        {/* HEADER  */}
         <thead>
           <tr>
             <th className="py-2 px-4 border-b">ID</th>
@@ -109,7 +115,11 @@ const GradeStructure = () => {
             <th className="py-2 px-4 border-b">Action</th>
           </tr>
         </thead>
+
+        {/* CONTENT */}
         <tbody className="text-center">
+
+          {/* GRADES */}
           {grades.map((grade) => (
             <tr key={grade.id}>
               <td className="py-2 px-4 border-b">{grade.gradeCode}</td>
@@ -147,6 +157,8 @@ const GradeStructure = () => {
                   `${grade.ratio}%`
                 )}
               </td>
+
+              {/* ACTION BUTTON */}
               <td className="py-2 px-4 border-b">
                 {edit === grade.id ? (
                   <>
@@ -184,6 +196,8 @@ const GradeStructure = () => {
           ))}
         </tbody>
       </table>
+
+      {/* ADD GRADE */}
       <div className="text-center">
         <button
           type="button"
@@ -194,6 +208,7 @@ const GradeStructure = () => {
         </button>
       </div>
 
+      {/* TOTAL */}
       {isTotalValid ? (
         <h2 className="text-xl font-semibold text-[#10375c]">
           Total: {calculateTotal() + "%"}
