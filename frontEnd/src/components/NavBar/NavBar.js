@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
