@@ -104,6 +104,9 @@ const SignIn = ({ handleChange }) => {
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
+  const handleFacebookLogin = () => {
+    window.location.href = "http://localhost:8080/api/v1/auth/facebook";
+  };
 
   const handleKeyPress = (e) => {
     if (e.charCode === 13 && e.code === "Enter") {
@@ -211,6 +214,7 @@ const SignIn = ({ handleChange }) => {
                 variant="text"
                 style={{ backgroundColor: "#F5F5F5" }}
                 fullWidth
+                onClick={handleFacebookLogin}
               >
                 <FacebookIcon style={{ fontSize: "28px", color: "#3B5998" }} />
               </Button>

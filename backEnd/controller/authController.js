@@ -24,17 +24,29 @@ const handleLogin = (req, res, next) => {
     return res.json({ token });
   })(req, res, next);
 };
-//google
+//google login
 const initGG = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
 const authenticateGG = passport.authenticate("google", {
   failureRedirect: `${process.env.BASE_URL}/signin?message="The email address is not registered!!!"`,
 });
-const handleAuthentication = (req, res) => {
+const handleAuthenticationGG = (req, res) => {
   const token = req.user.token;
   res.redirect(`${process.env.BASE_URL}?token=${token}`);
 };
+//facebook login
+const initFB = passport.authenticate("facebook", {
+  scope: ["email"],
+});
+const authenticateFB = passport.authenticate("facebook", {
+  failureRedirect: `${process.env.BASE_URL}/signin?message="The email address is not registered!!!"`,
+});
+const handleAuthenticationFB = (req, res) => {
+  const token = req.user.token;
+  res.redirect(`${process.env.BASE_URL}?token=${token}`);
+};
+
 const generateUniqueToken = () => {
   const token = crypto.randomBytes(16).toString("hex");
   return token;
@@ -150,5 +162,8 @@ export {
   updatePassword,
   initGG,
   authenticateGG,
-  handleAuthentication,
+  handleAuthenticationGG,
+  initFB,
+  authenticateFB,
+  handleAuthenticationFB,
 };

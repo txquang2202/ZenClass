@@ -14,7 +14,10 @@ import {
   resetPassword,
   initGG,
   authenticateGG,
-  handleAuthentication,
+  handleAuthenticationGG,
+  initFB,
+  authenticateFB,
+  handleAuthenticationFB,
 } from "../controller/authController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
@@ -33,11 +36,15 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const initApi = (app) => {
+  //goolge login
+  router.get("/auth/google", initGG);
+  router.get("/auth/google/callback", authenticateGG, handleAuthenticationGG);
+  //facebook login
+  router.get("/auth/facebook", initFB);
+  router.get("/auth/facebook/callback", authenticateFB, handleAuthenticationFB);
   //unprotect
   router.post("/register", createUser);
   router.post("/login", handleLogin);
-  router.get("/auth/google", initGG);
-  router.get("/auth/google/callback", authenticateGG, handleAuthentication);
   router.get("/verifyReset", verifyReset);
   router.get("/verify", verifyEmail);
   router.post("/deleteUser/:id", deleteUsersbyID);

@@ -4,6 +4,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import env from "dotenv";
 import GoogleStrategy from "passport-google-oauth20";
+import FacebookStrategy from "passport-facebook";
 import { createToken } from "./jwt.js";
 
 env.config();
@@ -52,7 +53,33 @@ passport.use(
     }
   )
 );
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: process.env.BA_BASE_URL + "/api/v1/auth/facebook/callback",
+      profileFields: ["email"],
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        console.log(profile);
+        const existingUser = await User.findOne({
+          email: profile.emails[0].value,
+        });
 
+        if (existingUser) {
+          const token = createToken(existingUser);
+          return cb(null, { user: existingUser, token });
+        } else {
+          return cb(null, false, { message: "The user is not exist!!" });
+        }
+      } catch (err) {
+        return cb(err);
+      }
+    }
+  )
+);
 passport.serializeUser((user, done) => {
   done(null, user);
 });

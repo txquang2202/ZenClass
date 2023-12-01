@@ -14,9 +14,6 @@ const registerUser = (username, email, password) => {
     password,
   });
 };
-const googleAuth = () => {
-  return axios.get("/api/v1/auth/google");
-};
 const getComments = () => {
   return axios.get("/api/v1/getComments");
 };
@@ -62,5 +59,4 @@ export {
   getComments,
   resetPassword,
   updatePassword,
-  googleAuth,
 };
