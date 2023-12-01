@@ -4,6 +4,7 @@ import {
   getUserProfile,
   getAllUsersComments,
   addComment,
+  getAllUsers,
 } from "../controller/userController.js";
 import {
   handleLogin,
@@ -35,7 +36,6 @@ const initApi = (app) => {
   //unprotect
   router.post("/register", createUser);
   router.post("/login", handleLogin);
-  router.get("/home", getAllUsers);
   router.get("/auth/google", initGG);
   router.get("/auth/google/callback", authenticateGG, handleAuthentication);
   router.get("/verifyReset", verifyReset);
@@ -43,6 +43,21 @@ const initApi = (app) => {
   router.post("/deleteUser/:id", deleteUsersbyID);
   router.post("/deleteListUser", deleteListUsersByIds);
   router.post("/blockUserbyID/:id", blockUserbyID);
+  router.get("/getComments", getAllUsersComments);
+  router.post("/updatePassword/:id", updatePassword);
+  router.post("/resetPassword", resetPassword);
+
+  //protected api
+  router.get("/getprofile/:id", authenticateToken, getUserProfile);
+  router.put(
+    "/editprofile/:id",
+    authenticateToken,
+    upload.single("img"),
+    editUser
+  );
+  router.get("/getallusers", authenticateToken, getAllUsers);
+  router.post("/addComments", authenticateToken, addComment);
+
   return app.use("/api/v1/", router);
 };
 

@@ -110,6 +110,16 @@ const SignIn = ({ handleChange }) => {
       handleLogin();
     }
   };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams) {
+      const msg = urlParams.get("message");
+      const verified = urlParams.get("verified");
+
+      if (msg) toast.error(msg);
+      if (verified) toast.success(verified);
+    }
+  }, []);
   return (
     <Grid
       className="font-sans pt-12 h-screen bg-gradient-to-br from-[#10375C] via-blue-700 to-blue-800"

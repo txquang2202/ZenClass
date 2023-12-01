@@ -36,21 +36,16 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        const user = await User.findOne({ email: profile.emails[0].value });
-        if (user) {
-          const token = createToken(user);
-          return cb(null, { user: user, token });
-        }
-
-        const newUser = new User({
+        const existingUser = await User.findOne({
           email: profile.emails[0].value,
-          username: profile.displayName,
         });
 
-        await newUser.save();
-
-        // Return the newly created user
-        return cb(null, newUser);
+        if (existingUser) {
+          const token = createToken(existingUser);
+          return cb(null, { user: existingUser, token });
+        } else {
+          return cb(null, false, { message: "The user is not exist!!" });
+        }
       } catch (err) {
         return cb(err);
       }
