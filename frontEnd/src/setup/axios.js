@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 // Set config defaults when creating the instance
 const instance = axios.create({
-  baseURL: "http://localhost:8080/",
+  baseURL: process.env.REACT_APP_BA_BASE_URL,
 });
 instance.defaults.withCredentials = true;
 // // Alter defaults after instance has been created

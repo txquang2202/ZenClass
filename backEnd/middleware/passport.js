@@ -63,7 +63,6 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        console.log(profile);
         const existingUser = await User.findOne({
           email: profile.emails[0].value,
         });

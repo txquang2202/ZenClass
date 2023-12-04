@@ -50,7 +50,8 @@ function ForgotPassword(props) {
     }));
   };
 
-  const handleEmail = async () => {
+  const handleEmail = async (e) => {
+    e.preventDefault();
     const { email } = credentials;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email || !email.match(emailRegex)) {
@@ -78,28 +79,22 @@ function ForgotPassword(props) {
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.charCode === 13 && e.code === "Enter") {
-      handleEmail();
-    }
-  };
-
   return (
     <Grid
       className="font-sans pt-12 h-screen bg-gradient-to-br from-[#10375C] via-blue-700 to-blue-800"
       style={bg}
     >
-      <Paper style={paperStyle}>
+      <Paper style={paperStyle} className="relative">
         <IconButton
           color="inherit"
           component={Link}
           to="/signin"
-          className="absolute top-0 left-[-45px]"
+          className="absolute top-0 left-[-2px]"
         >
           <ArrowLeftIcon />
         </IconButton>
 
-        <Grid align="center" className="mb-6">
+        <Grid align="center" className="mb-6 pt-8">
           <Avatar style={avatarStyle}>
             <LockResetIcon />
           </Avatar>
@@ -115,6 +110,9 @@ function ForgotPassword(props) {
             value={credentials.email}
             className="text-2xl"
             onChange={handleInputChange}
+            onKeyPress={(e) =>
+              e.charCode === 13 && e.code === "Enter" && handleEmail(e)
+            }
           />
 
           <Button
@@ -125,7 +123,6 @@ function ForgotPassword(props) {
             fullWidth
             onClick={handleEmail}
             className="text-xl"
-            onKeyPress={handleKeyPress}
           >
             Send Reset Code
           </Button>
