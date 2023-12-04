@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children, roleRequired }) => {
     const items = session ? jwtDecode(session) : null;
     if (!session) {
       navigate("/signin");
-    } else if (roleRequired && items.userData.role !== roleRequired) {
+    } else if (roleRequired && items.role !== roleRequired) {
       navigate("*");
     }
   }, [navigate, roleRequired]);
