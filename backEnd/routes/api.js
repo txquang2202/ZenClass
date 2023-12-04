@@ -19,12 +19,19 @@ import {
   authenticateFB,
   handleAuthenticationFB,
 } from "../controller/authController.js";
+import {
+  getAllClasses,
+  createClass,
+  deleteClassbyID,
+} from "../controller/classController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
 import upload from "../middleware/multer.js";
-import { deleteUsersbyID } from "../controller/adminController.js";
-import { deleteListUsersByIds } from "../controller/adminController.js";
-import { blockUserbyID } from "../controller/adminController.js";
+import {
+  deleteUsersbyID,
+  deleteListUsersByIds,
+  blockUserbyID,
+} from "../controller/adminController.js";
 
 const router = express.Router();
 // @param {*} app: express app
@@ -63,6 +70,10 @@ const initApi = (app) => {
     editUser
   );
   router.get("/getallusers", authenticateToken, getAllUsers);
+  router.get("/getallclasses", getAllClasses);
+  router.post("/createClass", createClass);
+  router.post("/deleteClass/:id", deleteClassbyID);
+
   router.post("/addComments", authenticateToken, addComment);
 
   return app.use("/api/v1/", router);
