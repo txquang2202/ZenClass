@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { updatePassword } from "../../services/userServices";
+import { jwtDecode } from "jwt-decode";
 
 function ResetPassword(props) {
   // LAYOUT
@@ -12,7 +13,8 @@ function ResetPassword(props) {
     password: "",
     confirmPassword: "",
   });
-  const { id } = useParams();
+  const data = jwtDecode(localStorage.getItem("token"));
+  const id = data._id;
   const navigate = useNavigate();
 
   const paperStyle = {
@@ -48,7 +50,7 @@ function ResetPassword(props) {
       if (response.status === 200) {
         toast.success("Update successful");
         setTimeout(() => {
-          navigate(`/home/${id}`);
+          navigate(`/home`);
         }, 1000);
       } else {
         toast.error(response.data.message);
