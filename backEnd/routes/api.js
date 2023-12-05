@@ -23,6 +23,8 @@ import {
   getAllClasses,
   createClass,
   deleteClassbyID,
+  editClass,
+  getClassByID,
 } from "../controller/classController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
@@ -69,11 +71,11 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
-  router.get("/getallusers", authenticateToken, getAllUsers);
-  router.get("/getallclasses", getAllClasses);
-  router.post("/createClass", createClass);
-  router.post("/deleteClass/:id", deleteClassbyID);
-
+  router.get("/getClassID/:id", authenticateToken, getClassByID);
+  router.get("/getallclasses", authenticateToken, getAllClasses);
+  router.post("/createClass", authenticateToken, createClass);
+  router.post("/deleteClass/:id", authenticateToken, deleteClassbyID);
+  router.put("/editclass/:id", authenticateToken, editClass);
   router.post("/addComments", authenticateToken, addComment);
 
   return app.use("/api/v1/", router);

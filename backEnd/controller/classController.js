@@ -2,7 +2,6 @@ import Class from "../models/class.js";
 
 const getAllClasses = async (req, res) => {
   try {
-    console.log(req.cookies);
     const classes = await Class.find();
 
     if (!classes || classes.length === 0) {
@@ -57,5 +56,43 @@ const deleteClassbyID = async (req, res) => {
     res.status(500).send("Error while fetching user profile");
   }
 };
+const editClass = async (req, res) => {
+  try {
+    const { title, teacher, className } = req.body;
+    console.log(req.body);
+    const classID = req.params.id;
+    const class_edit = await Class.findById(classID);
 
-export { getAllClasses, createClass, deleteClassbyID };
+    if (!class_edit) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    class_edit.title = title;
+    class_edit.teacher = teacher;
+    class_edit.className = className;
+    await class_edit.save();
+
+    res.json({ message: "Class updated successfully", class_edit });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while updating class");
+  }
+};
+const getClassByID = async (req, res) => {
+  try {
+    const classID = req.params.id;
+
+    const classInfo = await Class.findById(classID);
+
+    if (!classInfo) {
+      return res.status(404).json({ message: "Class not found!" });
+    }
+
+    res.json({ classInfo });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching class info");
+  }
+};
+
+export { getAllClasses, createClass, deleteClassbyID, editClass, getClassByID };
