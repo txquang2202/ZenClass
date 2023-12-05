@@ -27,4 +27,35 @@ const deleteClass = (id, token) => {
   });
 };
 
-export { getAllClasses, createClass, deleteClass };
+const getClassByID = (id, token) => {
+  return axios.get(`/api/v1/getClassID/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const deleteClassbyID = (id, token) => {
+  return axios.delete(`/api/v1/deleteClass/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const editClass = (id, data, token) => {
+  return axios.put(`/api/v1/editclass/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export {
+  getAllClasses,
+  createClass,
+  deleteClass,
+  getClassByID,
+  deleteClassbyID,
+  editClass,
+};

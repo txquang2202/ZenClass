@@ -74,7 +74,7 @@ const initApi = (app) => {
   router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.get("/getallclasses", authenticateToken, getAllClasses);
   router.post("/createClass", authenticateToken, createClass);
-  router.post("/deleteClass/:id", authenticateToken, deleteClassbyID);
+  router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
   router.post("/addComments", authenticateToken, addComment);
 
