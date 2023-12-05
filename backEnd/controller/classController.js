@@ -26,6 +26,12 @@ const createClass = async (req, res) => {
 
     const existTitle = await Class.findOne({ title });
 
+    if (!title) {
+      return res.status(400).json({ message: "Title is empty!" });
+    }
+    if (!className) {
+      return res.status(400).json({ message: "Class name is empty!" });
+    }
     if (existTitle) {
       return res.status(400).json({ message: "Class title already taken!" });
     }
