@@ -1,9 +1,11 @@
 import React from "react";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import { Link, useParams } from "react-router-dom";
+import { useClassContext } from "../../context/ClassContext";
 
 function DetailPage(props) {
   const { id } = useParams();
+  
   return (
     <>
       {/* MAIN CONTENT */}
@@ -17,10 +19,12 @@ function DetailPage(props) {
                 'url("https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
             }}
           ></div>
-          <div className="absolute top-[120px] left-5">
-            <h1 className="text-6xl text-white mb-2">ReactJS</h1>
-            <span className="text-2xl text-white">2310-CLC-AWP-20KTPM2</span>
-          </div>
+        
+              <div className="absolute top-[120px] left-5">
+                <h1 className="text-6xl text-white mb-2">ReactJS</h1>
+                <span className="text-2xl text-white">KTPM-1</span>
+              </div>
+         
         </section>
 
         {/* CONTENT */}
@@ -28,6 +32,13 @@ function DetailPage(props) {
           {/* LEFT */}
           <article>
             <section className="border p-4 rounded-lg flex flex-col">
+              <h2 className="font-semibold">Class ID</h2>
+              <p className="mt-3  text-gray-400">gzkhk5fzkhk5fzkhk5f</p>
+              <a href="#!" className="ml-auto text-blue-400">
+                coppy
+              </a>
+            </section>
+            <section className="border p-4 rounded-lg flex flex-col mt-3">
               <h2 className="font-semibold">Upcoming events</h2>
               <p className="mt-3 mb-3 text-gray-400">
                 There are no upcoming events
@@ -39,6 +50,15 @@ function DetailPage(props) {
           </article>
           {/* RIGHT */}
           <article className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
+            <div className="text-center">
+              <button
+                // onClick={openModal}
+                className="btn border-2 border-gray-300 bg-white text-gray-400 px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-gray-100 drop-shadow-md "
+              >
+                +
+              </button>
+            </div>
+
             {data.map((item, index) => (
               <Link to={`/home/classes/detail/homework/${id}`}>
                 <section

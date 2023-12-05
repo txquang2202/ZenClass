@@ -8,7 +8,7 @@ const getAllClasses = async (req, res) => {
       return res.status(404).json({ message: "No classes found!" });
     }
 
-    res.json({ classes });
+    res.json({ classes }); //
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching users");

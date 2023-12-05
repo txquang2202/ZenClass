@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import Modal from "react-modal";
 import { useClassContext } from "../../context/ClassContext";
+import { createClass } from "../../services/classServices";
+import { jwtDecode } from "jwt-decode";
 
 function SideBar() {
   const { id } = useParams();
@@ -12,14 +14,17 @@ function SideBar() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newClassInfo, setNewClassInfo] = useState({
     title: "",
+    teacher: "",
     className: "",
   });
-
+  const token = localStorage.getItem("token");
+  let data;
+  if (token) data = jwtDecode(token);
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
 
-  const { createClass } = useClassContext();
+  // const { addClass } = useClassContext(); // Assuming your context provides a classes state
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -29,10 +34,19 @@ function SideBar() {
     setModalIsOpen(false);
   };
 
-  const handleCreateClass = () => {
-    createClass(newClassInfo);
-    setModalIsOpen(false);
-    setNewClassInfo({ title: "", className: "" });
+  const handleCreateClass = async () => {
+    try {
+      await createClass(
+        newClassInfo.title,
+        data.username,
+        newClassInfo.className,
+        token
+      );
+      closeModal();
+      setNewClassInfo({ title: "", teacher: "", className: "" });
+    } catch (error) {
+      console.error("Error creating class:", error);
+    }
   };
 
   return (
