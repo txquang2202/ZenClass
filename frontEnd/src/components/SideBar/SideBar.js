@@ -7,9 +7,9 @@ import Modal from "react-modal";
 import { useClassContext } from "../../context/ClassContext";
 import { createClass } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 function SideBar() {
-  const { id } = useParams();
   const [activeLink, setActiveLink] = useState("main");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newClassInfo, setNewClassInfo] = useState({
@@ -43,9 +43,10 @@ function SideBar() {
         token
       );
       closeModal();
+      toast.success("Add successfully!");
       setNewClassInfo({ title: "", teacher: "", className: "" });
     } catch (error) {
-      console.error("Error creating class:", error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -120,7 +121,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/${id}`}
+            to={`/home`}
             className={`flex flex-col items-center text-gray-700  text-xs  ${
               activeLink === "main" ? "text-blue-300" : ""
             }`}
@@ -134,7 +135,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/classes/${id}`}
+            to={`/home/classes`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
               activeLink === "classes" ? "text-blue-300" : ""
             }`}
@@ -148,7 +149,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/courses/${id}`}
+            to={`/home/courses`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
               activeLink === "courses" ? "text-blue-300" : ""
             }`}

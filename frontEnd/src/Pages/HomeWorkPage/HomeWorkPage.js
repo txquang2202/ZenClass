@@ -11,9 +11,7 @@ function HomeWorkPage(props) {
   const data = localStorage.getItem("token");
   const decoded = jwtDecode(data);
   const username = decoded.username;
-  /////////////////////////////////////////////////////////////////////////
-  /////////////////            CHUA FIX COMMENT   ???????       //////////////////
-  /////////////////////////////////////////////////////////////////////////
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,7 +23,7 @@ function HomeWorkPage(props) {
     };
 
     fetchData();
-  }, []);
+  }, [comments]);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
