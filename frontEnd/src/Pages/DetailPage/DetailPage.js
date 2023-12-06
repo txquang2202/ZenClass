@@ -78,7 +78,7 @@ function DetailPage(props) {
         toast.success("Class deleted successfully!");
         navigate("/home");
       } catch (error) {
-        console.error("Error deleting class:", error);
+        toast.error("Error deleting class:", error);
       }
     }
   };
@@ -94,9 +94,9 @@ function DetailPage(props) {
         title: formData.title,
         className: formData.className,
       };
-      const response = await editClass(detailClass.id, formSub, token);
+      await editClass(detailClass.id, formSub, token);
       // Handle success, e.g., show a success message
-      console.log("Class edited successfully:", response.data);
+      toast.success("Class edited successfully:");
 
       setDetailClass((prevDetailClass) => ({
         ...prevDetailClass,
@@ -106,8 +106,7 @@ function DetailPage(props) {
 
       closeModal(); // Close the modal after editing
     } catch (error) {
-      console.error("Error editing class:", error);
-      // Handle error, e.g., show an error message
+      toast.error("Error editing class:", error);
     }
   };
 

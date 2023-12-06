@@ -62,6 +62,7 @@ const initApi = (app) => {
   router.get("/getComments", getAllUsersComments);
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
+  router.get("/getallclasses", getAllClasses);
 
   //protected api
   router.get("/getprofile/:id", authenticateToken, getUserProfile);
@@ -72,7 +73,6 @@ const initApi = (app) => {
     editUser
   );
   router.get("/getClassID/:id", authenticateToken, getClassByID);
-  router.get("/getallclasses", authenticateToken, getAllClasses);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
