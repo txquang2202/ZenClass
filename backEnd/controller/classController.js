@@ -64,8 +64,7 @@ const deleteClassbyID = async (req, res) => {
 };
 const editClass = async (req, res) => {
   try {
-    const { title, teacher, className } = req.body;
-    console.log(req.body);
+    const { title, className } = req.body;
     const classID = req.params.id;
     const class_edit = await Class.findById(classID);
 
@@ -74,7 +73,6 @@ const editClass = async (req, res) => {
     }
 
     class_edit.title = title;
-    class_edit.teacher = teacher;
     class_edit.className = className;
     await class_edit.save();
 

@@ -10,6 +10,7 @@ import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import ClipboardJS from "clipboard";
 import Modal from "../../components/Modal/ClassDetailModal";
+import { toast } from "react-toastify";
 
 function DetailPage(props) {
   const { id } = useParams();
@@ -74,6 +75,7 @@ function DetailPage(props) {
         await deleteClassbyID(classId, token);
 
         closeModal();
+        toast.success("Class deleted successfully!");
         navigate("/home");
       } catch (error) {
         console.error("Error deleting class:", error);
@@ -88,16 +90,17 @@ function DetailPage(props) {
   // API editClass
   const handleEditClass = async () => {
     try {
-      const response = await editClass(detailClass.id, formData, token);
+      const formSub = {
+        title: formData.title,
+        className: formData.className,
+      };
+      const response = await editClass(detailClass.id, formSub, token);
       // Handle success, e.g., show a success message
       console.log("Class edited successfully:", response.data);
 
-      // You may also want to update the local state or refetch the data
-      // ...
       setDetailClass((prevDetailClass) => ({
         ...prevDetailClass,
         title: formData.title,
-        teacher: dataUser.username,
         className: formData.className,
       }));
 
