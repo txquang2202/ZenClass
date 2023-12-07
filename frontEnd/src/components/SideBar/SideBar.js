@@ -10,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 
 function SideBar() {
+  const { id } = useParams();
   const [activeLink, setActiveLink] = useState("main");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newClassInfo, setNewClassInfo] = useState({
@@ -121,7 +122,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home`}
+            to={`/home/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs  ${
               activeLink === "main" ? "text-blue-300" : ""
             }`}
@@ -135,7 +136,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/classes`}
+            to={`/home/classes/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
               activeLink === "classes" ? "text-blue-300" : ""
             }`}
@@ -149,7 +150,7 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/courses`}
+            to={`/home/courses/${id}`}
             className={`flex flex-col items-center text-gray-700  text-xs ${
               activeLink === "courses" ? "text-blue-300" : ""
             }`}

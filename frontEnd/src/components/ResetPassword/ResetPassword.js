@@ -71,7 +71,7 @@ function ResetPassword(props) {
           <Avatar style={avatarStyle}>
             <LockResetIcon />
           </Avatar>
-          <h2 className="text-2xl mt-1">Reset Password</h2>
+          <h2 className="text-2xl mt-1">Update Password</h2>
         </Grid>
 
         <form>
