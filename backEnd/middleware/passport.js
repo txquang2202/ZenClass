@@ -6,6 +6,7 @@ import env from "dotenv";
 import GoogleStrategy from "passport-google-oauth20";
 import FacebookStrategy from "passport-facebook";
 import { createToken } from "./jwt.js";
+import { createUserOauth } from "../controller/userController.js";
 
 env.config();
 
@@ -45,7 +46,24 @@ passport.use(
           const token = createToken(existingUser);
           return cb(null, { user: existingUser, token });
         } else {
-          return cb(null, false, { message: "The user is not exist!!" });
+          const userInfo = {
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            password: "",
+          };
+
+          const newUser = await createUserOauth(
+            userInfo.username,
+            userInfo.email,
+            userInfo.password
+          );
+
+          const token = createToken(newUser);
+          return cb(null, {
+            user: newUser,
+            token,
+            message: "Register successfully!!",
+          });
         }
       } catch (err) {
         return cb(err);
@@ -68,10 +86,28 @@ passport.use(
         });
 
         if (existingUser) {
+          //  console.log(profile);
           const token = createToken(existingUser);
           return cb(null, { user: existingUser, token });
         } else {
-          return cb(null, false, { message: "The user is not exist!!" });
+          const userInfo = {
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            password: "",
+          };
+
+          const newUser = await createUserOauth(
+            userInfo.username,
+            userInfo.email,
+            userInfo.password
+          );
+
+          const token = createToken(newUser);
+          return cb(null, {
+            user: newUser,
+            token,
+            message: "Register successfully!!",
+          });
         }
       } catch (err) {
         return cb(err);

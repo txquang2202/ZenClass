@@ -65,6 +65,7 @@ const initApi = (app) => {
   router.get("/getallclasses", getAllClasses);
 
   //protected api
+  router.get("/getallusers", authenticateToken, getAllUsers);
   router.get("/getprofile/:id", authenticateToken, getUserProfile);
   router.put(
     "/editprofile/:id",
