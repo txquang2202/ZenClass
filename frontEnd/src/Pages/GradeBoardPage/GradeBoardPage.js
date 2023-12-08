@@ -1,8 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { GradeContext } from "../../context/GradeContext"; 
-import { CSVLink } from "react-csv";
-import Papa from "papaparse";
-import { toast, ToastContainer } from "react-toastify";
+import { GradeContext } from "../../context/GradeContext";
+import { ToastContainer } from "react-toastify";
 import TextField from "@mui/material/TextField";
 
 const GradeBoard = () => {

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import Modal from "react-modal";
-import { useClassContext } from "../../context/ClassContext";
+// import { useClassContext } from "../../context/ClassContext";
 import { createClass } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";

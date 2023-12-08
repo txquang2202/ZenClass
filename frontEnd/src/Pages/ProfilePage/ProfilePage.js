@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { getUserID, updateUser } from "../../services/userServices";
 
-const drawerWidth = 210;
 function ResponsiveDrawer(props) {
   const [formData, setFormData] = React.useState({
     fullname: "",
