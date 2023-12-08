@@ -35,7 +35,7 @@ export const ClassProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [navigate, token]);
+  }, [navigate, token, classes]);
 
   //  const addClass = (newClass) => {
   //     setClasses((prevClasses) => [...prevClasses, newClass]);
