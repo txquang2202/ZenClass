@@ -34,6 +34,8 @@ const createUser = async (req, res) => {
       street: "",
       city: "",
       status: "Normal",
+      courses: "",
+      classes: "",
     });
 
     const existUsername = await User.findOne({ username });
@@ -76,6 +78,8 @@ const createUserOauth = async (username, email, password) => {
       street: "",
       city: "",
       status: "Normal",
+      courses: "",
+      classes: "",
     });
 
     await newUser.save();

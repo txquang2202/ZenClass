@@ -13,8 +13,12 @@ function ResetPassword(props) {
     password: "",
     confirmPassword: "",
   });
-  const data = jwtDecode(localStorage.getItem("token"));
-  const id = data._id;
+  const { id } = useParams();
+  // let data;
+  // const token = localStorage.getItem("token");
+  // if (token) {
+  //   data = jwtDecode(token);
+  // }
   const navigate = useNavigate();
 
   const paperStyle = {

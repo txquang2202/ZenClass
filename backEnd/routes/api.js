@@ -25,6 +25,9 @@ import {
   deleteClassbyID,
   editClass,
   getClassByID,
+  addStudent,
+  addTeacher,
+  getClassMembers,
 } from "../controller/classController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
@@ -78,6 +81,9 @@ const initApi = (app) => {
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
   router.post("/addComments", authenticateToken, addComment);
+  router.post("/addStudentsToClass/:id", addStudent);
+  router.post("/addTeacherToClass/:id", addTeacher);
+  router.get("/getclassmembers/:id", getClassMembers);
 
   return app.use("/api/v1/", router);
 };

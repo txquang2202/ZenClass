@@ -7,7 +7,6 @@ const commentsSchema = new mongoose.Schema({
   date: Date,
 });
 
-// Tạo một Model từ Schema
 const Comment = mongoose.model("comments", commentsSchema);
 
 export default Comment;

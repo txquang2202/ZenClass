@@ -1,4 +1,5 @@
-import Class from "../models/class.js";
+import Class from "../models/classes.js";
+import User from "../models/user.js";
 
 const getAllClasses = async (req, res) => {
   try {
@@ -12,6 +13,76 @@ const getAllClasses = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching users");
+  }
+};
+const getClassMembers = async (req, res) => {
+  const classId = req.params.id;
+  console.log("Có thằng gọi");
+  try {
+    const classWithMembers = await Class.findById(classId)
+      .populate("students", "username fullname img")
+      .populate("teachers", "username fullname img");
+
+    if (!classWithMembers) {
+      return res.status(404).json({ error: "Invalid Class ID" });
+    }
+
+    res.json(classWithMembers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+const addStudent = async (req, res) => {
+  const classId = req.params.id;
+  const { studentId } = req.body;
+
+  try {
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: "The students is not exist!!!" });
+    }
+
+    const updatedClass = await Class.findByIdAndUpdate(
+      classId,
+      {
+        $push: {
+          students: student,
+        },
+      },
+      { new: true }
+    );
+
+    res.json(updatedClass);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+const addTeacher = async (req, res) => {
+  const classId = req.params.id;
+  const { teacherId } = req.body;
+
+  try {
+    const teacher = await User.findById(teacherId);
+    if (!teacher) {
+      return res.status(404).json({ error: "The teacher is not exist!!!" });
+    }
+
+    const updatedClass = await Class.findByIdAndUpdate(
+      classId,
+      {
+        $push: {
+          teachers: teacher,
+        },
+      },
+      { new: true }
+    );
+
+    res.json(updatedClass);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 const createClass = async (req, res) => {
@@ -99,4 +170,13 @@ const getClassByID = async (req, res) => {
   }
 };
 
-export { getAllClasses, createClass, deleteClassbyID, editClass, getClassByID };
+export {
+  getAllClasses,
+  createClass,
+  deleteClassbyID,
+  editClass,
+  getClassByID,
+  addStudent,
+  addTeacher,
+  getClassMembers,
+};
