@@ -11,13 +11,10 @@ env.config();
 
 const createUser = async (req, res) => {
   try {
-    const { username, password, email, fullname, birthdate, phone, gender } =
-      req.body;
+    const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Generate a verification token
     const verificationToken = generateUniqueToken();
-
+    console.log(req.body);
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -26,8 +23,8 @@ const createUser = async (req, res) => {
       isVerified: false,
       role: 0,
       img: "",
-      fullname,
-      birthdate,
+      fullname: "",
+      birthdate: "",
       role: 0,
       img: "",
       fullname: "",
@@ -37,6 +34,8 @@ const createUser = async (req, res) => {
       street: "",
       city: "",
       status: "Normal",
+      courses: "",
+      classes: "",
     });
 
     const existUsername = await User.findOne({ username });
@@ -59,6 +58,36 @@ const createUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Đã xảy ra lỗi.");
+  }
+};
+const createUserOauth = async (username, email, password) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      username,
+      password: hashedPassword,
+      email,
+      isVerified: true,
+      role: 0,
+      img: "",
+      fullname: "",
+      birthdate: "",
+      phone: "",
+      gender: "",
+      street: "",
+      city: "",
+      status: "Normal",
+      courses: "",
+      classes: "",
+    });
+
+    await newUser.save();
+
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Đã xảy ra lỗi.");
   }
 };
 
@@ -161,4 +190,5 @@ export {
   addComment,
   sendEmail,
   verifyEmail,
+  createUserOauth,
 };

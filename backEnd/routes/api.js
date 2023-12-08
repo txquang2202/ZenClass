@@ -22,6 +22,11 @@ import {
   getAllClasses,
   createClass,
   deleteClassbyID,
+  editClass,
+  getClassByID,
+  addStudent,
+  addTeacher,
+  getClassMembers,
 } from "../controller/classController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
@@ -60,8 +65,10 @@ const initApi = (app) => {
   router.get("/getComments", getAllUsersComments);
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
+  router.get("/getallclasses", getAllClasses);
 
   //protected api
+  router.get("/getallusers", authenticateToken, getAllUsers);
   router.get("/getprofile/:id", authenticateToken, getUserProfile);
   router.put(
     "/editprofile/:id",
@@ -69,12 +76,14 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
-  router.get("/getallusers", authenticateToken, getAllUsers);
-  router.get("/getallclasses", getAllClasses);
-  router.post("/createClass", createClass);
-  router.post("/deleteClass/:id", deleteClassbyID);
-
+  router.get("/getClassID/:id", authenticateToken, getClassByID);
+  router.post("/createClass", authenticateToken, createClass);
+  router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
+  router.put("/editclass/:id", authenticateToken, editClass);
   router.post("/addComments", authenticateToken, addComment);
+  router.post("/addStudentsToClass/:id", addStudent);
+  router.post("/addTeacherToClass/:id", addTeacher);
+  router.get("/getclassmembers/:id", getClassMembers);
 
   return app.use("/api/v1/", router);
 };

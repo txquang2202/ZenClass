@@ -33,9 +33,6 @@ const createToken = (user) => {
 };
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  console.log(" ");
-  console.log(authHeader);
-  console.log(" ");
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {

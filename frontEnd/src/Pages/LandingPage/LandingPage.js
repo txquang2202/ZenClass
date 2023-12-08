@@ -30,11 +30,11 @@ const HeroSection = () => {
     <>
       {/* HERO */}
       <section className="hero bg-[#10375C] pt-[76px] pb-[170px]">
-        <div className="container w-max lg:max-w-[calc(100%-20rem)] mx-auto flex flex-col lg:flex-row items-center justify-between">
+        <div className="container w-full lg:max-w-screen-xl mx-auto flex flex-col lg:flex-row items-center justify-between">
           {/* Hero content */}
           <section className="hero__content text-white flex-shrink-0 lg:w-[44%] lg:order-1 mb-8 lg:mb-0">
             <h1 className="hero__heading text-white text-4xl lg:text-7xl font-semibold leading-tight mb-4">
-              Welcome to Our ZenClass Website
+              Welcome to Our&nbsp;ZenClass Website
             </h1>
             <p className="hero__desc text-gray-300 mt-[22px] text-lg lg:text-xl leading-7 lg:w-[90%]">
               Explore a unique online learning hub for teachers and students to

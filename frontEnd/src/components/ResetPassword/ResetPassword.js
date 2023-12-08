@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
@@ -13,8 +13,12 @@ function ResetPassword(props) {
     password: "",
     confirmPassword: "",
   });
-  const data = jwtDecode(localStorage.getItem("token"));
-  const id = data._id;
+  const { id } = useParams();
+  // let data;
+  // const token = localStorage.getItem("token");
+  // if (token) {
+  //   data = jwtDecode(token);
+  // }
   const navigate = useNavigate();
 
   const paperStyle = {
@@ -71,7 +75,7 @@ function ResetPassword(props) {
           <Avatar style={avatarStyle}>
             <LockResetIcon />
           </Avatar>
-          <h2 className="text-2xl mt-1">Reset Password</h2>
+          <h2 className="text-2xl mt-1">Update Password</h2>
         </Grid>
 
         <form>

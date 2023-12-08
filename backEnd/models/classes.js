@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
 const classSchema = new mongoose.Schema({
   title: String,
-  teacher: String,
+  teachers: [{ type: Schema.Types.ObjectId, ref: "users" }],
   className: String,
+  students: [{ type: Schema.Types.ObjectId, ref: "users" }],
 });
 
-// Tạo một Model từ Schema
 const Class = mongoose.model("classes", classSchema);
 
 export default Class;

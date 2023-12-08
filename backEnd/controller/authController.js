@@ -29,7 +29,7 @@ const initGG = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
 const authenticateGG = passport.authenticate("google", {
-  failureRedirect: `${process.env.BASE_URL}/signin?message="The email address is not registered!!!"`,
+  failureRedirect: `${process.env.BASE_URL}/signin?message="Failed!!!"`,
 });
 const handleAuthenticationGG = (req, res) => {
   const token = req.user.token;

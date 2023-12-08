@@ -72,13 +72,13 @@ const Navbar = () => {
     Navigate("/");
   };
   return (
-    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10 ">
-      <div className="container w-full lg:max-w-[calc(100%-7rem)] mx-auto">
+    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
+      <div className="container w-full lg:max-w-screen-xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-white text-lg">
             ZenClass
           </Link>
-          <div className="flex items-center space-x-4 gap-12">
+          <div className="flex items-center space-x-4 lg:gap-12">
             <Link to={`/home/${id}`} className="text-white">
               Home
             </Link>

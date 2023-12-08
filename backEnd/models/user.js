@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -15,6 +16,8 @@ const userSchema = new mongoose.Schema({
   verificationToken: String,
   isVerified: Boolean,
   status: String,
+  courses: [{ type: Schema.Types.ObjectId, ref: "courses" }],
+  classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
 });
 
 // Tạo một Model từ Schema
