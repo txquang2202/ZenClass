@@ -6,7 +6,6 @@ import {
   Typography,
   TextField,
   Button,
-  AppBar,
   Toolbar,
 } from "@material-ui/core";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -15,7 +14,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerUser } from "../../services/userServices";

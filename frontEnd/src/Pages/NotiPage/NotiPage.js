@@ -46,36 +46,4 @@ function NotiPage(props) {
   );
 }
 
-const menuItemsData = [
-  {
-    id: 1,
-    name: "Duy",
-    avatarSrc: "/static/images/avatar/1.jpg",
-    content: "Reprehenderit quia neque error Ipsa laudantium molestias",
-    timestamp: "1 month ago",
-  },
-  {
-    id: 2,
-    name: "Hieu",
-    avatarSrc: "/static/images/avatar/1.jpg",
-    content: "Reprehenderit quia neque error Ipsa laudantium molestias",
-    timestamp: "1 month ago",
-  },
-  {
-    id: 3,
-    name: "Quang",
-    avatarSrc: "/static/images/avatar/1.jpg",
-    content: "Reprehenderit quia neque error Ipsa laudantium molestias",
-    timestamp: "1 month ago",
-  },
-  {
-    id: 4,
-    name: "Quang",
-    avatarSrc: "/static/images/avatar/1.jpg",
-    content: "Reprehenderit quia neque error Ipsa laudantium molestias",
-    timestamp: "1 month ago",
-  },
-  // Add more items as needed
-];
-
 export default NotiPage;
