@@ -1,5 +1,6 @@
 import React from "react";
 import SideBarUser from "../../components/SideBarUser/SideBarUser";
+import IsBlocked from "../../components/IsBlocked/IsBlocked";
 
 function Default({ children }) {
   return (
@@ -11,7 +12,7 @@ function Default({ children }) {
           <SideBarUser />
         </div>
         {/* Main content */}
-        <div className="basis-11/12 bg-white">{children}</div>
+        <div className="basis-11/12 bg-white"><IsBlocked>{children}</IsBlocked></div>
       </div>
     </div>
   );

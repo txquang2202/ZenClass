@@ -19,11 +19,17 @@ import SendMailSuccessPage from "../Pages/SendMailSuccessPage/SendMailSuccessPag
 import ResetPassword from "../components/ResetPassword/ResetPassword";
 import UserLayout from "../layouts/UserLayout/UserLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
-import ManageUser from "../Pages/Manage/ManageUser";
-import ManageClass from "../Pages/Manage/ManageClass";
-import ManageCourse from "../Pages/Manage/ManageCourse";
+import ManageClass from "../Pages/ManageClass/ManageClass";
+import ManageCourse from "../Pages/ManageCourse/ManageCourse";
 import NotiPage from "../Pages/NotiPage/NotiPage";
+import ManageUser from "../Pages/ManageUser/ManageUser";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
+import BlockPage from "../Pages/BlockPage/BlockPage";
+import NotiLayout from "../layouts/NotiLayout/NotiLayout";
+
+
+
+
 
 const routes = [
   {
@@ -84,7 +90,7 @@ const routes = [
   {
     path: "/home/notifications/:id",
     page: NotiPage,
-    layout: DefaultLayout,
+    layout: NotiLayout,
     isProtected: true,
   },
   {
@@ -164,6 +170,12 @@ const routes = [
   {
     path: "500",
     page: ServerErrorPage,
+    layout: null,
+    isProtected: false,
+  },
+  {
+    path: "/blocked",
+    page: BlockPage, 
     layout: null,
     isProtected: false,
   },

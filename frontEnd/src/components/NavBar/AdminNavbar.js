@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
-import axios from "axios";
+import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
-const AdminNavbar = () => {
+import Noti from "../Noti/Noti";
+
+
+const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
   const [name, setName] = useState("");
@@ -22,17 +25,23 @@ const AdminNavbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+
         const check = localStorage.getItem("token");
         if (!check) {
           setUser(false);
           return;
         }
-        const data = JSON.parse(localStorage.getItem("token"));
-        const session = jwtDecode(data.token);
+        const data = localStorage.getItem("token");
+        const session = jwtDecode(data);
+
         setId(session._id);
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/getprofile/${session._id}`
-        );
+        const response = await getUserID(session._id, data);
         const userData = response.data.user;
 
         if (userData) {
@@ -57,27 +66,6 @@ const AdminNavbar = () => {
     fetchUserData();
   }, [id]);
 
-  // useEffect(() => {
-  //   const userData = JSON.parse(sessionStorage.getItem("account"));
-  //   if (userData) {
-  //     console.log(userData);
-  //     const storedName = userData.userData.username;
-  //     const storedAvt = userData.userData.img;
-  //     const storedId = userData.userData._id;
-
-  //     if (storedName) {
-  //       setName(storedName);
-  //     }
-
-  //     if (storedAvt) {
-  //       setAvt(storedAvt);
-  //     }
-  //     if (storedId) {
-  //       setId(storedId);
-  //     }
-  //     setUser(true);
-  //   }
-  // }, []);
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(false);
@@ -85,7 +73,7 @@ const AdminNavbar = () => {
     Navigate("/");
   };
   return (
-    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
+    <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10 ">
       <div className="container w-full lg:max-w-[calc(100%-7rem)] mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-white text-lg">
@@ -108,6 +96,7 @@ const AdminNavbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <Noti />
                 <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
@@ -134,7 +123,7 @@ const AdminNavbar = () => {
                   <Link to={`/profile/${id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Settings</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
@@ -158,4 +147,4 @@ const AdminNavbar = () => {
   );
 };
 
-export default AdminNavbar;
+export default Navbar;

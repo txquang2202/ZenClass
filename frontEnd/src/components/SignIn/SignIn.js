@@ -76,7 +76,7 @@ const SignIn = ({ handleChange }) => {
       const response = await loginUser(username, password);
       localStorage.setItem("token", response.data.token);
       const decodedToken = jwtDecode(response.data.token);
-      console.log(process.env.REACT_APP_BASE_URL);
+      console.log(decodedToken);
 
       if (response.status === 200) {
         if (decodedToken.isVerified) {

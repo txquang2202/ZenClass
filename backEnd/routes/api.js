@@ -4,7 +4,6 @@ import {
   getUserProfile,
   getAllUsersComments,
   addComment,
-  getAllUsers,
 } from "../controller/userController.js";
 import {
   handleLogin,
@@ -31,6 +30,7 @@ import {
   deleteUsersbyID,
   deleteListUsersByIds,
   blockUserbyID,
+  getAllUsers,
 } from "../controller/adminController.js";
 
 const router = express.Router();

@@ -6,6 +6,7 @@ import DataTable from 'react-data-table-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteUserbyID,deleteListUserbyID,getAllUsers, blockUserbyID } from "../../services/adminServices";
 import { ToastContainer, toast } from "react-toastify";
+
 function ManageUser() {
   const columns = [
     {
@@ -163,11 +164,10 @@ function ManageUser() {
 			<button key="delete" onClick={handleDelete} className="pt-[5px] pb-[5px] pl-[10px] pr-[10px] bg-[#FF0000]" icon>
 				Delete
 			</button>
-		);
-	}, [listIdDelete, toggleCleared, fetchUserData]);
+      );
+    }, [listIdDelete, toggleCleared, fetchUserData]);
 
 
-  console.log(listIdDelete)
   return (
     <>
       <div className="relative  ">

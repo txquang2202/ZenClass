@@ -14,6 +14,7 @@ const ProtectedRoute = ({ children, roleRequired }) => {
     } else if (roleRequired && items.role !== roleRequired) {
       navigate("*");
     }
+    
   }, [navigate, roleRequired]);
   return <>{children}</>;
 };

@@ -4,18 +4,23 @@ import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+
+
+
 function App() {
+
   return (
     <Router>
       <div className="Container">
         <Routes>
+          
           {routes.map((route) => {
-            const Page = route.page;
+            let Page = route.page;
             // const Layout = route.isShowHeader ? DefaultLayout : Fragment;
             const Protect = route.isProtected ? ProtectedRoute : Fragment;
-
             let Layout = DefaultLayout;
-
+        
+            
             if (route.layout) {
               Layout = route.layout;
             } else if (route.layout === null) {
