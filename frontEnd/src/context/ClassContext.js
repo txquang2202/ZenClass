@@ -25,7 +25,6 @@ export const ClassProvider = ({ children }) => {
           teacher: data.teachers[0].username || "",
           className: data.className || "",
         }));
-        console.log(mappedClasses);
         setClasses(mappedClasses);
         setLoading(false);
       } catch (error) {

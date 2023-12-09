@@ -110,6 +110,7 @@ const createClass = async (req, res) => {
       title: title,
       teacher: teacherName,
       className: className,
+      id: newClass._id,
     };
     await newClass.save();
 
