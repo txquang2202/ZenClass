@@ -4,7 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import Modal from "react-modal";
-// import { useClassContext } from "../../context/ClassContext";
+import { useClassContext } from "../../context/ClassContext";
 import { createClass } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
@@ -25,7 +25,7 @@ function SideBar() {
     setActiveLink(link);
   };
 
-  // const { addClass } = useClassContext(); // Assuming your context provides a classes state
+  const { addClass } = useClassContext();
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -37,12 +37,14 @@ function SideBar() {
 
   const handleCreateClass = async () => {
     try {
-      await createClass(
+      const response = await createClass(
         newClassInfo.title,
         data.username,
         newClassInfo.className,
         token
       );
+      console.log(response.data.class);
+      addClass(response.data.class);
       closeModal();
       toast.success("Add successfully!");
       setNewClassInfo({ title: "", teacher: "", className: "" });

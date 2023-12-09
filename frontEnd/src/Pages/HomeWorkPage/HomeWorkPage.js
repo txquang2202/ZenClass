@@ -23,7 +23,7 @@ function HomeWorkPage(props) {
     };
 
     fetchData();
-  }, [comments]);
+  }, []);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
@@ -35,19 +35,20 @@ function HomeWorkPage(props) {
       const newCommentObj = {
         username: username,
         content: newComment,
-        avatarSrc: "/static/images/avatar/2.jpg",
-        date: new Date(),
+        avt: "/static/images/avatar/2.jpg",
+        date: new Date().toISOString(),
       };
       try {
         const response = await postComment(newCommentObj);
 
-        setComments([...comments, response.data]);
+        setComments((prevComments) => [...prevComments, response.data.comment]);
         setNewComment("");
       } catch (error) {
         console.error("Error adding comment:", error);
       }
     }
   };
+
   return (
     <>
       <section className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto mt-6">

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { getAllClasses } from "../services/classServices";
 import { useNavigate } from "react-router-dom";
+import { circularProgressClasses } from "@mui/material";
 
 const ClassContext = createContext();
 
@@ -17,15 +18,14 @@ export const ClassProvider = ({ children }) => {
       try {
         const response = await getAllClasses(token);
         const classesData = response.data.classes;
-
-        // Assuming you want to map all classesData items
+        console.log(classesData);
         const mappedClasses = classesData.map((data) => ({
           id: data._id || "",
           title: data.title || "",
-          teacher: data.teacher || "",
+          teacher: data.teachers[0].username || "",
           className: data.className || "",
         }));
-
+        console.log(mappedClasses);
         setClasses(mappedClasses);
         setLoading(false);
       } catch (error) {
@@ -35,11 +35,11 @@ export const ClassProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [navigate, token, classes]);
+  }, [navigate, token]);
 
-  //  const addClass = (newClass) => {
-  //     setClasses((prevClasses) => [...prevClasses, newClass]);
-  //   };
+  const addClass = (newClass) => {
+    setClasses((prevClasses) => [...prevClasses, newClass]);
+  };
 
   // const createClass = async (e) => {
   //   e.preventDefault();
@@ -54,7 +54,7 @@ export const ClassProvider = ({ children }) => {
   // };
 
   return (
-    <ClassContext.Provider value={{ classes, loading }}>
+    <ClassContext.Provider value={{ classes, loading, addClass }}>
       {children}
     </ClassContext.Provider>
   );

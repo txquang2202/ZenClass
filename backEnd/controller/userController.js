@@ -152,7 +152,7 @@ const getAllUsers = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     const { username, content, avt, date } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const newComment = new Comment({
       username,
       content,
@@ -161,7 +161,7 @@ const addComment = async (req, res) => {
     });
 
     await newComment.save();
-    res.json({ message: "Adding succesfully!" });
+    res.json({ message: "Adding succesfully!", comment: newComment });
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);

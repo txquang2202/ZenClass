@@ -1,15 +1,12 @@
 import Class from "../models/classes.js";
 import User from "../models/user.js";
+import transporter from "../middleware/nodemailer.js";
 
 const getAllClasses = async (req, res) => {
   try {
-    const classes = await Class.find();
+    const classes = await Class.find().populate("teachers", "username");
 
-    if (!classes || classes.length === 0) {
-      return res.status(404).json({ message: "No classes found!" });
-    }
-
-    res.json({ classes }); //
+    res.json({ classes });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching users");
@@ -17,7 +14,6 @@ const getAllClasses = async (req, res) => {
 };
 const getClassMembers = async (req, res) => {
   const classId = req.params.id;
-  console.log("Có thằng gọi");
   try {
     const classWithMembers = await Class.findById(classId)
       .populate("students", "username fullname img")
@@ -87,15 +83,7 @@ const addTeacher = async (req, res) => {
 };
 const createClass = async (req, res) => {
   try {
-    const { title, teacher, className } = req.body;
-
-    const newClass = new Class({
-      title: title,
-      teacher: teacher,
-      className: className,
-    });
-
-    const existTitle = await Class.findOne({ title });
+    const { title, teacherName, className } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is empty!" });
@@ -103,20 +91,38 @@ const createClass = async (req, res) => {
     if (!className) {
       return res.status(400).json({ message: "Class name is empty!" });
     }
+
+    const existTitle = await Class.findOne({ title });
     if (existTitle) {
       return res.status(400).json({ message: "Class title already taken!" });
     }
+    const teacher = await User.findOne({ username: teacherName });
+    if (!teacher) {
+      return res.status(400).json({ message: "Teacher not found!" });
+    }
 
+    const newClass = new Class({
+      title: title,
+      teachers: [teacher._id],
+      className: className,
+    });
+    const returnClass = {
+      title: title,
+      teacher: teacherName,
+      className: className,
+    };
     await newClass.save();
 
     res.json({
       message: "Create class successfully!!",
+      class: returnClass,
     });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error.");
   }
 };
+
 const deleteClassbyID = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -169,7 +175,42 @@ const getClassByID = async (req, res) => {
     res.status(500).send("Error while fetching class info");
   }
 };
+const resetPassword = async (req, res) => {
+  const classId = req.params.id;
+  const verificationLink = `${process.env.BA_BASE_URL}/api/v1/invite/${classId}`;
 
+  const existEmail = await User.findOne({ email });
+
+  if (!existEmail) {
+    return res.status(400).json({ message: "Email is not exist!" });
+  }
+
+  try {
+    await User.updateOne(
+      { email: email },
+      { $set: { verificationToken: verificationToken } }
+    );
+  } catch (error) {
+    console.error("Error saving verificationToken to database:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+
+  const mailOptions = {
+    from: "Zen Class Corporation stellaron758@gmail.com",
+    to: email,
+    subject: "[Reset Password]",
+    html: `Your reset password link is: <a href="${verificationLink}">Reset your password</a>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent");
+    return res.status(200).json({ message: "Reset email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 export {
   getAllClasses,
   createClass,

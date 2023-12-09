@@ -30,13 +30,13 @@ const addTeacher = (id, teacherId, token) => {
     teacherId,
   });
 };
-const createClass = (title, teacher, className, token) => {
+const createClass = (title, teacherName, className, token) => {
   return axios.post("/api/v1/createClass", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     title,
-    teacher,
+    teacherName,
     className,
   });
 };
@@ -48,7 +48,6 @@ const deleteClass = (id, token) => {
     },
   });
 };
-
 const getClassByID = (id, token) => {
   return axios.get(`/api/v1/getClassID/${id}`, {
     headers: {
