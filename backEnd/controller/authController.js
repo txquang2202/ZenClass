@@ -127,9 +127,9 @@ const resetPassword = async (req, res) => {
 };
 const verifyReset = async (req, res) => {
   const { token } = req.query;
-  console.log(token);
+
   const user = await User.findOne({ verificationToken: token });
-  console.log(user.verificationToken);
+
   if (!user) {
     return res.status(400).send("Invalid verification token.");
   }

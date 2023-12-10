@@ -6,6 +6,10 @@ import Modal from "../../components/Modal/ClassDetailModal";
 import { useParams, useNavigate } from "react-router-dom";
 import { getClassMembers } from "../../services/classServices";
 import ClipboardJS from "clipboard";
+import { getAllUsers } from "../../services/userServices";
+import { chipClasses } from "@mui/material";
+import { inviteLink } from "../../services/classServices";
+import { toast } from "react-toastify";
 
 function PeoplePage() {
   const token = localStorage.getItem("token");
@@ -16,26 +20,24 @@ function PeoplePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [invTeacher, setInvTeacher] = useState([
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Lê Ngọc Như Ý",
-      mail: "thuynguyen1@gmail.com",
-    },
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Hồ Quốc Duy",
-      mail: "thuynguyen2@gmail.com",
-    },
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Trần Xuân Quang",
-      mail: "thuynguyen3@gmail.com",
-    },
-  ]);
+  const [invTeacher, setInvTeacher] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState(invTeacher);
   const textRef = useRef(null);
 
+  useEffect(() => {
+    const fetchingList = async () => {
+      const respone = await getAllUsers();
+      const users = respone.data.users;
+
+      const mappedUser = users.map((users) => ({
+        avatarSrc: "/assets/imgs/" + users.img || "",
+        name: users.fullname || "",
+        mail: users.email || "",
+      }));
+      setInvTeacher(mappedUser);
+    };
+    fetchingList();
+  }, []);
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
@@ -84,7 +86,6 @@ function PeoplePage() {
 
   // SEARCH
   useEffect(() => {
-    // Step 2: Update the board based on the search text
     const filteredTeachers = invTeacher.filter((teacher) => {
       const searchString = searchText.toLowerCase();
       return (
@@ -95,7 +96,6 @@ function PeoplePage() {
     setFilteredTeachers(filteredTeachers);
   }, [invTeacher, searchText]);
 
-  // Coppy ID
   const handleCopyClick = () => {
     const clipboard = new ClipboardJS(".copy-button", {
       text: () => textRef.current.innerText,
@@ -109,6 +109,24 @@ function PeoplePage() {
     clipboard.on("error", (e) => {
       clipboard.destroy();
     });
+  };
+  const handleInviteStudentClick = async () => {
+    try {
+      const check = 0;
+      await inviteLink(id, check, searchText, token);
+      toast.success("Invitation sent!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+  const handleInviteTeacherClick = async () => {
+    try {
+      const check = 1;
+      await inviteLink(id, check, searchText, token);
+      toast.success("Invitation sent!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -238,7 +256,7 @@ function PeoplePage() {
         {/* ACTION BUTTON */}
         <div className="flex justify-end">
           <button
-            // onClick={handleEditClass}
+            onClick={handleInviteTeacherClick}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
             Invite
@@ -312,7 +330,7 @@ function PeoplePage() {
         {/* ACTION BUTTON */}
         <div className="flex justify-end">
           <button
-            // onClick={handleEditClass}
+            onClick={handleInviteStudentClick}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
             Invite

@@ -6,7 +6,7 @@ import { useClassContext } from "../../context/ClassContext";
 const ClassPage = () => {
   const { id } = useParams();
   const { classes, loading } = useClassContext();
-  console.log(classes);
+  // console.log(classes);
   return (
     <>
       <div>

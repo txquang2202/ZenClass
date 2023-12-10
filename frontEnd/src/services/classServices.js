@@ -40,7 +40,20 @@ const createClass = (title, teacherName, className, token) => {
     className,
   });
 };
-
+const inviteLink = (id, check, searchText, token) => {
+  return axios.post(
+    `/api/v1/sendInvitation/${id}`,
+    {
+      check: check,
+      searchText: searchText,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 const deleteClass = (id, token) => {
   return axios.post(`/api/v1/deleteClass/${id}`, {
     headers: {
@@ -81,4 +94,5 @@ export {
   addStudent,
   addTeacher,
   getClassMembers,
+  inviteLink,
 };

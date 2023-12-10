@@ -31,7 +31,7 @@ const getClassMembers = async (req, res) => {
 };
 const addStudent = async (req, res) => {
   const classId = req.params.id;
-  const { studentId } = req.body;
+  const { studentId } = req.query;
 
   try {
     const student = await User.findById(studentId);
@@ -49,7 +49,7 @@ const addStudent = async (req, res) => {
       { new: true }
     );
 
-    res.json(updatedClass);
+    res.json({ message: "added student" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -57,7 +57,7 @@ const addStudent = async (req, res) => {
 };
 const addTeacher = async (req, res) => {
   const classId = req.params.id;
-  const { teacherId } = req.body;
+  const { teacherId } = req.query;
 
   try {
     const teacher = await User.findById(teacherId);
@@ -75,10 +75,45 @@ const addTeacher = async (req, res) => {
       { new: true }
     );
 
-    res.json(updatedClass);
+    res.json({ message: "added successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+const invitationLink = async (req, res) => {
+  const check = req.body.check;
+  const email = req.body.searchText;
+  const classId = req.params.id;
+  const person = await User.findOne({ email });
+  if (!person) {
+    return res.status(404).json({ message: "The user is not exist!!!" });
+  }
+  let links = null;
+  if (check == 1) {
+    links = `${process.env.BA_BASE_URL}/api/v1/addTeacherToClass/${classId}?teacherId=${person._id}`;
+  } else {
+    links = `${process.env.BA_BASE_URL}/api/v1/addStudentsToClass/${classId}?studentId=${person._id}`;
+  }
+  // const existEmail = await User.findOne({ email });
+
+  // if (!existEmail) {
+  //   return res.status(400).json({ message: "Email is not exist!" });
+  // }
+  const mailOptions = {
+    from: "Zen Class Corporation stellaron758@gmail.com",
+    to: email,
+    subject: "[Invitation to our class]",
+    html: `To join our class please click this link: <a href="${links}">JOIN</a>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent");
+    return res.status(200).json({ message: "Reset email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 const createClass = async (req, res) => {
@@ -123,7 +158,6 @@ const createClass = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
-
 const deleteClassbyID = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -176,42 +210,6 @@ const getClassByID = async (req, res) => {
     res.status(500).send("Error while fetching class info");
   }
 };
-const resetPassword = async (req, res) => {
-  const classId = req.params.id;
-  const verificationLink = `${process.env.BA_BASE_URL}/api/v1/invite/${classId}`;
-
-  const existEmail = await User.findOne({ email });
-
-  if (!existEmail) {
-    return res.status(400).json({ message: "Email is not exist!" });
-  }
-
-  try {
-    await User.updateOne(
-      { email: email },
-      { $set: { verificationToken: verificationToken } }
-    );
-  } catch (error) {
-    console.error("Error saving verificationToken to database:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-
-  const mailOptions = {
-    from: "Zen Class Corporation stellaron758@gmail.com",
-    to: email,
-    subject: "[Reset Password]",
-    html: `Your reset password link is: <a href="${verificationLink}">Reset your password</a>`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("Email sent");
-    return res.status(200).json({ message: "Reset email sent successfully" });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-};
 export {
   getAllClasses,
   createClass,
@@ -221,4 +219,5 @@ export {
   addStudent,
   addTeacher,
   getClassMembers,
+  invitationLink,
 };

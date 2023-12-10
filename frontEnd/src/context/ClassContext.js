@@ -18,7 +18,7 @@ export const ClassProvider = ({ children }) => {
       try {
         const response = await getAllClasses(token);
         const classesData = response.data.classes;
-        console.log(classesData);
+
         const mappedClasses = classesData.map((data) => ({
           id: data._id || "",
           title: data.title || "",

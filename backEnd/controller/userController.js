@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateUniqueToken();
-    console.log(req.body);
+
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -136,7 +136,6 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    console.log(req.cookies);
     const users = await User.find();
 
     if (!users || users.length === 0) {
