@@ -22,7 +22,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(passport.initialize());
 app.use(
   session({
     secret: process.env.SECRET_KEY,
@@ -30,6 +29,10 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.authenticate("session"));
+
 const port = process.env.PORT;
 app.use("/assets", express.static("../frontend/assets"));
 //connect to database

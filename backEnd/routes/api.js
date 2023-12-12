@@ -40,15 +40,12 @@ import {
   blockUserbyID,
   getAllUsers,
 } from "../controller/adminController.js";
+import passport from "passport";
+import "../middleware/passport.js";
 
 const router = express.Router();
 // @param {*} app: express app
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/");
-};
+// middleware.js
 
 const initApi = (app) => {
   //goolge login

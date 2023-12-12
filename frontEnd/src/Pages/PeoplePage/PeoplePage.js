@@ -24,23 +24,7 @@ function PeoplePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [invTeacher, setInvTeacher] = useState([
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Lê Ngọc Như Ý",
-      mail: "thuynguyen1@gmail.com",
-    },
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Hồ Quốc Duy",
-      mail: "thuynguyen2@gmail.com",
-    },
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Trần Xuân Quang",
-      mail: "thuynguyen3@gmail.com",
-    },
-  ]);
+  const [invTeacher, setInvTeacher] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState(invTeacher);
   const textRef = useRef(null);
 
@@ -102,6 +86,7 @@ function PeoplePage() {
   const handleListItemClick = (item) => {
     setSearchText(`${item.mail}`);
   };
+
   const handleDeleteStudent = async (personID) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this student?"
@@ -262,7 +247,7 @@ function PeoplePage() {
       {/* Modal Teacher*/}
       <Modal show={isModalOpen} handleClose={closeModal}>
         <h2 className="text-2xl font-semibold mb-4 text-[#10375c]">
-          Invite teacher
+          Invite a teacher
         </h2>
         {/* INVITE LINK */}
         <div className="p-2">
@@ -274,7 +259,8 @@ function PeoplePage() {
               ref={textRef}
               className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
             >
-              3fhdfhdfj2398
+              {process.env.REACT_APP_BA_BASE_URL +
+                `/api/v1/addTeacherToClass/${id}`}
             </p>
             <button
               onClick={handleCopyClick}
@@ -336,7 +322,7 @@ function PeoplePage() {
       {/* Modal Student */}
       <Modal show={isModalOpen1} handleClose={closeModal1}>
         <h2 className="text-2xl font-semibold mb-4 text-[#10375c] ">
-          Invite students
+          Invite a student
         </h2>
         {/* INVITE LINK */}
         <div className="p-2">
@@ -348,7 +334,8 @@ function PeoplePage() {
               ref={textRef}
               className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
             >
-              3fhdfhdfj2398
+              {process.env.REACT_APP_BA_BASE_URL +
+                `/api/v1/addStudentsToClass/${id}`}
             </p>
             <button
               onClick={handleCopyClick}

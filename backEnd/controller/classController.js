@@ -31,7 +31,11 @@ const getClassMembers = async (req, res) => {
 };
 const addStudent = async (req, res) => {
   const classId = req.params.id;
-  const { studentId } = req.query;
+  let { studentId } = req.query;
+
+  if (!studentId && req.user._id) {
+    studentId = req.user._id;
+  }
 
   try {
     const student = await User.findById(studentId);
@@ -58,8 +62,10 @@ const addStudent = async (req, res) => {
 };
 const addTeacher = async (req, res) => {
   const classId = req.params.id;
-  const { teacherId } = req.query;
-
+  let { teacherId } = req.query;
+  if (!teacherId && req.user._id) {
+    teacherId = req.user._id;
+  }
   try {
     const teacher = await User.findById(teacherId);
     if (!teacher) {
