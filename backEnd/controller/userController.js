@@ -34,8 +34,8 @@ const createUser = async (req, res) => {
       street: "",
       city: "",
       status: "Normal",
-      courses: "",
-      classes: "",
+      courses: [],
+      classes: [],
     });
 
     const existUsername = await User.findOne({ username });

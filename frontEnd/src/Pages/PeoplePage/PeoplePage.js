@@ -8,7 +8,11 @@ import { getClassMembers } from "../../services/classServices";
 import ClipboardJS from "clipboard";
 import { getAllUsers } from "../../services/userServices";
 import { chipClasses } from "@mui/material";
-import { inviteLink } from "../../services/classServices";
+import {
+  inviteLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
+} from "../../services/classServices";
 import { toast } from "react-toastify";
 
 function PeoplePage() {
@@ -44,7 +48,6 @@ function PeoplePage() {
     const fetchingList = async () => {
       const respone = await getAllUsers();
       const users = respone.data.users;
-
       const mappedUser = users.map((users) => ({
         avatarSrc: "/assets/imgs/" + users.img || "",
         name: users.fullname || "",
@@ -66,6 +69,7 @@ function PeoplePage() {
         setTeachers(teacherData);
 
         const studentData = response.data.students.map((student) => ({
+          id: student._id,
           avatarSrc: "/assets/imgs/" + student.img,
           name: student.fullname,
         }));
@@ -78,7 +82,6 @@ function PeoplePage() {
 
     fetchStudentData();
   }, [id, token, Navigate]);
-
   // Modal
   const openModal = () => {
     setIsModalOpen(true);
@@ -98,6 +101,39 @@ function PeoplePage() {
 
   const handleListItemClick = (item) => {
     setSearchText(`${item.mail}`);
+  };
+  const handleDeleteStudent = async (personID) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this student?"
+    );
+    if (isConfirmed) {
+      try {
+        const response = await deleteStudentFromClass(id, personID, token);
+        toast.success(response.data.message);
+        setStudents((prevStudents) =>
+          prevStudents.filter((student) => student.id !== personID)
+        );
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
+  const handleDeleteTeacher = async (personID) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this teacher?"
+    );
+    if (isConfirmed) {
+      try {
+        const response = await deleteStudentFromClass(id, personID, token);
+        toast.success(response.data.message);
+        setTeachers((prevTeachers) =>
+          prevTeachers.filter((teacher) => teacher.id !== personID)
+        );
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
   };
 
   // SEARCH
@@ -142,24 +178,6 @@ function PeoplePage() {
       toast.success("Invitation sent!");
     } catch (error) {
       toast.error(error.response.data.message);
-    }
-  };
-
-  const handleDeleteTeacher = () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this teacher?"
-    );
-    if (isConfirmed) {
-      toast.success("Teacher deleted successfully!");
-    }
-  };
-
-  const handleDeleteStudent = () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this student?"
-    );
-    if (isConfirmed) {
-      toast.success("Student deleted successfully!");
     }
   };
 
@@ -231,8 +249,8 @@ function PeoplePage() {
                 </div>
                 <span className="">
                   <RemoveCircleOutlineIcon
-                    onClick={() => handleDeleteStudent()}
                     className="text-gray-300 cursor-pointer hover:text-blue-400"
+                    onClick={() => handleDeleteStudent(item.id)}
                   />
                 </span>
               </section>

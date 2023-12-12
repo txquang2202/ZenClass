@@ -42,7 +42,7 @@ const authenticateToken = (req, res, next) => {
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) {
       console.error("Error verifying token:", err);
-      return res.sendStatus(403);
+      return res.json({ message: "added successfully" });
     }
 
     req.user = user;

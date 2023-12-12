@@ -16,8 +16,8 @@ const getClassMembers = async (req, res) => {
   const classId = req.params.id;
   try {
     const classWithMembers = await Class.findById(classId)
-      .populate("students", "username fullname img")
-      .populate("teachers", "username fullname img");
+      .populate("students", "_id username fullname img")
+      .populate("teachers", "_id username fullname img");
 
     if (!classWithMembers) {
       return res.status(404).json({ error: "Invalid Class ID" });
@@ -38,7 +38,8 @@ const addStudent = async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: "The students is not exist!!!" });
     }
-
+    student.courses.push(classId);
+    await student.save();
     const updatedClass = await Class.findByIdAndUpdate(
       classId,
       {
@@ -95,11 +96,22 @@ const invitationLink = async (req, res) => {
   } else {
     links = `${process.env.BA_BASE_URL}/api/v1/addStudentsToClass/${classId}?studentId=${person._id}`;
   }
-  // const existEmail = await User.findOne({ email });
+  const existTeacher = await Class.findOne({
+    teachers: person._id,
+    _id: classId,
+  });
 
-  // if (!existEmail) {
-  //   return res.status(400).json({ message: "Email is not exist!" });
-  // }
+  if (existTeacher) {
+    return res.status(400).json({ message: "That user is already in class" });
+  }
+  const existStudent = await Class.findOne({
+    students: person._id,
+    _id: classId,
+  });
+
+  if (existStudent) {
+    return res.status(400).json({ message: "That user is already in class" });
+  }
   const mailOptions = {
     from: "Zen Class Corporation stellaron758@gmail.com",
     to: email,
@@ -114,6 +126,58 @@ const invitationLink = async (req, res) => {
   } catch (error) {
     console.error("Error sending email:", error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+const deleteStudentFromClass = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const personID = req.body.personID;
+
+    const isStudentExists = await Class.exists({
+      _id: classID,
+      students: personID,
+    });
+    if (isStudentExists) {
+      const deleteStudent = await Class.findByIdAndUpdate(
+        classID,
+        {
+          $pull: {
+            students: personID,
+          },
+        },
+        { new: true }
+      );
+    }
+    res.json({ message: "Delete successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching user profile");
+  }
+};
+const deleteTeacherFromClass = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const personID = req.body.personID;
+
+    const isTeachersExists = await Class.exists({
+      _id: classID,
+      teachers: personID,
+    });
+    if (isTeachersExists) {
+      const deleteTeacher = await Class.findByIdAndUpdate(
+        classID,
+        {
+          $pull: {
+            teachers: personID,
+          },
+        },
+        { new: true }
+      );
+    }
+    res.json({ message: "Delete successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching user profile");
   }
 };
 const createClass = async (req, res) => {
@@ -220,4 +284,6 @@ export {
   addTeacher,
   getClassMembers,
   invitationLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
 };

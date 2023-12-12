@@ -75,6 +75,24 @@ const deleteClassbyID = (id, token) => {
     },
   });
 };
+const deleteStudentFromClass = (id, personID, token) => {
+  console.log(personID);
+  return axios.post(`/api/v1/deleteStudentFromClass/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    personID: personID,
+  });
+};
+const deleteTeacherFromClass = (id, personID, token) => {
+  console.log(personID);
+  return axios.post(`/api/v1/deleteTeacherFromClass/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    personID: personID,
+  });
+};
 
 const editClass = (id, data, token) => {
   return axios.put(`/api/v1/editclass/${id}`, data, {
@@ -95,4 +113,6 @@ export {
   addTeacher,
   getClassMembers,
   inviteLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
 };
