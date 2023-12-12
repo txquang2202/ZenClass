@@ -20,7 +20,23 @@ function PeoplePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [invTeacher, setInvTeacher] = useState([]);
+  const [invTeacher, setInvTeacher] = useState([
+    {
+      avatarSrc: "/static/images/avatar/2.jpg",
+      name: "Lê Ngọc Như Ý",
+      mail: "thuynguyen1@gmail.com",
+    },
+    {
+      avatarSrc: "/static/images/avatar/2.jpg",
+      name: "Hồ Quốc Duy",
+      mail: "thuynguyen2@gmail.com",
+    },
+    {
+      avatarSrc: "/static/images/avatar/2.jpg",
+      name: "Trần Xuân Quang",
+      mail: "thuynguyen3@gmail.com",
+    },
+  ]);
   const [filteredTeachers, setFilteredTeachers] = useState(invTeacher);
   const textRef = useRef(null);
 

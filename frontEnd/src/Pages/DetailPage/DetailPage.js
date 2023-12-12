@@ -8,9 +8,9 @@ import {
 import { jwtDecode } from "jwt-decode";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import ClipboardJS from "clipboard";
 import Modal from "../../components/Modal/ClassDetailModal";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 function DetailPage(props) {
   const { id } = useParams();
@@ -19,6 +19,7 @@ function DetailPage(props) {
   const [detailClass, setDetailClass] = useState({});
   const textRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     teacher: "",
@@ -27,6 +28,31 @@ function DetailPage(props) {
 
   let dataUser;
   if (token) dataUser = jwtDecode(token);
+  const [homeworks, setHomeWorks] = useState([
+    {
+      title: "Syllabus - CSC13114 Advanced Web Application",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
+      date: "16 thg 11",
+    },
+    {
+      title: "L01 - Course IntroductionFile",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
+      date: "12 thg 10",
+    },
+    {
+      title: "Assignment Class Diagram",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
+      date: "20 thg 9",
+    },
+  ]);
+  const [newHomework, setNewHomework] = useState({
+    title: "",
+    description: "",
+    date: format(new Date(), "dd MMMM"),
+  });
 
   // Modal
   const openModal = () => {
@@ -35,6 +61,13 @@ function DetailPage(props) {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  const openModal1 = () => {
+    setIsModalOpen1(true);
+  };
+
+  const closeModal1 = () => {
+    setIsModalOpen1(false);
   };
 
   // APIgetClass
@@ -47,7 +80,7 @@ function DetailPage(props) {
         setDetailClass({
           id: data._id || "",
           title: data.title || "",
-          teacher: data.teacher || "",
+          teacher: data.teachers[0] || "",
           className: data.className || "",
         });
 
@@ -110,20 +143,38 @@ function DetailPage(props) {
     }
   };
 
-  // Coppy ID
-  const handleCopyClick = () => {
-    const clipboard = new ClipboardJS(".copy-button", {
-      text: () => textRef.current.innerText,
+  // Add homework
+  const handleNewHomeworkChange = (e) => {
+    setNewHomework({
+      ...newHomework,
+      [e.target.id]: e.target.value,
     });
+  };
 
-    clipboard.on("success", () => {
-      clipboard.destroy();
-      window.alert("Text copied to clipboard!");
-    });
-
-    clipboard.on("error", (e) => {
-      clipboard.destroy();
-    });
+  const handleAddHomework = () => {
+    if (
+      newHomework.title.trim() !== "" &&
+      newHomework.description.trim() !== ""
+    ) {
+      // Thêm bài tập mới vào danh sách
+      setHomeWorks((prevHomeworks) => [
+        ...prevHomeworks,
+        {
+          title: newHomework.title,
+          description: newHomework.description,
+          date: newHomework.date,
+        },
+      ]);
+      setNewHomework({
+        title: "",
+        description: "",
+        date: format(new Date(), "dd MMMM"),
+      });
+      closeModal1();
+      toast.success("Homework added successfully!");
+    } else {
+      toast.error("Please enter the title for the homework");
+    }
   };
 
   return (
@@ -163,22 +214,7 @@ function DetailPage(props) {
         <section className="mt-4 grid grid-cols-4 gap-4">
           {/* LEFT */}
           <article>
-            <section className="border p-4 rounded-lg flex flex-col">
-              <h2 className="font-semibold">Class ID</h2>
-              <p
-                ref={textRef}
-                className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
-              >
-                {detailClass.id}
-              </p>
-              <button
-                onClick={handleCopyClick}
-                className="ml-auto text-blue-400 cursor-pointer copy-button"
-              >
-                Copy
-              </button>
-            </section>
-            <section className="border p-4 rounded-lg flex flex-col mt-3">
+            <section className="border p-4 rounded-lg flex flex-col mt-1">
               <h2 className="font-semibold">Upcoming events</h2>
               <p className="mt-3 mb-3 text-gray-400">
                 There are no upcoming events
@@ -192,14 +228,14 @@ function DetailPage(props) {
           <article className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
             <div className="text-center">
               <button
-                // onClick={openModal}
+                onClick={openModal1}
                 className="btn border-2 border-gray-300 bg-white text-gray-400 px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-gray-100 drop-shadow-md "
               >
                 +
               </button>
             </div>
 
-            {data.map((item, index) => (
+            {homeworks.map((item, index) => (
               <Link to={`/home/classes/detail/homework/${id}`}>
                 <section
                   key={index}
@@ -212,10 +248,10 @@ function DetailPage(props) {
                     />
                   </div>
                   <div>
-                    <a href="#!">
+                    <div>
                       <h2>{item.title}</h2>
                       <span className="text-gray-400 text-sm">{item.date}</span>
-                    </a>
+                    </div>
                   </div>
                 </section>
               </Link>
@@ -224,7 +260,7 @@ function DetailPage(props) {
         </section>
       </section>
 
-      {/* Render the modal */}
+      {/* Modal Edit */}
       <Modal show={isModalOpen} handleClose={closeModal}>
         <h2 className="text-2xl font-semibold mb-4">Edit Class</h2>
         <form>
@@ -276,35 +312,54 @@ function DetailPage(props) {
           </button>
         </div>
       </Modal>
+      {/* Modal Post */}
+      <Modal show={isModalOpen1} handleClose={closeModal1}>
+        <h2 className="text-2xl font-semibold mb-4 text-[#10375c]">
+          Add Homework
+        </h2>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600">
+            Title:
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={newHomework.title}
+            onChange={handleNewHomeworkChange}
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600">
+            Description:
+          </label>
+          <textarea
+            id="description" // Thay đổi id thành "description"
+            placeholder="Write your post here..."
+            type="text"
+            value={newHomework.description}
+            onChange={handleNewHomeworkChange}
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none"
+          />
+        </div>
+
+        <div className="flex justify-end">
+          <button
+            onClick={handleAddHomework}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+          >
+            Add Homework
+          </button>
+          <button
+            onClick={closeModal1}
+            className="border border-gray-300 px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
     </>
   );
 }
-
-const data = [
-  {
-    title: "Syllabus - CSC13114 Advanced Web Application",
-    date: "16 thg 11",
-  },
-  {
-    title: "L01 - Course IntroductionFile",
-    date: "12 thg 10",
-  },
-  {
-    title: "Assignment Class Diagram",
-    date: "20 thg 9",
-  },
-  {
-    title: "Syllabus - CSC13114 Advanced Web Application",
-    date: "16 thg 11",
-  },
-  {
-    title: "L01 - Course IntroductionFile",
-    date: "12 thg 10",
-  },
-  {
-    title: "Assignment Class Diagram",
-    date: "20 thg 9",
-  },
-];
 
 export default DetailPage;
