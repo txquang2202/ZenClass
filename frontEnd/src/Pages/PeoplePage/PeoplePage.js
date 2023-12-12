@@ -145,6 +145,24 @@ function PeoplePage() {
     }
   };
 
+  const handleDeleteTeacher = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this teacher?"
+    );
+    if (isConfirmed) {
+      toast.success("Teacher deleted successfully!");
+    }
+  };
+
+  const handleDeleteStudent = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this student?"
+    );
+    if (isConfirmed) {
+      toast.success("Student deleted successfully!");
+    }
+  };
+
   return (
     <>
       <section className="container w-full lg:max-w-[calc(100%-20rem)] mx-auto mt-6">
@@ -164,14 +182,22 @@ function PeoplePage() {
             {teachers.map((item, index) => (
               <section
                 key={index}
-                className="p-3 flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer border-b"
+                className="p-3 flex justify-between items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer border-b"
               >
-                <div>
-                  <Avatar alt={item.name} src={item.avatarSrc} />
+                <div className="flex items-center gap-4">
+                  <div>
+                    <Avatar alt={item.name} src={item.avatarSrc} />
+                  </div>
+                  <div>
+                    <span className="text-sm">{item.name}</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-sm">{item.name}</span>
-                </div>
+                <span className="">
+                  <RemoveCircleOutlineIcon
+                    onClick={() => handleDeleteTeacher()}
+                    className="text-gray-300 cursor-pointer hover:text-blue-400"
+                  />
+                </span>
               </section>
             ))}
           </>
@@ -204,7 +230,10 @@ function PeoplePage() {
                   </div>
                 </div>
                 <span className="">
-                  <RemoveCircleOutlineIcon className="text-gray-300 cursor-pointer hover:text-blue-400" />
+                  <RemoveCircleOutlineIcon
+                    onClick={() => handleDeleteStudent()}
+                    className="text-gray-300 cursor-pointer hover:text-blue-400"
+                  />
                 </span>
               </section>
             ))}
