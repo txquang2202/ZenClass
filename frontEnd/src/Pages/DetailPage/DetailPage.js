@@ -81,7 +81,7 @@ function DetailPage(props) {
         setDetailClass({
           id: data._id || "",
           title: data.title || "",
-          teacher: data.teachers[0] || "",
+          teacher: data.teachers[0].fullname || data.teachers[0].username || "",
           className: data.className || "",
         });
 

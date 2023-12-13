@@ -4,7 +4,10 @@ import transporter from "../middleware/nodemailer.js";
 
 const getAllClasses = async (req, res) => {
   try {
-    const classes = await Class.find().populate("teachers", "username");
+    const classes = await Class.find().populate(
+      "teachers",
+      "username fullname"
+    );
 
     res.json({ classes });
   } catch (error) {
@@ -88,7 +91,6 @@ const addStudent = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 const addTeacher = async (req, res) => {
   const classId = req.params.id;
   let { teacherId } = req.query;
@@ -325,8 +327,10 @@ const getClassByID = async (req, res) => {
   try {
     const classID = req.params.id;
 
-    const classInfo = await Class.findById(classID);
-
+    const classInfo = await Class.findById(classID).populate(
+      "teachers",
+      "_id username fullname img"
+    );
     if (!classInfo) {
       return res.status(404).json({ message: "Class not found!" });
     }

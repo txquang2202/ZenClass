@@ -65,7 +65,6 @@ const initApi = (app) => {
   router.get("/getComments", getAllUsersComments);
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
-  router.get("/getallclasses", getAllClasses);
 
   //protected api
   router.get("/getallusers", authenticateToken, getAllUsers);
@@ -87,6 +86,7 @@ const initApi = (app) => {
   router.post("/sendInvitation/:id", invitationLink);
   router.post("/deleteStudentFromClass/:id", deleteStudentFromClass);
   router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
+  router.get("/getallclasses", getAllClasses);
 
   return app.use("/api/v1/", router);
 };

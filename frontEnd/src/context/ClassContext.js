@@ -18,11 +18,10 @@ export const ClassProvider = ({ children }) => {
       try {
         const response = await getAllClasses(token);
         const classesData = response.data.classes;
-
         const mappedClasses = classesData.map((data) => ({
           id: data._id || "",
           title: data.title || "",
-          teacher: data.teachers[0].username || "",
+          teacher: data.teachers[0].fullname || data.teachers[0].username || "",
           className: data.className || "",
         }));
         setClasses(mappedClasses);
