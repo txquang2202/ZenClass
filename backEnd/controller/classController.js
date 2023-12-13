@@ -33,15 +33,14 @@ const addStudent = async (req, res) => {
   const classId = req.params.id;
   let { studentId } = req.query;
 
+  if (!req.user) {
+    return res.redirect(
+      `${process.env.BASE_URL}/signin?message=You have to login first`
+    );
+  }
   if (!studentId) {
-    if (!req.user) {
-      return res.redirect(
-        `${process.env.BASE_URL}/signin?message=You have to login first`
-      );
-    }
     studentId = req.user._id;
   }
-
   try {
     const student = await User.findById(studentId);
     if (!student) {
@@ -94,12 +93,12 @@ const addTeacher = async (req, res) => {
   const classId = req.params.id;
   let { teacherId } = req.query;
 
+  if (!req.user) {
+    return res.redirect(
+      `${process.env.BASE_URL}/signin?message=You have to login first`
+    );
+  }
   if (!teacherId) {
-    if (!req.user) {
-      return res.redirect(
-        `${process.env.BASE_URL}/signin?message=You have to login first`
-      );
-    }
     teacherId = req.user._id;
   }
   try {
