@@ -206,12 +206,14 @@ function PeoplePage() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                 </div>
-                <span className="">
-                  <RemoveCircleOutlineIcon
-                    onClick={() => handleDeleteTeacher(item.id)}
-                    className="text-gray-300 cursor-pointer hover:text-blue-400"
-                  />
-                </span>
+                {index !== 0 && (
+                  <span className="">
+                    <RemoveCircleOutlineIcon
+                      onClick={() => handleDeleteTeacher(item.id)}
+                      className="text-gray-300 cursor-pointer hover:text-blue-400"
+                    />
+                  </span>
+                )}
               </section>
             ))}
           </>

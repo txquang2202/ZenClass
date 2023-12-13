@@ -4,12 +4,11 @@ import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
-
-
-
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18en/i18n";
+import LanguageSwitcher from "./components/SwitchLanguage/SwitchLanguage";
 
 function App() {
-
   return (
     <>
       <Router>
@@ -34,7 +33,9 @@ function App() {
                   element={
                     <Layout>
                       <Protect roleRequired={route.roleRequired}>
-                        <Page />
+                        <I18nextProvider i18n={i18n}>
+                          <Page />
+                        </I18nextProvider>
                       </Protect>
                     </Layout>
                   }

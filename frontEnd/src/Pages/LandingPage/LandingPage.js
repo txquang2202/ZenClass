@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const [showScrollBtn, setShowScrollBtn] = useState(false);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ const HeroSection = () => {
                 href="#!"
                 className="btn bg-[#2E80CE] text-white px-6 py-3 lg:px-14 lg:py-5 rounded-full mr-4 lg:mr-[38px] text-base lg:text-lg"
               >
-                Get started
+                {t("Get started")}
               </a>
               <span className="hero__phone text-white text-lg lg:text-xl font-normal">
                 or call (123) 456-7890
