@@ -36,7 +36,7 @@ const addStudent = async (req, res) => {
   if (!studentId) {
     if (!req.user) {
       return res.redirect(
-        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=Unauthorized: User not logged in`
+        `${process.env.BASE_URL}/signin?message=Unauthorized: User not logged in`
       );
     }
     studentId = req.user._id;
@@ -97,7 +97,7 @@ const addTeacher = async (req, res) => {
   if (!teacherId) {
     if (!req.user) {
       return res.redirect(
-        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=Unauthorized: User not logged in`
+        `${process.env.BASE_URL}/signin?message=Unauthorized: User not logged in`
       );
     }
     teacherId = req.user._id;
