@@ -33,18 +33,45 @@ const addStudent = async (req, res) => {
   const classId = req.params.id;
   let { studentId } = req.query;
 
-  if (!studentId && req.user._id) {
+  if (!studentId) {
+    if (!req.user) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=Unauthorized: User not logged in`
+      );
+    }
     studentId = req.user._id;
   }
 
   try {
     const student = await User.findById(studentId);
     if (!student) {
-      return res.status(404).json({ error: "The students is not exist!!!" });
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=The student does not exist!!!`
+      );
+    }
+    const existStudent = await Class.findOne({
+      students: studentId,
+      _id: classId,
+    });
+
+    if (existStudent) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
+    }
+    const existTeacher = await Class.findOne({
+      teachers: studentId,
+      _id: classId,
+    });
+
+    if (existTeacher) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
     }
     student.courses.push(classId);
     await student.save();
-    const updatedClass = await Class.findByIdAndUpdate(
+    await Class.findByIdAndUpdate(
       classId,
       {
         $push: {
@@ -54,25 +81,55 @@ const addStudent = async (req, res) => {
       { new: true }
     );
 
-    res.json({ message: "added student" });
+    return res.redirect(
+      `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const addTeacher = async (req, res) => {
   const classId = req.params.id;
   let { teacherId } = req.query;
-  if (!teacherId && req.user._id) {
+
+  if (!teacherId) {
+    if (!req.user) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=Unauthorized: User not logged in`
+      );
+    }
     teacherId = req.user._id;
   }
   try {
     const teacher = await User.findById(teacherId);
     if (!teacher) {
-      return res.status(404).json({ error: "The teacher is not exist!!!" });
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=The teacher is not exist!!!`
+      );
     }
+    const existStudent = await Class.findOne({
+      students: teacherId,
+      _id: classId,
+    });
 
-    const updatedClass = await Class.findByIdAndUpdate(
+    if (existStudent) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
+    }
+    const existTeacher = await Class.findOne({
+      teachers: teacherId,
+      _id: classId,
+    });
+
+    if (existTeacher) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
+    }
+    await Class.findByIdAndUpdate(
       classId,
       {
         $push: {
@@ -82,7 +139,9 @@ const addTeacher = async (req, res) => {
       { new: true }
     );
 
-    res.json({ message: "added successfully" });
+    return res.redirect(
+      `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -144,7 +203,7 @@ const deleteStudentFromClass = async (req, res) => {
       students: personID,
     });
     if (isStudentExists) {
-      const deleteStudent = await Class.findByIdAndUpdate(
+      await Class.findByIdAndUpdate(
         classID,
         {
           $pull: {
@@ -164,7 +223,6 @@ const deleteTeacherFromClass = async (req, res) => {
   try {
     const classID = req.params.id;
     const personID = req.body.personID;
-
     const isTeachersExists = await Class.exists({
       _id: classID,
       teachers: personID,

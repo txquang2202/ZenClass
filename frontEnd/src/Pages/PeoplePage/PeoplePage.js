@@ -42,11 +42,22 @@ function PeoplePage() {
     fetchingList();
   }, []);
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams) {
+      const msg = urlParams.get("err");
+      const verified = urlParams.get("okay");
+
+      if (msg) toast.error(msg);
+      if (verified) toast.success(verified);
+    }
+  }, []);
+  useEffect(() => {
     const fetchStudentData = async () => {
       try {
         const response = await getClassMembers(id, token);
 
         const teacherData = response.data.teachers.map((teacher) => ({
+          id: teacher._id,
           avatarSrc: "/assets/imgs/" + teacher.img,
           name: teacher.fullname,
         }));
@@ -110,7 +121,7 @@ function PeoplePage() {
     );
     if (isConfirmed) {
       try {
-        const response = await deleteStudentFromClass(id, personID, token);
+        const response = await deleteTeacherFromClass(id, personID, token);
         toast.success(response.data.message);
         setTeachers((prevTeachers) =>
           prevTeachers.filter((teacher) => teacher.id !== personID)
@@ -197,7 +208,7 @@ function PeoplePage() {
                 </div>
                 <span className="">
                   <RemoveCircleOutlineIcon
-                    onClick={() => handleDeleteTeacher()}
+                    onClick={() => handleDeleteTeacher(item.id)}
                     className="text-gray-300 cursor-pointer hover:text-blue-400"
                   />
                 </span>
