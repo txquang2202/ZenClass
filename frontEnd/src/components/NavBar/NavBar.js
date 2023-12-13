@@ -96,7 +96,7 @@ const Navbar = () => {
               Contact
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between space-x-4">
             {user ? (
               <>
                 <Noti />
