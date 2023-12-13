@@ -91,6 +91,54 @@ const addStudent = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const joinByCode = async (req, res) => {
+  const classId = req.params.id;
+  const studentId = req.body.studentId;
+  console.log(classId, studentId);
+  try {
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+    const existStudent = await Class.findOne({
+      students: studentId,
+      _id: classId,
+    });
+
+    if (existStudent) {
+      return res
+        .status(404)
+        .json({ message: "You have already joined this class!!" });
+    }
+    const existTeacher = await Class.findOne({
+      teachers: studentId,
+      _id: classId,
+    });
+
+    if (existTeacher) {
+      return res
+        .status(404)
+        .json({ message: "You have already joined this class!!" });
+    }
+    student.courses.push(classId);
+    await student.save();
+
+    await Class.findByIdAndUpdate(
+      classId,
+      {
+        $push: {
+          students: student,
+        },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({ message: "Joined class successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 const addTeacher = async (req, res) => {
   const classId = req.params.id;
   let { teacherId } = req.query;
@@ -353,4 +401,5 @@ export {
   invitationLink,
   deleteStudentFromClass,
   deleteTeacherFromClass,
+  joinByCode,
 };

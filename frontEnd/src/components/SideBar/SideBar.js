@@ -5,7 +5,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import Modal from "react-modal";
 import { useClassContext } from "../../context/ClassContext";
-import { createClass } from "../../services/classServices";
+import { createClass, joinByCode } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { Menu, MenuItem } from "@material-ui/core";
@@ -49,7 +49,6 @@ function SideBar() {
         newClassInfo.className,
         token
       );
-      console.log(response.data.class);
       addClass(response.data.class);
       closeModal();
       toast.success("Add successfully!");
@@ -70,13 +69,7 @@ function SideBar() {
 
   const handleJoinClass = async () => {
     try {
-      // Implement the logic to join a class using joinClass function
-      // Use the joinClass function similar to how createClass is used
-      // Example: const response = await joinClass(joinClassCode, token);
-      // Handle the response as needed
-      // ...
-
-      // Close the modal and reset the state
+      await joinByCode(joinClassCode, data._id, token);
       closeJoinModal();
       toast.success("Joined the class successfully!");
       setJoinClassCode("");

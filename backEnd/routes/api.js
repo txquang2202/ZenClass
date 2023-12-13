@@ -30,6 +30,7 @@ import {
   invitationLink,
   deleteStudentFromClass,
   deleteTeacherFromClass,
+  joinByCode,
 } from "../controller/classController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
@@ -87,6 +88,7 @@ const initApi = (app) => {
   router.post("/deleteStudentFromClass/:id", deleteStudentFromClass);
   router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
   router.get("/getallclasses", getAllClasses);
+  router.post("/joinbycode/:id", joinByCode);
 
   return app.use("/api/v1/", router);
 };

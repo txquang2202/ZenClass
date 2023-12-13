@@ -14,22 +14,30 @@ const getClassMembers = (id, token) => {
     },
   });
 };
-const addStudent = (id, studentId, token) => {
-  return axios.post(`/api/v1/addStudentsToClass/${id}`, {
+const joinByCode = (id, studentId, token) => {
+  return axios.post(`/api/v1/joinbycode/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     studentId,
   });
 };
-const addTeacher = (id, teacherId, token) => {
-  return axios.post(`/api/v1/addTeacherToClass/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    teacherId,
-  });
-};
+// const addStudent = (id, studentId, token) => {
+//   return axios.post(`/api/v1/addStudentsToClass/${id}`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     studentId,
+//   });
+// };
+// const addTeacher = (id, teacherId, token) => {
+//   return axios.post(`/api/v1/addTeacherToClass/${id}`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     teacherId,
+//   });
+// };
 const createClass = (title, teacherName, className, token) => {
   return axios.post("/api/v1/createClass", {
     headers: {
@@ -109,10 +117,9 @@ export {
   getClassByID,
   deleteClassbyID,
   editClass,
-  addStudent,
-  addTeacher,
   getClassMembers,
   inviteLink,
   deleteStudentFromClass,
   deleteTeacherFromClass,
+  joinByCode,
 };
