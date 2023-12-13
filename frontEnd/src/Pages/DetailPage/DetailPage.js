@@ -11,6 +11,7 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import Modal from "../../components/Modal/ClassDetailModal";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import ClipboardJS from "clipboard";
 
 function DetailPage(props) {
   const { id } = useParams();
@@ -177,6 +178,22 @@ function DetailPage(props) {
     }
   };
 
+  // Coppy ID
+  const handleCopyClick = () => {
+    const clipboard = new ClipboardJS(".copy-button", {
+      text: () => textRef.current.innerText,
+    });
+
+    clipboard.on("success", () => {
+      clipboard.destroy();
+      window.alert("Text copied to clipboard!");
+    });
+
+    clipboard.on("error", (e) => {
+      clipboard.destroy();
+    });
+  };
+
   return (
     <>
       {/* MAIN CONTENT */}
@@ -214,7 +231,23 @@ function DetailPage(props) {
         <section className="mt-4 grid grid-cols-4 gap-4">
           {/* LEFT */}
           <article>
-            <section className="border p-4 rounded-lg flex flex-col mt-1">
+            <section className="border p-4 rounded-lg flex flex-col">
+              <h2 className="font-semibold">Class ID</h2>
+
+              <p
+                ref={textRef}
+                className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
+              >
+                {detailClass.id}
+              </p>
+              <button
+                onClick={handleCopyClick}
+                className="ml-auto text-blue-400 cursor-pointer copy-button"
+              >
+                Copy
+              </button>
+            </section>
+            <section className="border p-4 rounded-lg flex flex-col mt-3">
               <h2 className="font-semibold">Upcoming events</h2>
               <p className="mt-3 mb-3 text-gray-400">
                 There are no upcoming events
