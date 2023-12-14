@@ -7,7 +7,7 @@ env.config();
 const app = express();
 
 const createToken = (user) => {
-  const { _id, username, role, isVerified, status } = user;
+  const { _id, username, role, isVerified, status, fullname } = user;
   const secretKey = process.env.SECRET_KEY;
 
   try {
@@ -18,6 +18,7 @@ const createToken = (user) => {
         role,
         isVerified,
         status,
+        fullname,
       },
       secretKey,
       {

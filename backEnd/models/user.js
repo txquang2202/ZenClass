@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   verificationToken: String,
   isVerified: Boolean,
   status: String,
-  courses: [{ type: Schema.Types.ObjectId, ref: "courses" }],
+  courses: [{ type: Schema.Types.ObjectId, ref: "classes" }],
   classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
 });
 

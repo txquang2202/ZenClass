@@ -32,6 +32,10 @@ import {
   deleteTeacherFromClass,
   joinByCode,
 } from "../controller/classController.js";
+import {
+  getCourseByUser,
+  getCourseByID,
+} from "../controller/coursesController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
 import upload from "../middleware/multer.js";
@@ -76,6 +80,7 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
+  //class APIs
   router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
@@ -89,7 +94,9 @@ const initApi = (app) => {
   router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
   router.get("/getallclasses", getAllClasses);
   router.post("/joinbycode/:id", joinByCode);
-
+  //coureseAPIS
+  router.get("/getCourseByUser/:id", getCourseByUser);
+  router.get("/getCourseByID/:id", getCourseByID);
   return app.use("/api/v1/", router);
 };
 

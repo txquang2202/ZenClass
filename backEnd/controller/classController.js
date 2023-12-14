@@ -1,6 +1,7 @@
 import Class from "../models/classes.js";
 import User from "../models/user.js";
 import transporter from "../middleware/nodemailer.js";
+import mongoose from "mongoose";
 
 const getAllClasses = async (req, res) => {
   try {
@@ -94,11 +95,13 @@ const addStudent = async (req, res) => {
 const joinByCode = async (req, res) => {
   const classId = req.params.id;
   const studentId = req.body.studentId;
-  console.log(classId, studentId);
   try {
     const student = await User.findById(studentId);
     if (!student) {
       return res.status(404).json({ message: "Not Found" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(classId)) {
+      return res.status(400).json({ message: "Invalid Class ID" });
     }
     const existStudent = await Class.findOne({
       students: studentId,
@@ -308,7 +311,7 @@ const createClass = async (req, res) => {
     if (existTitle) {
       return res.status(400).json({ message: "Class title already taken!" });
     }
-    const teacher = await User.findOne({ username: teacherName });
+    const teacher = await User.findOne({ fullname: teacherName });
     if (!teacher) {
       return res.status(400).json({ message: "Teacher not found!" });
     }

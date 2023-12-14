@@ -1,10 +1,42 @@
 // CoursePage.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { getCourseByUser } from "../../services/courseServices";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getUserID } from "../../services/userServices";
 
-function CoursePage({}) {
-  const { id } = useParams();
+function CoursePage() {
+  const [courses, setCourses] = useState([]);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const data = jwtDecode(token);
+  // const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getCourseByUser(data._id, token);
+        const courseData = response.data.courseInfo;
+        if (courseData) {
+          const mappedcourse = courseData.map((data) => ({
+            id: data._id || "",
+            title: data.title || "",
+            author: data.teachers[0].fullname || "",
+            class: data.className || "",
+          }));
+          setCourses(mappedcourse);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        navigate("/500");
+      }
+    };
+
+    fetchUserData();
+  }, [navigate, token]);
+
   return (
     <>
       <div>
@@ -48,37 +80,37 @@ function CoursePage({}) {
   );
 }
 
-const courses = [
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-  {
-    title: "Angular",
-    author: "Quoc Duy",
-    class: "KTPM 2",
-  },
-];
+// const courses = [
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+//   {
+//     title: "Angular",
+//     author: "Quoc Duy",
+//     class: "KTPM 2",
+//   },
+// ];
 
 export default CoursePage;
