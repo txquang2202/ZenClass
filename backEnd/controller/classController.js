@@ -44,6 +44,7 @@ const getClassMembers = async (req, res) => {
 const joinByCode = async (req, res) => {
   const classId = req.params.id;
   const studentId = req.body.studentId;
+
   try {
     const student = await User.findById(studentId);
     if (!student) {
@@ -73,12 +74,11 @@ const joinByCode = async (req, res) => {
         .json({ message: "You have already joined this class!!" });
     }
     if (!student.courses.includes(classId)) {
-      // If not present, push the classId into the array
       student.courses.push(classId);
       await student.save();
     }
 
-    await Class.findByIdAndUpdate(
+    const reciver = await Class.findByIdAndUpdate(
       classId,
       {
         $push: {
@@ -87,7 +87,21 @@ const joinByCode = async (req, res) => {
       },
       { new: true }
     );
-    return res.status(200).json({ message: "Joined class successfully!" });
+    const teacherName = await Class.findOne(
+      {
+        _id: classId,
+      },
+      "teachers"
+    ).populate("teachers", "_id fullname");
+    const toReturn = {
+      id: reciver._id,
+      title: reciver.title,
+      author: teacherName.teachers[0].fullname,
+      class: reciver.className,
+    };
+    return res
+      .status(200)
+      .json({ message: "Joined class successfully!", toReturn });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -19,8 +19,6 @@ export const ClassProvider = ({ children }) => {
         const data = jwtDecode(token);
         const response = await getAllClasses(data._id, token);
         const classesData = response.data.classInfo;
-        console.log(classesData);
-
         if (classesData) {
           const mappedClasses = classesData.map((data) => ({
             id: data._id || "",

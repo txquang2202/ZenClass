@@ -73,8 +73,8 @@ function SideBar() {
   const handleJoinClass = async () => {
     try {
       const response = await joinByCode(joinClassCode, data._id, token);
-      console.log(response.data);
-      addCourse(response.data);
+      //  console.log(response.data.toReturn);
+      addCourse(response.data.toReturn);
 
       closeJoinModal();
       toast.success("Joined the class successfully!");
