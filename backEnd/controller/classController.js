@@ -41,67 +41,6 @@ const getClassMembers = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-const addStudent = async (req, res) => {
-  const classId = req.params.id;
-  let { studentId } = req.query;
-
-  if (!req.user) {
-    return res.redirect(
-      `${process.env.BASE_URL}/signin?message=You have to login first`
-    );
-  }
-  if (!studentId) {
-    studentId = req.user._id;
-  }
-  try {
-    const student = await User.findById(studentId);
-    if (!student) {
-      return res.redirect(
-        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=The student does not exist!!!`
-      );
-    }
-    const existStudent = await Class.findOne({
-      students: studentId,
-      _id: classId,
-    });
-
-    if (existStudent) {
-      return res.redirect(
-        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
-      );
-    }
-    const existTeacher = await Class.findOne({
-      teachers: studentId,
-      _id: classId,
-    });
-
-    if (existTeacher) {
-      return res.redirect(
-        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
-      );
-    }
-    if (!student.courses.includes(classId)) {
-      student.courses.push(classId);
-      await student.save();
-    }
-    await Class.findByIdAndUpdate(
-      classId,
-      {
-        $push: {
-          students: student,
-        },
-      },
-      { new: true }
-    );
-
-    return res.redirect(
-      `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
-    );
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 const joinByCode = async (req, res) => {
   const classId = req.params.id;
   const studentId = req.body.studentId;
@@ -148,8 +87,72 @@ const joinByCode = async (req, res) => {
       },
       { new: true }
     );
-
     return res.status(200).json({ message: "Joined class successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+const addStudent = async (req, res) => {
+  const classId = req.params.id;
+  let { studentId } = req.query;
+
+  if (!req.user) {
+    return res.redirect(
+      `${process.env.BASE_URL}/signin?message=You have to login first`
+    );
+  }
+  if (!studentId) {
+    if (req.user._id) {
+      studentId = req.user._id;
+    } else if (req.user.user._id) {
+      studentId = req.user.user._id;
+    }
+  }
+  try {
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=The student does not exist!!!`
+      );
+    }
+    const existStudent = await Class.findOne({
+      students: studentId,
+      _id: classId,
+    });
+
+    if (existStudent) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
+    }
+    const existTeacher = await Class.findOne({
+      teachers: studentId,
+      _id: classId,
+    });
+
+    if (existTeacher) {
+      return res.redirect(
+        `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
+      );
+    }
+    if (!student.courses.includes(classId)) {
+      student.courses.push(classId);
+      await student.save();
+    }
+    await Class.findByIdAndUpdate(
+      classId,
+      {
+        $push: {
+          students: student,
+        },
+      },
+      { new: true }
+    );
+
+    return res.redirect(
+      `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

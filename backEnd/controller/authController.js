@@ -21,7 +21,6 @@ const handleLogin = (req, res, next) => {
         .status(401)
         .json({ message: "Incorrect username or password." });
     }
-
     req.logIn(user, function (err) {
       if (err) {
         console.log(err);
