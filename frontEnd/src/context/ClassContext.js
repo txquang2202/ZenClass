@@ -45,18 +45,6 @@ export const ClassProvider = ({ children }) => {
     setClasses((prevClasses) => [...prevClasses, newClass]);
   };
 
-  // const createClass = async (e) => {
-  //   e.preventDefault();
-  //   const { title, className, teacher } = classes;
-
-  //   try {
-  //     const response = await createClass(title, teacher, className, token);
-  //   } catch (error) {
-  //     console.error("Error fetching create class:", error);
-  //     navigate("/500");
-  //   }
-  // };
-
   return (
     <ClassContext.Provider value={{ classes, loading, addClass }}>
       {children}

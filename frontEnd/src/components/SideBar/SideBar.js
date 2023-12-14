@@ -5,6 +5,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import Modal from "react-modal";
 import { useClassContext } from "../../context/ClassContext";
+import { useCourseContext } from "../../context/CourseContext";
 import { createClass, joinByCode } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
@@ -31,6 +32,7 @@ function SideBar() {
   };
 
   const { addClass } = useClassContext();
+  const { addCourse } = useCourseContext();
 
   const openModal = () => {
     handleClose();
@@ -70,7 +72,10 @@ function SideBar() {
 
   const handleJoinClass = async () => {
     try {
-      await joinByCode(joinClassCode, data._id, token);
+      const response = await joinByCode(joinClassCode, data._id, token);
+      console.log(response.data);
+      addCourse(response.data);
+
       closeJoinModal();
       toast.success("Joined the class successfully!");
       setJoinClassCode("");

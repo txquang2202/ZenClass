@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer className="footer pt-20 bg-[#10375C] text-white font-open-sans mt-auto flex flex-col justify-between min-h-screen ">
-      <div className="container mx-auto max-w-[calc(100%-20rem)] w-max lg:max-w-[calc(100%-7rem)] ">
+      <div className="container mx-auto max-w-[calc(100%-20rem)] w-max lg:max-w-[calc(100%-15rem)] ">
         <div className="grid grid-cols-1 lg:grid-cols-4">
           <div className="col-span-1">
             {/* <!-- Logo --> */}

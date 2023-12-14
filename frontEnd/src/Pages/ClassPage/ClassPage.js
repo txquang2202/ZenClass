@@ -17,7 +17,7 @@ const ClassPage = () => {
         ) : (
           <>
             {classes.length === 0 ? (
-              <p className="text-gray-400 mb-10">No course available</p>
+              <p className="text-gray-400 mb-10">No class available</p>
             ) : (
               <Grid
                 container

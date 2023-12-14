@@ -52,7 +52,6 @@ function PeoplePage() {
         name: users.fullname || "",
         mail: users.email || "",
       }));
-      console.log(mappedUser);
       setInvTeacher(mappedUser);
     };
     fetchingList();
