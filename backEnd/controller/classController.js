@@ -72,8 +72,10 @@ const addStudent = async (req, res) => {
         `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
       );
     }
-    student.courses.push(classId);
-    await student.save();
+    if (!student.courses.includes(classId)) {
+      student.courses.push(classId);
+      await student.save();
+    }
     await Class.findByIdAndUpdate(
       classId,
       {
@@ -123,8 +125,11 @@ const joinByCode = async (req, res) => {
         .status(404)
         .json({ message: "You have already joined this class!!" });
     }
-    student.courses.push(classId);
-    await student.save();
+    if (!student.courses.includes(classId)) {
+      // If not present, push the classId into the array
+      student.courses.push(classId);
+      await student.save();
+    }
 
     await Class.findByIdAndUpdate(
       classId,

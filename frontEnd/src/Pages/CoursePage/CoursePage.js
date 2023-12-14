@@ -5,13 +5,13 @@ import { getCourseByUser } from "../../services/courseServices";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getUserID } from "../../services/userServices";
-
+import { Link, useParams } from "react-router-dom";
 function CoursePage() {
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const data = jwtDecode(token);
+  const { id } = useParams();
   // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
