@@ -4,6 +4,7 @@ import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
+import LanguageSwitcher from "../SwitchLanguage/SwitchLanguage";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -74,11 +75,14 @@ const Navbar = () => {
   return (
     <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
       <div className="container w-full lg:max-w-screen-xl mx-auto">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-white text-lg">
-            ZenClass
-          </Link>
-          <div className="flex items-center space-x-4 lg:gap-12">
+        <div className="flex items-center justify-between space-x-4 ">
+          <div>
+            <Link to="/" className="text-white text-lg">
+              ZenClass
+            </Link>
+          </div>
+          {/* <LanguageSwitcher /> */}
+          <div className="flex items-center justify-between space-x-4 lg:gap-12">
             <Link to={`/home/${id}`} className="text-white">
               Home
             </Link>
@@ -92,7 +96,7 @@ const Navbar = () => {
               Contact
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between space-x-4">
             {user ? (
               <>
                 <Noti />

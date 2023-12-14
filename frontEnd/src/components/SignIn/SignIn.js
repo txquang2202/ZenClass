@@ -98,7 +98,7 @@ const SignIn = ({ handleChange }) => {
         toast.error("Username or password incorrect");
       } else {
         console.error("Error sending login request", error);
-        toast.error(error.message);
+        toast.error(error.response.data.message);
       }
     }
   };

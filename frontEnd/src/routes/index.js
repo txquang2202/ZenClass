@@ -27,10 +27,6 @@ import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
 
-
-
-
-
 const routes = [
   {
     path: "/signin",
@@ -175,7 +171,7 @@ const routes = [
   },
   {
     path: "/blocked",
-    page: BlockPage, 
+    page: BlockPage,
     layout: null,
     isProtected: false,
   },

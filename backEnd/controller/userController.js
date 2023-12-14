@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateUniqueToken();
-    console.log(req.body);
+
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -34,8 +34,8 @@ const createUser = async (req, res) => {
       street: "",
       city: "",
       status: "Normal",
-      courses: "",
-      classes: "",
+      courses: [],
+      classes: [],
     });
 
     const existUsername = await User.findOne({ username });
@@ -136,7 +136,6 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    console.log(req.cookies);
     const users = await User.find();
 
     if (!users || users.length === 0) {
@@ -152,7 +151,7 @@ const getAllUsers = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     const { username, content, avt, date } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const newComment = new Comment({
       username,
       content,
@@ -161,7 +160,7 @@ const addComment = async (req, res) => {
     });
 
     await newComment.save();
-    res.json({ message: "Adding succesfully!" });
+    res.json({ message: "Adding succesfully!", comment: newComment });
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);

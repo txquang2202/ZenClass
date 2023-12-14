@@ -22,8 +22,7 @@ function ServerErrorPage(props) {
           <div className="contant_box_500 mt-[120px]">
             <h3 className="text-6xl">500 Server Error</h3>
             <p className="text-xl mt-[20px]">
-              Unfortunately we're having trouble loading the page you are
-              looking for. Please come back in a while.
+              Internal server error occurred or the session has exprired
             </p>
             <p className="text-xl mt-[20px]">{error}</p>
             <Link

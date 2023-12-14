@@ -6,9 +6,18 @@ import Modal from "../../components/Modal/ClassDetailModal";
 import { useParams, useNavigate } from "react-router-dom";
 import { getClassMembers } from "../../services/classServices";
 import ClipboardJS from "clipboard";
+import { getAllUsers } from "../../services/userServices";
+import { jwtDecode } from "jwt-decode";
+import {
+  inviteLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
+} from "../../services/classServices";
+import { toast } from "react-toastify";
 
 function PeoplePage() {
   const token = localStorage.getItem("token");
+
   const { id } = useParams();
   const Navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
@@ -18,23 +27,46 @@ function PeoplePage() {
   const [searchText, setSearchText] = useState("");
   const [invTeacher, setInvTeacher] = useState([
     {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Lê Ngọc Như Ý",
-      mail: "thuynguyen1@gmail.com",
+      avatarSrc: "",
+      name: "duy",
+      mail: "phu@gmail.com",
     },
     {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Hồ Quốc Duy",
-      mail: "thuynguyen2@gmail.com",
-    },
-    {
-      avatarSrc: "/static/images/avatar/2.jpg",
-      name: "Trần Xuân Quang",
-      mail: "thuynguyen3@gmail.com",
+      avatarSrc: "",
+      name: "an",
+      mail: "an@gmail.com",
     },
   ]);
   const [filteredTeachers, setFilteredTeachers] = useState(invTeacher);
   const textRef = useRef(null);
+  let data;
+  if (token) data = jwtDecode(token);
+  const [isClassOwner, setIsClassOwner] = useState(false);
+
+  useEffect(() => {
+    const fetchingList = async () => {
+      const respone = await getAllUsers();
+      const users = respone.data.users;
+      const mappedUser = users.map((users) => ({
+        avatarSrc: "/assets/imgs/" + users.img || "",
+        name: users.fullname || "",
+        mail: users.email || "",
+      }));
+      setInvTeacher(mappedUser);
+    };
+    fetchingList();
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams) {
+      const msg = urlParams.get("err");
+      const verified = urlParams.get("okay");
+
+      if (msg) toast.error(msg);
+      if (verified) toast.success(verified);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -42,12 +74,18 @@ function PeoplePage() {
         const response = await getClassMembers(id, token);
 
         const teacherData = response.data.teachers.map((teacher) => ({
+          id: teacher._id,
           avatarSrc: "/assets/imgs/" + teacher.img,
           name: teacher.fullname,
         }));
+
+        if (teacherData[0].id === data._id) {
+          setIsClassOwner(true);
+        }
         setTeachers(teacherData);
 
         const studentData = response.data.students.map((student) => ({
+          id: student._id,
           avatarSrc: "/assets/imgs/" + student.img,
           name: student.fullname,
         }));
@@ -60,7 +98,6 @@ function PeoplePage() {
 
     fetchStudentData();
   }, [id, token, Navigate]);
-
   // Modal
   const openModal = () => {
     setIsModalOpen(true);
@@ -82,9 +119,42 @@ function PeoplePage() {
     setSearchText(`${item.mail}`);
   };
 
+  const handleDeleteStudent = async (personID) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this student?"
+    );
+    if (isConfirmed) {
+      try {
+        const response = await deleteStudentFromClass(id, personID, token);
+        toast.success(response.data.message);
+        setStudents((prevStudents) =>
+          prevStudents.filter((student) => student.id !== personID)
+        );
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
+  const handleDeleteTeacher = async (personID) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this teacher?"
+    );
+    if (isConfirmed) {
+      try {
+        const response = await deleteTeacherFromClass(id, personID, token);
+        toast.success(response.data.message);
+        setTeachers((prevTeachers) =>
+          prevTeachers.filter((teacher) => teacher.id !== personID)
+        );
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
   // SEARCH
   useEffect(() => {
-    // Step 2: Update the board based on the search text
     const filteredTeachers = invTeacher.filter((teacher) => {
       const searchString = searchText.toLowerCase();
       return (
@@ -95,7 +165,6 @@ function PeoplePage() {
     setFilteredTeachers(filteredTeachers);
   }, [invTeacher, searchText]);
 
-  // Coppy ID
   const handleCopyClick = () => {
     const clipboard = new ClipboardJS(".copy-button", {
       text: () => textRef.current.innerText,
@@ -109,6 +178,24 @@ function PeoplePage() {
     clipboard.on("error", (e) => {
       clipboard.destroy();
     });
+  };
+  const handleInviteStudentClick = async () => {
+    try {
+      const check = 0;
+      await inviteLink(id, check, searchText, token);
+      toast.success("Invitation sent!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+  const handleInviteTeacherClick = async () => {
+    try {
+      const check = 1;
+      await inviteLink(id, check, searchText, token);
+      toast.success("Invitation sent!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -130,14 +217,24 @@ function PeoplePage() {
             {teachers.map((item, index) => (
               <section
                 key={index}
-                className="p-3 flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer border-b"
+                className="p-3 flex justify-between items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer border-b"
               >
-                <div>
-                  <Avatar alt={item.name} src={item.avatarSrc} />
+                <div className="flex items-center gap-4">
+                  <div>
+                    <Avatar alt={item.name} src={item.avatarSrc} />
+                  </div>
+                  <div>
+                    <span className="text-sm">{item.name}</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-sm">{item.name}</span>
-                </div>
+                {isClassOwner && index !== 0 && (
+                  <span className="">
+                    <RemoveCircleOutlineIcon
+                      onClick={() => handleDeleteTeacher(item.id)}
+                      className="text-gray-300 cursor-pointer hover:text-blue-400"
+                    />
+                  </span>
+                )}
               </section>
             ))}
           </>
@@ -169,9 +266,14 @@ function PeoplePage() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                 </div>
-                <span className="">
-                  <RemoveCircleOutlineIcon className="text-gray-300 cursor-pointer hover:text-blue-400" />
-                </span>
+                {isClassOwner && (
+                  <span className="">
+                    <RemoveCircleOutlineIcon
+                      className="text-gray-300 cursor-pointer hover:text-blue-400"
+                      onClick={() => handleDeleteStudent(item.id)}
+                    />
+                  </span>
+                )}
               </section>
             ))}
           </>
@@ -181,7 +283,7 @@ function PeoplePage() {
       {/* Modal Teacher*/}
       <Modal show={isModalOpen} handleClose={closeModal}>
         <h2 className="text-2xl font-semibold mb-4 text-[#10375c]">
-          Invite teacher
+          Invite a teacher
         </h2>
         {/* INVITE LINK */}
         <div className="p-2">
@@ -193,7 +295,8 @@ function PeoplePage() {
               ref={textRef}
               className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
             >
-              3fhdfhdfj2398
+              {process.env.REACT_APP_BA_BASE_URL +
+                `/api/v1/addTeacherToClass/${id}`}
             </p>
             <button
               onClick={handleCopyClick}
@@ -238,7 +341,7 @@ function PeoplePage() {
         {/* ACTION BUTTON */}
         <div className="flex justify-end">
           <button
-            // onClick={handleEditClass}
+            onClick={handleInviteTeacherClick}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
             Invite
@@ -255,7 +358,7 @@ function PeoplePage() {
       {/* Modal Student */}
       <Modal show={isModalOpen1} handleClose={closeModal1}>
         <h2 className="text-2xl font-semibold mb-4 text-[#10375c] ">
-          Invite students
+          Invite a student
         </h2>
         {/* INVITE LINK */}
         <div className="p-2">
@@ -267,7 +370,8 @@ function PeoplePage() {
               ref={textRef}
               className="mt-3 text-gray-400 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
             >
-              3fhdfhdfj2398
+              {process.env.REACT_APP_BA_BASE_URL +
+                `/api/v1/addStudentsToClass/${id}`}
             </p>
             <button
               onClick={handleCopyClick}
@@ -312,7 +416,7 @@ function PeoplePage() {
         {/* ACTION BUTTON */}
         <div className="flex justify-end">
           <button
-            // onClick={handleEditClass}
+            onClick={handleInviteStudentClick}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
             Invite

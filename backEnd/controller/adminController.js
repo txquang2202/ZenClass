@@ -106,7 +106,6 @@ const getUserProfile = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    console.log(req.cookies);
     const users = await User.find({ role: [0] });
 
     if (!users || users.length === 0) {
@@ -151,19 +150,22 @@ const deleteUsersbyID = async (req, res) => {
   }
 };
 
-
 const deleteListUsersByIds = async (req, res) => {
   try {
-    const listIdDelete = req.body; 
+    const listIdDelete = req.body;
 
     if (!listIdDelete || listIdDelete.length === 0) {
-      return res.status(400).json({ message: "No user IDs provided for deletion!" });
+      return res
+        .status(400)
+        .json({ message: "No user IDs provided for deletion!" });
     }
 
     const deletedUsers = await User.deleteMany({ _id: { $in: listIdDelete } });
 
     if (deletedUsers.deletedCount === 0) {
-      return res.status(404).json({ message: "No users found for the provided IDs!" });
+      return res
+        .status(404)
+        .json({ message: "No users found for the provided IDs!" });
     }
 
     res.json({ message: "Users deleted successfully", deletedUsers });

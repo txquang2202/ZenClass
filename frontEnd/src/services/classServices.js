@@ -1,7 +1,7 @@
 import axios from "../setup/axios";
 
-const getAllClasses = (token) => {
-  return axios.get("/api/v1/getallclasses", {
+const getAllClasses = (id, token) => {
+  return axios.get(`/api/v1/getallclasses/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,33 +14,54 @@ const getClassMembers = (id, token) => {
     },
   });
 };
-const addStudent = (id, studentId, token) => {
-  return axios.post(`/api/v1/addStudentsToClass/${id}`, {
+const joinByCode = (id, studentId, token) => {
+  return axios.post(`/api/v1/joinbycode/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     studentId,
   });
 };
-const addTeacher = (id, teacherId, token) => {
-  return axios.post(`/api/v1/addTeacherToClass/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    teacherId,
-  });
-};
-const createClass = (title, teacher, className, token) => {
+// const addStudent = (id, studentId, token) => {
+//   return axios.post(`/api/v1/addStudentsToClass/${id}`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     studentId,
+//   });
+// };
+// const addTeacher = (id, teacherId, token) => {
+//   return axios.post(`/api/v1/addTeacherToClass/${id}`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     teacherId,
+//   });
+// };
+const createClass = (title, teacherName, className, token) => {
   return axios.post("/api/v1/createClass", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     title,
-    teacher,
+    teacherName,
     className,
   });
 };
-
+const inviteLink = (id, check, searchText, token) => {
+  return axios.post(
+    `/api/v1/sendInvitation/${id}`,
+    {
+      check: check,
+      searchText: searchText,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 const deleteClass = (id, token) => {
   return axios.post(`/api/v1/deleteClass/${id}`, {
     headers: {
@@ -48,7 +69,6 @@ const deleteClass = (id, token) => {
     },
   });
 };
-
 const getClassByID = (id, token) => {
   return axios.get(`/api/v1/getClassID/${id}`, {
     headers: {
@@ -61,6 +81,24 @@ const deleteClassbyID = (id, token) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  });
+};
+const deleteStudentFromClass = (id, personID, token) => {
+  console.log(personID);
+  return axios.post(`/api/v1/deleteStudentFromClass/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    personID: personID,
+  });
+};
+const deleteTeacherFromClass = (id, personID, token) => {
+  console.log(personID);
+  return axios.post(`/api/v1/deleteTeacherFromClass/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    personID: personID,
   });
 };
 
@@ -79,7 +117,9 @@ export {
   getClassByID,
   deleteClassbyID,
   editClass,
-  addStudent,
-  addTeacher,
   getClassMembers,
+  inviteLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
+  joinByCode,
 };

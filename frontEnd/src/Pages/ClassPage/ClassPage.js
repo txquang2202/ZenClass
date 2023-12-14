@@ -1,11 +1,10 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useClassContext } from "../../context/ClassContext";
 
 const ClassPage = () => {
-  const { id } = useParams();
-  const { classes, loading } = useClassContext(); // Include loading state
+  const { classes, loading } = useClassContext();
 
   return (
     <>
@@ -18,7 +17,7 @@ const ClassPage = () => {
         ) : (
           <>
             {classes.length === 0 ? (
-              <p className="text-gray-400 mb-10">No course available</p>
+              <p className="text-gray-400 mb-10">No class available</p>
             ) : (
               <Grid
                 container

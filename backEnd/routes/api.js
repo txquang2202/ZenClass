@@ -27,7 +27,15 @@ import {
   addStudent,
   addTeacher,
   getClassMembers,
+  invitationLink,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
+  joinByCode,
 } from "../controller/classController.js";
+import {
+  getCourseByUser,
+  getCourseByID,
+} from "../controller/coursesController.js";
 import express from "express";
 import { authenticateToken } from "../middleware/jwt.js";
 import upload from "../middleware/multer.js";
@@ -38,15 +46,12 @@ import {
   getAllUsers,
   changeStatusUsers,
 } from "../controller/adminController.js";
+import passport from "passport";
+import "../middleware/passport.js";
 
 const router = express.Router();
 // @param {*} app: express app
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/");
-};
+// middleware.js
 
 const initApi = (app) => {
   //goolge login
@@ -67,7 +72,6 @@ const initApi = (app) => {
   router.get("/getComments", getAllUsersComments);
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
-  router.get("/getallclasses", getAllClasses);
 
   //protected api
   router.get("/getallusers", authenticateToken, getAllUsers);
@@ -78,15 +82,23 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
+  //class APIs
   router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
   router.post("/addComments", authenticateToken, addComment);
-  router.post("/addStudentsToClass/:id", addStudent);
-  router.post("/addTeacherToClass/:id", addTeacher);
+  router.get("/addStudentsToClass/:id", addStudent);
+  router.get("/addTeacherToClass/:id", addTeacher);
   router.get("/getclassmembers/:id", getClassMembers);
-
+  router.post("/sendInvitation/:id", invitationLink);
+  router.post("/deleteStudentFromClass/:id", deleteStudentFromClass);
+  router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
+  router.get("/getallclasses/:id", getAllClasses);
+  router.post("/joinbycode/:id", joinByCode);
+  //coureseAPIS
+  router.get("/getCourseByUser/:id", getCourseByUser);
+  router.get("/getCourseByID/:id", getCourseByID);
   return app.use("/api/v1/", router);
 };
 

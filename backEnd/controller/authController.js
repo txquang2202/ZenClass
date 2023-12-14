@@ -9,6 +9,8 @@ import bcrypt from "bcryptjs";
 
 env.config();
 
+// authcontroller.js
+
 const handleLogin = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -19,11 +21,17 @@ const handleLogin = (req, res, next) => {
         .status(401)
         .json({ message: "Incorrect username or password." });
     }
-
-    const token = createToken(user);
-    return res.json({ token });
+    req.logIn(user, function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Server error during login." });
+      }
+      const token = createToken(user);
+      return res.json({ token });
+    });
   })(req, res, next);
 };
+
 //google login
 const initGG = passport.authenticate("google", {
   scope: ["profile", "email"],
@@ -127,9 +135,9 @@ const resetPassword = async (req, res) => {
 };
 const verifyReset = async (req, res) => {
   const { token } = req.query;
-  console.log(token);
+
   const user = await User.findOne({ verificationToken: token });
-  console.log(user.verificationToken);
+
   if (!user) {
     return res.status(400).send("Invalid verification token.");
   }
