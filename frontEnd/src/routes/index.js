@@ -171,7 +171,7 @@ const routes = [
   },
   {
     path: "/blocked",
-    page: BlockPage, 
+    page: BlockPage,
     layout: null,
     isProtected: false,
   },

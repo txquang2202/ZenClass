@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getClassMembers } from "../../services/classServices";
 import ClipboardJS from "clipboard";
 import { getAllUsers } from "../../services/userServices";
-import { chipClasses } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 import {
   inviteLink,
   deleteStudentFromClass,
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 
 function PeoplePage() {
   const token = localStorage.getItem("token");
+
   const { id } = useParams();
   const Navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
@@ -24,9 +25,23 @@ function PeoplePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [invTeacher, setInvTeacher] = useState([]);
+  const [invTeacher, setInvTeacher] = useState([
+    {
+      avatarSrc: "",
+      name: "duy",
+      mail: "phu@gmail.com",
+    },
+    {
+      avatarSrc: "",
+      name: "an",
+      mail: "an@gmail.com",
+    },
+  ]);
   const [filteredTeachers, setFilteredTeachers] = useState(invTeacher);
   const textRef = useRef(null);
+  let data;
+  if (token) data = jwtDecode(token);
+  const [isClassOwner, setIsClassOwner] = useState(false);
 
   useEffect(() => {
     const fetchingList = async () => {
@@ -37,10 +52,12 @@ function PeoplePage() {
         name: users.fullname || "",
         mail: users.email || "",
       }));
+      console.log(mappedUser);
       setInvTeacher(mappedUser);
     };
     fetchingList();
   }, []);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams) {
@@ -51,6 +68,7 @@ function PeoplePage() {
       if (verified) toast.success(verified);
     }
   }, []);
+
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
@@ -61,6 +79,10 @@ function PeoplePage() {
           avatarSrc: "/assets/imgs/" + teacher.img,
           name: teacher.fullname,
         }));
+
+        if (teacherData[0].id === data._id) {
+          setIsClassOwner(true);
+        }
         setTeachers(teacherData);
 
         const studentData = response.data.students.map((student) => ({
@@ -206,7 +228,7 @@ function PeoplePage() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                 </div>
-                {index !== 0 && (
+                {isClassOwner && index !== 0 && (
                   <span className="">
                     <RemoveCircleOutlineIcon
                       onClick={() => handleDeleteTeacher(item.id)}
@@ -245,12 +267,14 @@ function PeoplePage() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                 </div>
-                <span className="">
-                  <RemoveCircleOutlineIcon
-                    className="text-gray-300 cursor-pointer hover:text-blue-400"
-                    onClick={() => handleDeleteStudent(item.id)}
-                  />
-                </span>
+                {isClassOwner && (
+                  <span className="">
+                    <RemoveCircleOutlineIcon
+                      className="text-gray-300 cursor-pointer hover:text-blue-400"
+                      onClick={() => handleDeleteStudent(item.id)}
+                    />
+                  </span>
+                )}
               </section>
             ))}
           </>

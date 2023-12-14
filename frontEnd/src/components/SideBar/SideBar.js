@@ -65,6 +65,7 @@ function SideBar() {
 
   const closeJoinModal = () => {
     setJoinModalIsOpen(false);
+    setJoinClassCode("");
   };
 
   const handleJoinClass = async () => {
