@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from 'react-data-table-component';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteUserbyID,deleteListUserbyID,getAllUsers, blockUserbyID } from "../../services/adminServices";
+import { deleteListUserbyID,getAllUsers, blockUserbyID,changestatusbyListuser } from "../../services/adminServices";
 import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+import Tooltip from "../../components/Tooltip/Tooltip";
 
 function ManageUser() {
   const columns = [
     {
       name: 'UserName',
-      selector: row => row.username
+      cell: (row) => (
+        <>
+          <Tooltip text = {userinfor(row)}><div>{row.username}</div></Tooltip>
+        </>
+      ),
+      sortable: true,
+      
     },
     {
       name: 'Email',
-      selector: row => row.email
+      selector: row => row.email,
+      sortable: true,
     },
     {
       name: 'Status',
@@ -33,16 +40,16 @@ function ManageUser() {
         if (row.status === "Normal") {
             return (
             <div>
-              <button className="w-[80px] mr-[20px] border-solid  border-[1px] p-[5px] pl-[10px] pr-[10px] bg-[#FF0000]" onClick={()=>handleBlockUser(row._id,row.username,row.status)}>Block</button>
-              <button className="" onClick={()=>handleDeleteUser(row._id,row.username)}><DeleteIcon/></button>
+              <button className="w-[80px] mr-[20px] border-solid  border-[1px] p-[5px] pl-[10px] pr-[10px] bg-[#FF0000]" /*onClick={()=>handleBlockUser(row._id,row.username,row.status)}*/ onClick={()=>openModalstatuschange(addUserToListUser(row._id,row.username,row.status))}>Block</button>
+              <button className="" /*onClick={()=>handleDeleteUser(row._id,row.username)}*/ onClick={()=>openModalDel(addUserToListUser(row._id,row.username,row.status))}><DeleteIcon/></button>
             </div>);
         } else {
           return (
             <div>
-              <button className="w-[80px] mr-[20px] border-solid  border-[1px] p-[5px] pl-[10px] pr-[10px] bg-[#00FF41]" onClick={()=>handleBlockUser(row._id,row.username,row.status)}>Unblock</button>
-              <button className="" onClick={()=>handleDeleteUser(row._id,row.username)}><DeleteIcon/></button>
+              <button className="w-[80px] mr-[20px] border-solid  border-[1px] p-[5px] pl-[10px] pr-[10px] bg-[#00FF41]" /*onClick={()=>handleBlockUser(row._id,row.username,row.status)}*/ onClick={()=>openModalstatuschange(addUserToListUser(row._id,row.username,row.status))}>Unblock</button>
+              <button className="" /*onClick={()=>handleDeleteUser(row._id,row.username)}*/onClick={()=>openModalDel(addUserToListUser(row._id,row.username,row.status))}><DeleteIcon/></button>
             </div>);
-        }
+        } 
       })
   }
   ]
@@ -54,7 +61,10 @@ function ManageUser() {
 	const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
 	const [toggleCleared, setToggleCleared] = React.useState(false);
-  const [listIdDelete, setListIdDelete] = React.useState([]);
+  const [listUser, setListUser] = React.useState([]);
+  const [modalDelIsOpen, setModalDelIsOpen] = useState(false);
+  const [modalStatusIsOpen, setModalStatusIsOpen] = useState(false);
+  const [dataFile, setDataFile] = useState([]);
 
   const fetchUserData = async () => {
     try {
@@ -84,8 +94,22 @@ function ManageUser() {
     setFilter(result);
   },[search]);
 
-  const handleDeleteUser = async  (id, username) => {
-    if (window.confirm(`Are you sure you want to delete ${username}`)) {
+  const handleDeleteUser = async  (user) => {
+    const ids = user.map(item => item.id)
+    try {
+      const response = await deleteListUserbyID(ids);
+      if (response.status === 200) {
+        toast.success("Users deleted successfully");
+        fetchUserData();
+        setToggleCleared(!toggleCleared);
+      } else {
+        toast.error("Failed to delete users");
+      }
+    } catch (error) {
+      console.error("Error deleting users:", error);
+    }
+    closeModaldel()
+    /*if (window.confirm(`Are you sure you want to delete ${username}`)) {
       try {
         const response = await deleteUserbyID(id);
         if (response.status === 200) {
@@ -99,11 +123,26 @@ function ManageUser() {
         toast.error(`An error occurred while deleting user ${username}`);
       }
       } else {
-      }
+      }*/
   };
 
-  const handleBlockUser = async  (id, username, status) => {
-    if (window.confirm(`Are you sure you want to block ${username}`)) {
+  const handleBlockUser = async  (user) => {
+
+    const ids = user.map(item => item.id)
+    try {
+      const response = await changestatusbyListuser(ids);
+      if (response.status === 200) {
+        toast.success("Users Block successfully");
+        fetchUserData();
+        setToggleCleared(!toggleCleared);
+      } else {
+        toast.error("Failed to Block users");
+      }
+    } catch (error) {
+      console.error("Error Block users:", error);
+    }
+    closeModalstatuschange()
+    /*if (window.confirm(`Are you sure you want to block ${username}`)) {
       try {
         const response = await blockUserbyID(id);
         if (response.status === 200) {
@@ -123,7 +162,7 @@ function ManageUser() {
         toast.error(`An error occurred while block user ${username}`);
       }
       } else {
-      }
+      }*/
   };
 
   const tableHeaderstyle={
@@ -137,37 +176,60 @@ function ManageUser() {
   }
 
   const handleRowSelected = React.useCallback(state => {
-		setSelectedRows(state.selectedRows);
-    setListIdDelete(state.selectedRows.map(s=>s._id))
+		setSelectedRows(state.selectedRows.map(s => ({ id: s._id, username: s.username, status: s.status})));
 	}, []);
   
   const contextActions = React.useMemo(() => {
-		const handleDelete = async  () => {
-			if (window.confirm(`Are you sure you want to delete this list?`)) {
-        try {
-          const response = await deleteListUserbyID(listIdDelete);
-          if (response.status === 200) {
-            toast.success("Users deleted successfully");
-            fetchUserData();
-            setToggleCleared(!toggleCleared);
-          } else {
-            toast.error("Failed to delete users");
-          }
-        } catch (error) {
-          console.error("Error deleting users:", error);
-          alert("An error occurred while deleting users");
-          console.log(error.response.data);
-        }
-			}
-		};
 		return (
-			<button key="delete" onClick={handleDelete} className="pt-[5px] pb-[5px] pl-[10px] pr-[10px] bg-[#FF0000]" icon>
-				Delete
-			</button>
+      <div >
+        <button key="delete" onClick={()=>openModalstatuschange(selectedRows)}  className="w-[150px] mr-[20px]  pt-[5px] pb-[5px] pl-[10px] pr-[10px] bg-[#d7c573]" icon>
+          Status change
+        </button>
+        <button key="delete" onClick={()=>openModalDel(selectedRows)}  className="pt-[5px] pb-[5px] pl-[10px] pr-[10px] bg-[#FF0000]" icon>
+          Delete
+        </button>
+      </div>
       );
-    }, [listIdDelete, toggleCleared, fetchUserData]);
+    }, [listUser, toggleCleared, fetchUserData]);
+
+  const addUserToListUser = (id, username, status) => {
+    return [...listUser, { id, username, status}];
+  };
+  const clearList = () => {
+    setListUser([]);
+  };
+  const openModalDel = (user) => {
+    setListUser(user)
+    setModalDelIsOpen(true);
+  };
+
+  const closeModaldel = () => {
+    setModalDelIsOpen(false);
+    clearList();
+  };
+
+  const openModalstatuschange = (user) => {
+    setListUser(user)
+    setModalStatusIsOpen(true);
+  };
+
+  const closeModalstatuschange = () => {
+    setModalStatusIsOpen(false);
+    clearList();
+  };
 
 
+
+  const userinfor = (user) => {
+    console.log(user);
+    return(
+      <>
+        <div>Username: {user.username}</div>
+        <div>Email: {user.email}</div>
+        <div>Fullname: {user.fullname}</div>
+      </>
+    )
+  };
   return (
     <>
       <div className="relative  ">
@@ -209,6 +271,81 @@ function ManageUser() {
         pauseOnHover
         theme="light"
       />
+      <Modal
+            isOpen={modalDelIsOpen}
+            onRequestClose={closeModaldel}
+            contentLabel="Create Class Modal"
+            // className="h-36 w-[400px] hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center  md:inset-0  "
+            className="h-36 w-[400px] absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+            // overlayClassName="overlay"
+          >
+            <div className="bg-white p-8 rounded-md border-solid border-2 border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4">Are you sure Delete?</h2>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-600">
+                  User:
+                </label>
+                <ul className="text-sm pl-3">
+                {listUser.map((item) => (
+                  <li >{item.username}</li>
+                ))}
+                </ul>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
+                  onClick={()=>handleDeleteUser(listUser)}
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={closeModaldel}
+                  className="border border-gray-300 px-4 py-2 rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            isOpen={modalStatusIsOpen}
+            onRequestClose={closeModalstatuschange}
+            contentLabel="Create Class Modal"
+            // className="h-36 w-[400px] hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center  md:inset-0  "
+            className="h-36 w-[400px] absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+            // overlayClassName="overlay"
+          >
+            <div className="bg-white p-8 rounded-md border-solid border-2 border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4">Are you sure Change status?</h2>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-600">
+                  User:
+                </label>
+                <ul className="text-sm pl-3">
+                {listUser.map((item) => (
+                  <li className="flex justify-between">
+                    <div>{item.username}</div>
+                    <div className="font-semibold">{item.status}</div>
+                  </li>
+                ))}
+                </ul>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
+                  onClick={()=>handleBlockUser(listUser)}
+                >
+                  Change status
+                </button>
+                <button
+                  onClick={closeModalstatuschange}
+                  className="border border-gray-300 px-4 py-2 rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </Modal>
     </>
   );
 }

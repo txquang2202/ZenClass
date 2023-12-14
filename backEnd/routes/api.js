@@ -36,6 +36,7 @@ import {
   deleteListUsersByIds,
   blockUserbyID,
   getAllUsers,
+  changeStatusUsers,
 } from "../controller/adminController.js";
 
 const router = express.Router();
@@ -61,6 +62,7 @@ const initApi = (app) => {
   router.get("/verify", verifyEmail);
   router.post("/deleteUser/:id", deleteUsersbyID);
   router.post("/deleteListUser", deleteListUsersByIds);
+  router.post("/changeStatusListUser", changeStatusUsers);
   router.post("/blockUserbyID/:id", blockUserbyID);
   router.get("/getComments", getAllUsersComments);
   router.post("/updatePassword/:id", updatePassword);

@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { updatePassword } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
+import { useParams } from "react-router-dom";
+
 
 function ResetPassword(props) {
   // LAYOUT

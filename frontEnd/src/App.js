@@ -1,15 +1,16 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import routes from "./routes";
+//import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
+import CreateRouter from "./routes/CreateRouter";
 
 
 
 
 function App() {
-
+  const routes = CreateRouter();
   return (
     <>
       <Router>

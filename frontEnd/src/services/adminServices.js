@@ -44,6 +44,10 @@ const deleteListUserbyID = (listIdDelete) => {
   return axios.post('http://localhost:8080/api/v1/deleteListUser',listIdDelete);
 };
 
+const changestatusbyListuser = (userIds) => {
+  return axios.post(`api/v1/changeStatusListUser`,userIds);
+};
+
 const blockUserbyID = (id) => {
   return axios.post(`api/v1/blockUserbyID/${id}`);
 };
@@ -62,4 +66,5 @@ export {
   deleteUserbyID,
   deleteListUserbyID,
   blockUserbyID,
+  changestatusbyListuser,
 };

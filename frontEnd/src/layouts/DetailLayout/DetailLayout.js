@@ -5,7 +5,7 @@ import SideBar from "../../components/SideBar/SideBar";
 import NavDetail from "../../components/NavDetail/NavDetail";
 import { ClassProvider } from "../../context/ClassContext";
 import { GradeProvider  } from "../../context/GradeContext";
-import IsBlocked from "../../components/IsBlocked/IsBlocked";
+
 
 function Default({ children }) {
   return (
@@ -19,7 +19,7 @@ function Default({ children }) {
             <div className="w-11/12 pl-6 flex-1">
               <NavDetail />
               <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">
-                <IsBlocked>{children}</IsBlocked>
+                {children}
               </section>
             </div>
           </div>
