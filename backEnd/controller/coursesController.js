@@ -16,6 +16,7 @@ const getCourseByUser = async (req, res) => {
         options: { limit: 1 },
       },
     });
+    console.log(courseInfo);
     res.json({ courseInfo: courseInfo.courses });
   } catch (error) {
     console.error(error);

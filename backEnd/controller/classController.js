@@ -4,13 +4,21 @@ import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
 
 const getAllClasses = async (req, res) => {
+  const userID = req.params.id;
   try {
-    const classes = await Class.find().populate(
-      "teachers",
-      "username fullname"
-    );
+    const classInfo = await User.findOne({ _id: userID }, "classes").populate({
+      path: "classes",
+      select: "title teachers className",
+      populate: {
+        path: "teachers",
+        model: "users",
+        select: "fullname",
+        options: { limit: 1 },
+      },
+    });
+    //console.log(classInfo);
 
-    res.json({ classes });
+    res.json({ classInfo: classInfo.classes });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching users");
@@ -186,6 +194,10 @@ const addTeacher = async (req, res) => {
         `${process.env.BASE_URL}/home/classes/detail/people/${classId}?err=You have already joined this class!!`
       );
     }
+    if (!teacher.classes.includes(classId)) {
+      teacher.classes.push(classId);
+      await teacher.save();
+    }
     await Class.findByIdAndUpdate(
       classId,
       {
@@ -333,7 +345,10 @@ const createClass = async (req, res) => {
       id: newClass._id,
     };
     await newClass.save();
-
+    if (!teacher.classes.includes(newClass._id)) {
+      teacher.classes.push(newClass._id);
+      await teacher.save();
+    }
     res.json({
       message: "Create class successfully!!",
       class: returnClass,

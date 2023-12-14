@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { getAllClasses } from "../services/classServices";
 import { useNavigate } from "react-router-dom";
-import { circularProgressClasses } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 
 const ClassContext = createContext();
 
@@ -16,16 +16,22 @@ export const ClassProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getAllClasses(token);
-        const classesData = response.data.classes;
-        const mappedClasses = classesData.map((data) => ({
-          id: data._id || "",
-          title: data.title || "",
-          teacher: data.teachers[0].fullname || data.teachers[0].username || "",
-          className: data.className || "",
-        }));
-        setClasses(mappedClasses);
-        setLoading(false);
+        const data = jwtDecode(token);
+        const response = await getAllClasses(data._id, token);
+        const classesData = response.data.classInfo;
+        console.log(classesData);
+
+        if (classesData) {
+          const mappedClasses = classesData.map((data) => ({
+            id: data._id || "",
+            title: data.title || "",
+            teacher:
+              data.teachers[0].fullname || data.teachers[0].username || "",
+            className: data.className || "",
+          }));
+          setClasses(mappedClasses);
+          setLoading(false);
+        }
       } catch (error) {
         console.error("Error fetching classes:", error);
         navigate("/500");

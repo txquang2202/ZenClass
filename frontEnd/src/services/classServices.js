@@ -1,7 +1,7 @@
 import axios from "../setup/axios";
 
-const getAllClasses = (token) => {
-  return axios.get("/api/v1/getallclasses", {
+const getAllClasses = (id, token) => {
+  return axios.get(`/api/v1/getallclasses/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

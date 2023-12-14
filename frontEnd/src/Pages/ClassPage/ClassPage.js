@@ -1,10 +1,9 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useClassContext } from "../../context/ClassContext";
 
 const ClassPage = () => {
-  const { id } = useParams();
   const { classes, loading } = useClassContext();
 
   return (

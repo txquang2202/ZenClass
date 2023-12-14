@@ -92,7 +92,7 @@ const initApi = (app) => {
   router.post("/sendInvitation/:id", invitationLink);
   router.post("/deleteStudentFromClass/:id", deleteStudentFromClass);
   router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
-  router.get("/getallclasses", getAllClasses);
+  router.get("/getallclasses/:id", getAllClasses);
   router.post("/joinbycode/:id", joinByCode);
   //coureseAPIS
   router.get("/getCourseByUser/:id", getCourseByUser);
