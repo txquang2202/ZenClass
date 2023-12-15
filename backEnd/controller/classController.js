@@ -3,6 +3,51 @@ import User from "../models/user.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
 
+const createClass = async (req, res) => {
+  try {
+    const { title, teacherName, className } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ message: "Title is empty!" });
+    }
+    if (!className) {
+      return res.status(400).json({ message: "Class name is empty!" });
+    }
+
+    const existTitle = await Class.findOne({ title });
+    if (existTitle) {
+      return res.status(400).json({ message: "Class title already taken!" });
+    }
+    const teacher = await User.findOne({ fullname: teacherName });
+    if (!teacher) {
+      return res.status(400).json({ message: "Teacher not found!" });
+    }
+
+    const newClass = new Class({
+      title: title,
+      teachers: [teacher._id],
+      className: className,
+    });
+    const returnClass = {
+      title: title,
+      teacher: teacherName,
+      className: className,
+      id: newClass._id,
+    };
+    await newClass.save();
+    if (!teacher.classes.includes(newClass._id)) {
+      teacher.classes.push(newClass._id);
+      await teacher.save();
+    }
+    res.json({
+      message: "Create class successfully!!",
+      class: returnClass,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error.");
+  }
+};
 const getAllClasses = async (req, res) => {
   const userID = req.params.id;
   try {
@@ -288,6 +333,7 @@ const deleteStudentFromClass = async (req, res) => {
       _id: classID,
       students: personID,
     });
+
     if (isStudentExists) {
       await Class.findByIdAndUpdate(
         classID,
@@ -298,23 +344,37 @@ const deleteStudentFromClass = async (req, res) => {
         },
         { new: true }
       );
+      await User.findOneAndUpdate(
+        { courses: classID },
+        {
+          $pull: {
+            courses: classID,
+          },
+        },
+        { new: true }
+      );
+
+      res.json({ message: "Delete successfully!" });
+    } else {
+      res.status(404).json({ message: "Student not found in the class." });
     }
-    res.json({ message: "Delete successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error while fetching user profile");
+    res.status(500).send("Error while deleting student from class");
   }
 };
 const deleteTeacherFromClass = async (req, res) => {
   try {
     const classID = req.params.id;
     const personID = req.body.personID;
-    const isTeachersExists = await Class.exists({
+
+    const isTeacherExists = await Class.exists({
       _id: classID,
       teachers: personID,
     });
-    if (isTeachersExists) {
-      const deleteTeacher = await Class.findByIdAndUpdate(
+
+    if (isTeacherExists) {
+      await Class.findByIdAndUpdate(
         classID,
         {
           $pull: {
@@ -323,74 +383,56 @@ const deleteTeacherFromClass = async (req, res) => {
         },
         { new: true }
       );
+      await User.findOneAndUpdate(
+        { _id: personID },
+        {
+          $pull: {
+            classes: classID,
+          },
+        },
+        { new: true }
+      ).populate("classes");
+
+      res.json({ message: "Delete successfully!" });
+    } else {
+      res.status(404).json({ message: "Teacher not found in the class." });
     }
-    res.json({ message: "Delete successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error while fetching user profile");
-  }
-};
-const createClass = async (req, res) => {
-  try {
-    const { title, teacherName, className } = req.body;
-
-    if (!title) {
-      return res.status(400).json({ message: "Title is empty!" });
-    }
-    if (!className) {
-      return res.status(400).json({ message: "Class name is empty!" });
-    }
-
-    const existTitle = await Class.findOne({ title });
-    if (existTitle) {
-      return res.status(400).json({ message: "Class title already taken!" });
-    }
-    const teacher = await User.findOne({ fullname: teacherName });
-    if (!teacher) {
-      return res.status(400).json({ message: "Teacher not found!" });
-    }
-
-    const newClass = new Class({
-      title: title,
-      teachers: [teacher._id],
-      className: className,
-    });
-    const returnClass = {
-      title: title,
-      teacher: teacherName,
-      className: className,
-      id: newClass._id,
-    };
-    await newClass.save();
-    if (!teacher.classes.includes(newClass._id)) {
-      teacher.classes.push(newClass._id);
-      await teacher.save();
-    }
-    res.json({
-      message: "Create class successfully!!",
-      class: returnClass,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error.");
+    res.status(500).send("Error while deleting teacher from class");
   }
 };
 const deleteClassbyID = async (req, res) => {
   try {
     const classID = req.params.id;
+    const deletedClass = await Class.findById(classID);
 
-    const deleteClass = await Class.findByIdAndDelete(classID);
-
-    if (!deleteClass) {
+    if (!deletedClass) {
       return res.status(404).json({ message: "Class not found!" });
     }
 
-    res.json({ message: "Delete succesfully!" });
+    const students = deletedClass.students;
+    const teachers = deletedClass.teachers;
+
+    await User.updateMany(
+      { _id: { $in: [...students, ...teachers] } },
+      {
+        $pull: {
+          courses: classID,
+          classes: classID,
+        },
+      }
+    );
+
+    await Class.findByIdAndDelete(classID);
+
+    res.json({ message: "Delete successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error while fetching user profile");
+    res.status(500).send("Error while deleting class");
   }
 };
+
 const editClass = async (req, res) => {
   try {
     const { title, className } = req.body;
