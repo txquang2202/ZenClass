@@ -1,16 +1,13 @@
 import Homework from "../models/homeworks.js";
 import User from "../models/user.js";
-import transporter from "../middleware/nodemailer.js";
-import mongoose from "mongoose";
 import Class from "../models/classes.js";
 
 const getAllHomework = async (req, res) => {
   const classID = req.params.id;
   try {
-    const homeworks = await Class.find({ _id: classID }, "homeworks");
-    console.log(homeworks);
+    const homeworks = await Class.findOne({ _id: classID }, "homeworks");
 
-    res.json({ homeworks });
+    res.json({ homeworks: homeworks.homeworks });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching");

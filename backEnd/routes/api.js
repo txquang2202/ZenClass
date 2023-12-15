@@ -2,8 +2,6 @@ import {
   createUser,
   editUser,
   getUserProfile,
-  getAllUsersComments,
-  addComment,
 } from "../controller/userController.js";
 import {
   handleLogin,
@@ -46,7 +44,11 @@ import {
   getAllUsers,
   changeStatusUsers,
 } from "../controller/adminController.js";
-
+import {
+  addComment,
+  getAllUsersComments,
+  deleteComment,
+} from "../controller/commentsController.js";
 import {
   deleteHomeworkByID,
   editHomeworkByID,
@@ -77,7 +79,7 @@ const initApi = (app) => {
   router.post("/deleteListUser", deleteListUsersByIds);
   router.post("/changeStatusListUser", changeStatusUsers);
   router.post("/blockUserbyID/:id", blockUserbyID);
-  router.get("/getComments", getAllUsersComments);
+
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
 
@@ -95,7 +97,7 @@ const initApi = (app) => {
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
-  router.post("/addComments", authenticateToken, addComment);
+
   router.get("/addStudentsToClass/:id", addStudent);
   router.get("/addTeacherToClass/:id", addTeacher);
   router.get("/getclassmembers/:id", getClassMembers);
@@ -115,7 +117,11 @@ const initApi = (app) => {
   // router.post("/createClass", authenticateToken, createHomeworkByID);
   // router.put("/editclass/:id", authenticateToken, editHomeworkByID);
   // router.delete("/deleteClass/:id", authenticateToken, deleteHomeworkByID);
-
+  //CommentAPIS
+  router.get("/getComments/:id", getAllUsersComments);
+  router.post("/addComments/:id", addComment);
+  router.delete("/deleteComment/:id", deleteComment);
+  // router.post("/addComments", authenticateToken, addComment);
   return app.use("/api/v1/", router);
 };
 
