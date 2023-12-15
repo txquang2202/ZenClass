@@ -6,6 +6,7 @@ const classSchema = new mongoose.Schema({
   teachers: [{ type: Schema.Types.ObjectId, ref: "users" }],
   className: String,
   students: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  homeworks: [{ type: Schema.Types.ObjectId, ref: "homeworks" }],
 });
 
 const Class = mongoose.model("classes", classSchema);

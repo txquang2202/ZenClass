@@ -46,6 +46,14 @@ import {
   getAllUsers,
   changeStatusUsers,
 } from "../controller/adminController.js";
+
+import {
+  deleteHomeworkByID,
+  editHomeworkByID,
+  createHomeworkByID,
+  getAllHomework,
+} from "../controller/homeworkController.js";
+
 import passport from "passport";
 import "../middleware/passport.js";
 
@@ -99,6 +107,15 @@ const initApi = (app) => {
   //coureseAPIS
   router.get("/getCourseByUser/:id", getCourseByUser);
   router.get("/getCourseByID/:id", getCourseByID);
+  //HomeworkAPIS
+  router.get("/getAllHomework/:id", getAllHomework);
+  router.post("/createHomework/:id", createHomeworkByID);
+  router.put("/editHomework/:id", editHomeworkByID);
+  router.delete("/deleteHomework/:id", deleteHomeworkByID);
+  // router.post("/createClass", authenticateToken, createHomeworkByID);
+  // router.put("/editclass/:id", authenticateToken, editHomeworkByID);
+  // router.delete("/deleteClass/:id", authenticateToken, deleteHomeworkByID);
+
   return app.use("/api/v1/", router);
 };
 
