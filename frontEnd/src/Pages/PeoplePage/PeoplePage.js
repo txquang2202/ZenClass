@@ -205,12 +205,14 @@ function PeoplePage() {
         <section>
           <div className="flex justify-between items-center">
             <h2 className="text-4xl text-[#10375c]">Teacher</h2>
-            <span className="">
-              <PersonAddAltIcon
-                className=" cursor-pointer hover:text-blue-400"
-                onClick={openModal}
-              />
-            </span>
+            {isClassOwner && (
+              <span className="">
+                <PersonAddAltIcon
+                  className=" cursor-pointer hover:text-blue-400"
+                  onClick={openModal}
+                />
+              </span>
+            )}
           </div>
           <hr className="mb-3 mt-3 border-indigo-200 border-b-[#10375c]" />
           <>
@@ -244,12 +246,14 @@ function PeoplePage() {
         <section className="mt-12">
           <div className="flex justify-between items-center">
             <h2 className="text-4xl text-[#10375c]">Students</h2>
-            <span className="">
-              <PersonAddAltIcon
-                className="cursor-pointer hover:text-blue-400"
-                onClick={openModal1}
-              />
-            </span>
+            {isClassOwner && (
+              <span className="">
+                <PersonAddAltIcon
+                  className="cursor-pointer hover:text-blue-400"
+                  onClick={openModal1}
+                />
+              </span>
+            )}
           </div>
           <hr className="mb-3 mt-3 border-indigo-200 border-b-[#10375c]" />
           <>

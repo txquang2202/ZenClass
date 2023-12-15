@@ -48,6 +48,7 @@ const createClass = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
+
 const getAllClasses = async (req, res) => {
   const userID = req.params.id;
   try {
@@ -61,8 +62,6 @@ const getAllClasses = async (req, res) => {
         options: { limit: 1 },
       },
     });
-    //console.log(classInfo);
-
     res.json({ classInfo: classInfo.classes });
   } catch (error) {
     console.error(error);

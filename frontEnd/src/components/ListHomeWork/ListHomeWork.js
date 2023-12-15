@@ -1,31 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import Modal from "../../components/Modal/ClassDetailModal";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
+import {
+  getAllHomework,
+  createHomeworkByID,
+} from "../../services/homeworkServices";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function ListHomeWork(props) {
-  const [homeworks, setHomeWorks] = useState([
-    {
-      title: "Syllabus - CSC13114 Advanced Web Application",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
-      date: "16 thg 11",
-    },
-    {
-      title: "L01 - Course IntroductionFile",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
-      date: "12 thg 10",
-    },
-    {
-      title: "Assignment Class Diagram",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, minus amet? Repellat consequatur quis, deserunt asperiores possimus distinctio quam aut odio atque perferendis inventore dolor ex id omnis sunt debitis!",
-      date: "20 thg 9",
-    },
-  ]);
+  const [homeworks, setHomeWorks] = useState([]);
   const [newHomework, setNewHomework] = useState({
     title: "",
     description: "",
@@ -33,6 +20,69 @@ function ListHomeWork(props) {
   });
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const { id } = useParams();
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  let data;
+  if (token) data = jwtDecode(token);
+  const [loading, setLoading] = useState(true);
+
+  // API create homeworks
+  const handleCreateHomework = async () => {
+    try {
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, "dd MMMM yyyy");
+      const response = await createHomeworkByID(
+        id,
+        token,
+        newHomework.title,
+        data.fullname,
+        newHomework.description,
+        currentDate
+      );
+      setHomeWorks((prevHomeworks) => [...prevHomeworks, response.data.class]);
+      setNewHomework({
+        title: "",
+        description: "",
+        date: formattedDate,
+      });
+      closeModal1();
+      toast.success("Homework added successfully!");
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+      navigate("/500");
+    }
+  };
+
+  // API get homeworks
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getAllHomework(id, token);
+        const homeworkData = response.data.homeworks;
+        if (homeworkData) {
+          const mappedhomework = homeworkData.map((data) => ({
+            id: data._id || "",
+            title: data.title || "",
+            date: format(new Date(data.date), "dd MMMM yyyy") || "",
+          }));
+          setHomeWorks(mappedhomework);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+        navigate("/500");
+      }
+    };
+    fetchUserData();
+  }, [navigate, token]);
+
+  // Add homework
+  const handleNewHomeworkChange = (e) => {
+    setNewHomework({
+      ...newHomework,
+      [e.target.id]: e.target.value,
+    });
+  };
 
   // Modal
   const openModal1 = () => {
@@ -43,39 +93,31 @@ function ListHomeWork(props) {
     setIsModalOpen1(false);
   };
 
-  // Add homework
-  const handleNewHomeworkChange = (e) => {
-    setNewHomework({
-      ...newHomework,
-      [e.target.id]: e.target.value,
-    });
-  };
-
-  const handleAddHomework = () => {
-    if (
-      newHomework.title.trim() !== "" &&
-      newHomework.description.trim() !== ""
-    ) {
-      // Thêm bài tập mới vào danh sách
-      setHomeWorks((prevHomeworks) => [
-        ...prevHomeworks,
-        {
-          title: newHomework.title,
-          description: newHomework.description,
-          date: newHomework.date,
-        },
-      ]);
-      setNewHomework({
-        title: "",
-        description: "",
-        date: format(new Date(), "dd MMMM"),
-      });
-      closeModal1();
-      toast.success("Homework added successfully!");
-    } else {
-      toast.error("Please enter the title for the homework");
-    }
-  };
+  // const handleAddHomework = () => {
+  //   if (
+  //     newHomework.title.trim() !== "" &&
+  //     newHomework.description.trim() !== ""
+  //   ) {
+  //     // Thêm bài tập mới vào danh sách
+  //     setHomeWorks((prevHomeworks) => [
+  //       ...prevHomeworks,
+  //       {
+  //         title: newHomework.title,
+  //         description: newHomework.description,
+  //         date: newHomework.date,
+  //       },
+  //     ]);
+  //     setNewHomework({
+  //       title: "",
+  //       description: "",
+  //       date: format(new Date(), "dd MMMM"),
+  //     });
+  //     closeModal1();
+  //     toast.success("Homework added successfully!");
+  //   } else {
+  //     toast.error("Please enter the title for the homework");
+  //   }
+  // };
 
   return (
     <div className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
@@ -87,25 +129,37 @@ function ListHomeWork(props) {
           +
         </button>
       </div>
-
-      {homeworks.map((item, index) => (
-        <Link to={`/home/classes/detail/homework/${id}`}>
-          <section
-            key={index}
-            className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
-          >
-            <div className="rounded-full p-2 bg-blue-400">
-              <ClassOutlinedIcon style={{ color: "white" }} fontSize="medium" />
-            </div>
-            <div>
-              <div>
-                <h2>{item.title}</h2>
-                <span className="text-gray-400 text-sm">{item.date}</span>
-              </div>
-            </div>
-          </section>
-        </Link>
-      ))}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {homeworks.length > 0 ? (
+            homeworks.map((item, index) => (
+              <Link to={`/home/classes/detail/homework/${item.id}`}>
+                <section
+                  key={index}
+                  className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="rounded-full p-2 bg-blue-400">
+                    <ClassOutlinedIcon
+                      style={{ color: "white" }}
+                      fontSize="medium"
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <h2>{item.title}</h2>
+                      <span className="text-gray-400 text-sm">{item.date}</span>
+                    </div>
+                  </div>
+                </section>
+              </Link>
+            ))
+          ) : (
+            <p className="text-gray-400 mb-10">No homework available...</p>
+          )}
+        </>
+      )}
 
       {/* Modal Post */}
       <Modal show={isModalOpen1} handleClose={closeModal1}>
@@ -140,7 +194,7 @@ function ListHomeWork(props) {
 
         <div className="flex justify-end">
           <button
-            onClick={handleAddHomework}
+            onClick={handleCreateHomework}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
             Add Homework

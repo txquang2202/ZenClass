@@ -1,11 +1,19 @@
 import Homework from "../models/homeworks.js";
 import User from "../models/user.js";
+import transporter from "../middleware/nodemailer.js";
+import mongoose from "mongoose";
 import Class from "../models/classes.js";
 
 const getAllHomework = async (req, res) => {
   const classID = req.params.id;
   try {
-    const homeworks = await Class.findOne({ _id: classID }, "homeworks");
+    const homeworks = await Class.findOne(
+      { _id: classID },
+      "homeworks"
+    ).populate({
+      path: "homeworks",
+      select: "title teacher date",
+    });
 
     res.json({ homeworks: homeworks.homeworks });
   } catch (error) {
@@ -13,6 +21,7 @@ const getAllHomework = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
+
 const createHomeworkByID = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -38,7 +47,7 @@ const createHomeworkByID = async (req, res) => {
       title: title,
       teacher: teacherName,
       description: description,
-      date,
+      date: date,
     });
     await newHW.save();
     const classHW = await Class.findById(classID);
