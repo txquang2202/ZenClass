@@ -227,7 +227,11 @@ const addTeacher = async (req, res) => {
     );
   }
   if (!teacherId) {
-    teacherId = req.user._id;
+    if (req.user._id) {
+      teacherId = req.user._id;
+    } else if (req.user.user._id) {
+      teacherId = req.user.user._id;
+    }
   }
   try {
     const teacher = await User.findById(teacherId);
