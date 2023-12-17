@@ -12,13 +12,29 @@ const getAllHomework = async (req, res) => {
       "homeworks"
     ).populate({
       path: "homeworks",
-      select: "title teacher date",
+      select: "title description teacher date",
     });
 
     res.json({ homeworks: homeworks.homeworks });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching");
+  }
+};
+
+const getHomeworkByID = async (req, res) => {
+  try {
+    const homeworkID = req.params.id;
+    const classWithHomework = await Homework.findOne({ homeworks: homeworkID });
+
+    if (!classWithHomework) {
+      return res.status(404).json({ message: "Homework not found!" });
+    }
+
+    res.json(classWithHomework);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching homework info");
   }
 };
 
@@ -114,4 +130,5 @@ export {
   editHomeworkByID,
   createHomeworkByID,
   getAllHomework,
+  getHomeworkByID,
 };

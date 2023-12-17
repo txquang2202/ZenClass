@@ -6,6 +6,7 @@ import NavDetail from "../../components/NavDetail/NavDetail";
 import { ClassProvider } from "../../context/ClassContext";
 import { GradeProvider } from "../../context/GradeContext";
 import { CourseProvider } from "../../context/CourseContext";
+import { ClassDetailProvider } from "../../context/ClassDetailContext";
 import IsBlocked from "../../components/IsBlocked/IsBlocked";
 
 function Default({ children }) {
@@ -13,20 +14,21 @@ function Default({ children }) {
     <div>
       <NavBar />
       <ClassProvider>
-        <CourseProvider>
-          <GradeProvider>
-            <div className="mt-10 container w-full lg:max-w-[calc(100%-7rem)] mx-auto max-w-4xl pb-10 flex min-h-96">
-              <SideBar />
-
-              <div className="w-11/12 pl-6 flex-1">
-                <NavDetail />
-                <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">
-                  <IsBlocked>{children}</IsBlocked>
-                </section>
+        <ClassDetailProvider>
+          <CourseProvider>
+            <GradeProvider>
+              <div className="mt-10 container w-full lg:max-w-[calc(100%-7rem)] mx-auto max-w-4xl pb-10 flex min-h-96">
+                <SideBar />
+                <div className="w-11/12 pl-6 flex-1">
+                  <NavDetail />
+                  <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">
+                    <IsBlocked>{children}</IsBlocked>
+                  </section>
+                </div>
               </div>
-            </div>
-          </GradeProvider>
-        </CourseProvider>
+            </GradeProvider>
+          </CourseProvider>
+        </ClassDetailProvider>
       </ClassProvider>
       <Footer />
     </div>

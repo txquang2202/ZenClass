@@ -54,6 +54,7 @@ import {
   editHomeworkByID,
   createHomeworkByID,
   getAllHomework,
+  getHomeworkByID,
 } from "../controller/homeworkController.js";
 
 import passport from "passport";
@@ -93,7 +94,7 @@ const initApi = (app) => {
     editUser
   );
   //class APIs
-  router.get("/getClassID/:id", authenticateToken, getClassByID);
+  router.get("/getClassID/:id", getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
@@ -111,6 +112,7 @@ const initApi = (app) => {
   router.get("/getCourseByID/:id", getCourseByID);
   //HomeworkAPIS
   router.get("/getAllHomework/:id", getAllHomework);
+  router.get("/getHomeworkByID/:id", getHomeworkByID);
   router.post("/createHomework/:id", createHomeworkByID);
   router.put("/editHomework/:id", editHomeworkByID);
   router.delete("/deleteHomework/:id", deleteHomeworkByID);

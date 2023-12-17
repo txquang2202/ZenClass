@@ -6,13 +6,20 @@ import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
 import LanguageSwitcher from "../SwitchLanguage/SwitchLanguage";
 
+const getUser = () => {
+  const data = localStorage.getItem("user");
+  if (data !== null) {
+    const user = JSON.parse(data);
+    if (user !== null) {
+      return user;
+    }
+  }
+  return null;
+}
+
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [user, setUser] = useState(false);
-  const [name, setName] = useState("");
-  const [avt, setAvt] = useState("");
-  const [id, setId] = useState("");
-  const Navigate = useNavigate();
+  const [user, setUser] = useState(getUser());
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -21,57 +28,48 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const navigate = useNavigate();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
+        let token = urlParams.get("token");
+        if (token === null) {
+          token = localStorage.getItem("token");
+        }
 
-        if (token) {
+        if (token !== null) {
+          const session = jwtDecode(token);
+          const response = await getUserID(session._id, token);
+          const userData = response.data.user;
           localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(userData));
         }
 
-        const check = localStorage.getItem("token");
-        if (!check) {
-          setUser(false);
-          return;
-        }
-        const data = localStorage.getItem("token");
-        const session = jwtDecode(data);
-
-        setId(session._id);
-        const response = await getUserID(session._id, data);
-        const userData = response.data.user;
-
-        if (userData) {
-          setUser(true);
-        }
-
-        if (userData.img) {
-          setAvt(userData.img);
-        } else {
-          setAvt(null);
-        }
-
-        if (userData.username) {
-          setName(userData.username);
+        const data = localStorage.getItem("user");
+        if (data !== null) {
+          const user = JSON.parse(data);
+          if (user !== null) {
+            setUser(user);
+          }
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
         navigate("/500");
       }
     };
-
     fetchUserData();
-  }, [id]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(false);
+    localStorage.removeItem("user");
+    setUser(null);
     setAnchorEl(null);
-    Navigate("/");
+    navigate("/");
   };
+
   return (
     <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
       <div className="container w-full lg:max-w-screen-xl mx-auto">
@@ -83,7 +81,7 @@ const Navbar = () => {
           </div>
           {/* <LanguageSwitcher /> */}
           <div className="flex items-center justify-between space-x-4 lg:gap-12">
-            <Link to={`/home/${id}`} className="text-white">
+            <Link to={`/home/${user?._id}`} className="text-white">
               Home
             </Link>
             <Link to="#!" className="text-white">
@@ -97,13 +95,15 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center justify-between space-x-4">
-            {user ? (
+            {user !== null ? (
               <>
                 <Noti />
-                <span className="text-white cursor-pointer">{name}</span>
+                <span className="text-white cursor-pointer">
+                  {user.username}
+                </span>
                 <Avatar
                   alt="User Avatar"
-                  src={`/assets/imgs/${avt}`}
+                  src={`/assets/imgs/${user.img}`}
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
@@ -123,7 +123,7 @@ const Navbar = () => {
                   }}
                   className="mt-12"
                 >
-                  <Link to={`/profile/${id}`}>
+                  <Link to={`/profile/${user._id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
                   <MenuItem onClick={handleClose}>Settings</MenuItem>

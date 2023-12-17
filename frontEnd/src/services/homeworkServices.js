@@ -8,6 +8,14 @@ const getAllHomework = (id, token) => {
   });
 };
 
+const getHomeworkByID = (id, token) => {
+  return axios.get(`/api/v1/getHomeworkByID/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const createHomeworkByID = (
   id,
   token,
@@ -49,4 +57,5 @@ export {
   createHomeworkByID,
   editHomeworkByID,
   deleteHomeworkByID,
+  getHomeworkByID,
 };

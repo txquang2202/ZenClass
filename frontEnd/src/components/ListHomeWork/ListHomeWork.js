@@ -10,6 +10,7 @@ import {
 } from "../../services/homeworkServices";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useClassDetailContext } from "../../context/ClassDetailContext";
 
 function ListHomeWork(props) {
   const [homeworks, setHomeWorks] = useState([]);
@@ -74,7 +75,7 @@ function ListHomeWork(props) {
       }
     };
     fetchUserData();
-  }, [navigate, token]);
+  }, [navigate, token, id]);
 
   // Add homework
   const handleNewHomeworkChange = (e) => {
@@ -118,7 +119,6 @@ function ListHomeWork(props) {
   //     toast.error("Please enter the title for the homework");
   //   }
   // };
-
   return (
     <div className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
       <div className="text-center">
@@ -135,25 +135,26 @@ function ListHomeWork(props) {
         <>
           {homeworks.length > 0 ? (
             homeworks.map((item, index) => (
-              <Link to={`/home/classes/detail/homework/${item.id}`}>
-                <section
-                  key={index}
-                  className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
-                >
-                  <div className="rounded-full p-2 bg-blue-400">
-                    <ClassOutlinedIcon
-                      style={{ color: "white" }}
-                      fontSize="medium"
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <h2>{item.title}</h2>
-                      <span className="text-gray-400 text-sm">{item.date}</span>
+              <div key={index}>
+                <Link to={`/home/classes/detail/homework/${item.id}`}>
+                  <section className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                    <div className="rounded-full p-2 bg-blue-400">
+                      <ClassOutlinedIcon
+                        style={{ color: "white" }}
+                        fontSize="medium"
+                      />
                     </div>
-                  </div>
-                </section>
-              </Link>
+                    <div>
+                      <div>
+                        <h2>{item.title}</h2>
+                        <span className="text-gray-400 text-sm">
+                          {item.date}
+                        </span>
+                      </div>
+                    </div>
+                  </section>
+                </Link>
+              </div>
             ))
           ) : (
             <p className="text-gray-400 mb-10">No homework available...</p>

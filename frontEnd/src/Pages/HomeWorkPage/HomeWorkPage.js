@@ -32,16 +32,16 @@ function HomeWorkPage(props) {
   const navigate = useNavigate();
   // Get API comment
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getComments();
-        setComments(response.data.comments);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await getComments();
+    //     setComments(response.data.comments);
+    //   } catch (error) {
+    //     console.error("Error fetching comments:", error);
+    //   }
+    // };
 
-    fetchData();
+    // fetchData();
   }, []);
 
   const handleCommentChange = (e) => {
@@ -126,7 +126,7 @@ function HomeWorkPage(props) {
         ))}
 
         {/* COMMENTS*/}
-        <section className="">
+        {/* <section className="">
           <hr className="mb-3 mt-3 border-indigo-100 border-b-[#10375c]" />
           <h2 className="text-base text-[#10375c]">Comments</h2>
 
@@ -134,7 +134,6 @@ function HomeWorkPage(props) {
             <Comment key={index} {...comment} />
           ))}
 
-          {/* Add a form for adding new comments */}
           <form onSubmit={handleCommentSubmit} className="mt-6 flex">
             <Avatar
               alt={"Default User"}
@@ -156,7 +155,7 @@ function HomeWorkPage(props) {
               <SendIcon />
             </button>
           </form>
-        </section>
+        </section> */}
       </section>
 
       {/* Modal edit*/}

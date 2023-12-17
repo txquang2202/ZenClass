@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getClassByID,
@@ -34,6 +34,7 @@ function HeroMedia(props) {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   // APIgetClass
   useEffect(() => {
     const fetchUserData = async () => {
@@ -97,7 +98,7 @@ function HeroMedia(props) {
         title: formData.title,
         className: formData.className,
       };
-      await editClass(detailClass.id, formSub, token);
+      await editClass(id, formSub, token);
       // Handle success, e.g., show a success message
       toast.success("Class edited successfully:");
 
@@ -174,10 +175,7 @@ function HeroMedia(props) {
           </div>
         </form>
 
-        <button
-          onClick={() => handleDeleteClass(detailClass.id)}
-          className="text-red-400"
-        >
+        <button onClick={() => handleDeleteClass(id)} className="text-red-400">
           Delete class
         </button>
 
