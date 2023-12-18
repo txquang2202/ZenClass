@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import LandingPage from "../Pages/LandingPage/LandingPage";
 import SignUpPage from "../components/SignUp/SignUp";
@@ -28,7 +28,6 @@ import ManageUser from "../Pages/ManageUser/ManageUser";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
-
 
 import { getUserID } from "../services/userServices";
 import { jwtDecode } from "jwt-decode";
@@ -147,7 +146,7 @@ const CreateRouter = () => {
       isProtected: true,
     },
     {
-      path: "/home/classes/detail/homework/:id",
+      path: "/home/classes/detail/:id1/homework/:id2",
       page: user === "Normal" ? HomeWorkPage : BlockPage,
       layout: DetailLayout,
       isProtected: true,
@@ -204,5 +203,5 @@ const CreateRouter = () => {
     },
   ];
   return routes;
-}
+};
 export default CreateRouter;

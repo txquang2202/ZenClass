@@ -136,7 +136,7 @@ function ListHomeWork(props) {
           {homeworks.length > 0 ? (
             homeworks.map((item, index) => (
               <div key={index}>
-                <Link to={`/home/classes/detail/homework/${item.id}`}>
+                <Link to={`/home/classes/detail/${id}/homework/${item.id}`}>
                   <section className="border p-4 rounded-lg flex items-center gap-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                     <div className="rounded-full p-2 bg-blue-400">
                       <ClassOutlinedIcon

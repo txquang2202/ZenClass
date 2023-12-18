@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 
 function HeroMedia(props) {
   const { id } = useParams();
+  console.log("id: " + id);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [detailClass, setDetailClass] = useState({});
