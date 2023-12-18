@@ -15,7 +15,7 @@ const getUser = () => {
     }
   }
   return null;
-}
+};
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);

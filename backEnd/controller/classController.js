@@ -427,6 +427,8 @@ const deleteClassbyID = async (req, res) => {
       }
     );
 
+    await Homework.deleteMany({ _id: { $in: deletedClass.homeworks } });
+
     await Class.findByIdAndDelete(classID);
 
     res.json({ message: "Delete successfully!" });
@@ -467,7 +469,6 @@ const getClassByID = async (req, res) => {
     if (!classInfo) {
       return res.status(404).json({ message: "Class not found!" });
     }
-
     res.json({ classInfo });
   } catch (error) {
     console.error(error);

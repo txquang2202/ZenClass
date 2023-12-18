@@ -1,7 +1,6 @@
 import Homework from "../models/homeworks.js";
 import User from "../models/user.js";
-import transporter from "../middleware/nodemailer.js";
-import mongoose from "mongoose";
+import Comment from "../models/comments.js";
 import Class from "../models/classes.js";
 
 const getAllHomework = async (req, res) => {
@@ -21,7 +20,6 @@ const getAllHomework = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
-
 const getHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;
@@ -37,7 +35,6 @@ const getHomeworkByID = async (req, res) => {
     res.status(500).send("Error while fetching homework info");
   }
 };
-
 const createHomeworkByID = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -84,12 +81,16 @@ const createHomeworkByID = async (req, res) => {
 const deleteHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;
+    const homeworkCMT = await Homework.findById(homeworkID);
 
     const classWithHomework = await Class.findOne({ homeworks: homeworkID });
 
     if (!classWithHomework) {
       return res.status(404).json({ message: "Homework not found!" });
     }
+
+    await Comment.deleteMany({ _id: { $in: homeworkCMT.comments } });
+
     classWithHomework.homeworks = classWithHomework.homeworks.filter(
       (id) => id.toString() !== homeworkID
     );
@@ -104,6 +105,7 @@ const deleteHomeworkByID = async (req, res) => {
     res.status(500).send("Error while deleting homework");
   }
 };
+
 const editHomeworkByID = async (req, res) => {
   try {
     const { title, description } = req.body;

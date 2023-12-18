@@ -1,9 +1,10 @@
 import Comment from "../models/comments.js";
 import Class from "../models/classes.js";
+import Homework from "../models/homeworks.js";
 
 const addComment = async (req, res) => {
   try {
-    const classID = req.params.id;
+    const homeworkID = req.params.id;
     const { username, content, avt, date } = req.body;
     // console.log(req.body);
     const newComment = new Comment({
@@ -14,11 +15,11 @@ const addComment = async (req, res) => {
     });
 
     await newComment.save();
-    const classCMT = await Class.findById(classID);
+    const homeworkCMT = await Homework.findById(homeworkID);
 
-    if (!classCMT.comments.includes(newComment._id)) {
-      classCMT.comments.push(newComment._id);
-      await classCMT.save();
+    if (!homeworkCMT.comments.includes(newComment._id)) {
+      homeworkCMT.comments.push(newComment._id);
+      await homeworkCMT.save();
     }
     res.json({ message: "Adding succesfully!", comment: newComment });
   } catch (error) {
@@ -42,7 +43,7 @@ const deleteComment = async (req, res) => {
   try {
     const commentID = req.params.id;
 
-    const classWithComment = await Class.findOne({ comments: commentID });
+    const classWithComment = await Homework.findOne({ comments: commentID });
 
     if (!classWithComment) {
       return res.status(404).json({ message: "Comments not found!" });
