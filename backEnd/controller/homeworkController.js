@@ -25,13 +25,13 @@ const getAllHomework = async (req, res) => {
 const getHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;
-    const classWithHomework = await Homework.findOne({ homeworks: homeworkID });
+    const DetailHomework = await Homework.findById(homeworkID);
 
-    if (!classWithHomework) {
+    if (!DetailHomework) {
       return res.status(404).json({ message: "Homework not found!" });
     }
 
-    res.json(classWithHomework);
+    res.json({ DetailHomework });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while fetching homework info");

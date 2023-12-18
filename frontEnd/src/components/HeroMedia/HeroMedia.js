@@ -10,13 +10,13 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import Modal from "../../components/Modal/ClassDetailModal";
 import { toast } from "react-toastify";
 
-function HeroMedia(props) {
+function HeroMedia() {
   const { id } = useParams();
-  console.log("id: " + id);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const [detailClass, setDetailClass] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const [detailClass, setDetailClass] = useState({});
   const [formData, setFormData] = useState({
     title: "",
     teacher: "",
@@ -51,10 +51,7 @@ function HeroMedia(props) {
 
         if (data.teachers[0]._id === dataUser._id) {
           setIsClassOwner(true);
-          // console.log(isClassOwner);
         }
-        // console.log(dataUser._id);
-        // console.log(data.teachers[0]._id);
 
         setFormData({
           title: data.title || "",
@@ -73,7 +70,7 @@ function HeroMedia(props) {
   // API deleteClass
   const handleDeleteClass = async (classId) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to delete this calss?"
+      "Are you sure you want to delete this class?"
     );
     if (isConfirmed) {
       try {

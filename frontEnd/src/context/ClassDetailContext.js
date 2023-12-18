@@ -1,21 +1,22 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 import { getClassByID } from "../services/classServices";
+import { jwtDecode } from "jwt-decode";
 
 const ClassDetailContext = createContext();
 
 export const useClassDetailContext = () => useContext(ClassDetailContext);
 
 export const ClassDetailProvider = ({ children }) => {
-  const { id1, id2 } = useParams();
+  const { id1 } = useParams();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [detailClass, setDetailClass] = useState({});
   const location = useLocation();
   let dataUser;
-
   if (token) dataUser = jwtDecode(token);
+  const [isClassOwner, setIsClassOwner] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,6 +41,10 @@ export const ClassDetailProvider = ({ children }) => {
           teacher: data.teachers[0].fullname || data.teachers[0].username || "",
           className: data.className || "",
         });
+        if (data.teachers[0]._id === dataUser._id) {
+          setIsClassOwner(true);
+          // console.log(isClassOwner);
+        }
       } catch (error) {
         console.error("Error fetching classes:", error);
         navigate("/500");
@@ -50,7 +55,7 @@ export const ClassDetailProvider = ({ children }) => {
   }, [navigate, token, id1, location.pathname]);
 
   return (
-    <ClassDetailContext.Provider value={{ detailClass }}>
+    <ClassDetailContext.Provider value={{ detailClass, isClassOwner }}>
       {children}
     </ClassDetailContext.Provider>
   );

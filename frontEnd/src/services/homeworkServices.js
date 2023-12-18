@@ -35,17 +35,16 @@ const createHomeworkByID = (
   });
 };
 
-const editHomeworkByID = (id, token, updatedHomework) => {
-  return axios.put(`/api/v1/editHomework/${id}`, {
+const editHomeworkByID = (id, updatedHomework, token) => {
+  return axios.put(`/api/v1/editHomework/${id}`, updatedHomework, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    updatedHomework,
   });
 };
 
 const deleteHomeworkByID = (id, token) => {
-  return axios.delete(`/api/v1/editHomework/${id}`, {
+  return axios.delete(`/api/v1/deleteHomework/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

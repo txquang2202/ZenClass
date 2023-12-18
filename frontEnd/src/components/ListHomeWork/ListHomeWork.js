@@ -27,6 +27,8 @@ function ListHomeWork(props) {
   if (token) data = jwtDecode(token);
   const [loading, setLoading] = useState(true);
 
+  const { isClassOwner } = useClassDetailContext();
+
   // API create homeworks
   const handleCreateHomework = async () => {
     try {
@@ -40,7 +42,18 @@ function ListHomeWork(props) {
         newHomework.description,
         currentDate
       );
-      setHomeWorks((prevHomeworks) => [...prevHomeworks, response.data.class]);
+      //  Cập nhật state homeworks
+      setHomeWorks((prevHomeworks) => [
+        ...prevHomeworks,
+        {
+          id: response.data.class._id || "",
+          title: response.data.class.title || "",
+          date:
+            format(new Date(response.data.class.date), "dd MMMM yyyy") || "",
+        },
+      ]);
+
+      // Cập nhật state newHomework
       setNewHomework({
         title: "",
         description: "",
@@ -122,12 +135,16 @@ function ListHomeWork(props) {
   return (
     <div className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
       <div className="text-center">
-        <button
-          onClick={openModal1}
-          className="btn border-2 border-gray-300 bg-white text-gray-400 px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-gray-100 drop-shadow-md "
-        >
-          +
-        </button>
+        {isClassOwner ? (
+          <button
+            onClick={openModal1}
+            className="btn border-2 border-gray-300 bg-white text-gray-400 px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-gray-100 drop-shadow-md "
+          >
+            +
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
       {loading ? (
         <p>Loading...</p>
