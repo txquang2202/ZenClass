@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   status: String,
   courses: [{ type: Schema.Types.ObjectId, ref: "classes" }],
   classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
+  
 });
 
 // Tạo một Model từ Schema

@@ -27,10 +27,17 @@ const addComment = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
 const getAllUsersComments = async (req, res) => {
   try {
-    const classID = req.params.id;
-    const comments = await Class.findOne({ _id: classID }, "comments");
+    const homeworkID = req.params.id;
+    const comments = await Homework.findOne(
+      { _id: homeworkID },
+      "comments"
+    ).populate({
+      path: "comments",
+      select: "username content avt date",
+    });
     //console.log(comments.comments);
 
     res.json({ comments: comments.comments });
@@ -39,6 +46,7 @@ const getAllUsersComments = async (req, res) => {
     res.status(500).send("Error while fetching users");
   }
 };
+
 const deleteComment = async (req, res) => {
   try {
     const commentID = req.params.id;

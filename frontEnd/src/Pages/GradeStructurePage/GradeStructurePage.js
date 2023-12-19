@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { GradeContext } from "../../context/GradeContext";
+import { useClassDetailContext } from "../../context/ClassDetailContext";
 
 const ItemType = "TABLE_ROW";
 
@@ -23,6 +24,8 @@ const DraggableRow = ({
     type: ItemType,
     item: { index },
   });
+
+  const { isClassOwner } = useClassDetailContext();
 
   const [, drop] = useDrop({
     accept: ItemType,
@@ -121,9 +124,13 @@ const DraggableRow = ({
       <td className="py-2 px-4 border-b ">{data.gradeCode}</td>
       <td className="py-2 px-4 border-b">{renderCell("topic")}</td>
       <td className="py-2 px-4 border-b">{renderCell("ratio")}</td>
-      <td className="py-2 px-4 border-b">
-        {edit === data.id ? renderEditButtons() : renderDefaultButtons(data.id)}
-      </td>
+      {isClassOwner && (
+        <td className="py-2 px-4 border-b">
+          {edit === data.id
+            ? renderEditButtons()
+            : renderDefaultButtons(data.id)}
+        </td>
+      )}
     </tr>
   );
 };
@@ -134,6 +141,8 @@ const GradeStructure = () => {
   const [tempRatio, setTempRatio] = useState(0);
   const [tempTopic, setTempTopic] = useState("New Grade");
   const [sortOrder, setSortOrder] = useState("");
+
+  const { isClassOwner } = useClassDetailContext();
 
   const moveRow = (fromIndex, toIndex) => {
     const updatedGrades = [...grades];
@@ -216,7 +225,7 @@ const GradeStructure = () => {
         Grade structure
       </h1>
       <DndProvider backend={HTML5Backend}>
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse border border-gray-300 mb-3">
           <thead>
             <tr>
               <th className="py-2 px-4 border-b">ID</th>
@@ -228,7 +237,7 @@ const GradeStructure = () => {
                 Ratio
                 {sortOrder === "asc" ? " ▲" : " ▼"}
               </th>
-              <th className="py-2 px-4 border-b">Action</th>
+              {isClassOwner && <th className="py-2 px-4 border-b">Action</th>}
             </tr>
           </thead>
           <tbody className="text-center">
@@ -252,13 +261,15 @@ const GradeStructure = () => {
         </table>
       </DndProvider>
       <div className="text-center">
-        <button
-          type="button"
-          onClick={handleAddGrade}
-          className="text-blue-400 mt-3 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-        >
-          Add Grade
-        </button>
+        {isClassOwner && (
+          <button
+            type="button"
+            onClick={handleAddGrade}
+            className="text-blue-400 mt-3 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
+            Add Grade
+          </button>
+        )}
       </div>
       {isTotalValid ? (
         <h2 className="text-xl font-semibold text-[#10375c]">

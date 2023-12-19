@@ -78,6 +78,7 @@ const createHomeworkByID = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
+
 const deleteHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;

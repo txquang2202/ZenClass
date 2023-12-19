@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { GradeContext } from "../../context/GradeContext";
 import { ToastContainer } from "react-toastify";
 import TextField from "@mui/material/TextField";
+import { useClassDetailContext } from "../../context/ClassDetailContext";
+import Modal from "../../components/Modal/ClassDetailModal";
 
 const GradeBoard = () => {
   const {
@@ -17,12 +19,15 @@ const GradeBoard = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const studentsPerPage = 8;
   const indexOfLastStudent = (pageNumber + 1) * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = board.slice(indexOfFirstStudent, indexOfLastStudent);
   const shouldDisplayPagination = board.length > 8;
+
+  const { isClassOwner } = useClassDetailContext();
 
   // FILE
   const handleExportCSV = () => {
@@ -264,6 +269,15 @@ const GradeBoard = () => {
     }
   };
 
+  // Modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <h2 className="mt-10 text-2xl text-[#10375c] font-bold mb-4">
@@ -271,7 +285,7 @@ const GradeBoard = () => {
       </h2>
 
       {/* SEARCH BAR */}
-      <div className="flex justify-center ">
+      <div className="flex justify-center mb-5">
         <div class="relative">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
@@ -304,51 +318,55 @@ const GradeBoard = () => {
 
       {/* IMPORT / EXPORT */}
       <div className="flex justify-end">
-        <label
-          htmlFor="test"
-          className="flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer"
-        >
-          <svg
-            class="w-3 h-3 me-1"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 18 16"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+        {isClassOwner && (
+          <>
+            <label
+              htmlFor="test"
+              className="flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer"
+            >
+              <svg
+                class="w-3 h-3 me-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 16"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                />
+              </svg>
+              Import
+            </label>
+            <input
+              id="test"
+              type="file"
+              hidden
+              onChange={(event) => handleFileChange(event)}
             />
-          </svg>
-          Import
-        </label>
-        <input
-          id="test"
-          type="file"
-          hidden
-          onChange={(event) => handleFileChange(event)}
-        />
 
-        <button
-          type="button"
-          onClick={handleExportCSV}
-          className=" ml-1 flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-        >
-          <svg
-            class="w-3 h-3 me-1"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
-            <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
-          </svg>
-          Export
-        </button>
+            <button
+              type="button"
+              onClick={handleExportCSV}
+              className=" ml-1 flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            >
+              <svg
+                class="w-3 h-3 me-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+                <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+              </svg>
+              Export
+            </button>
+          </>
+        )}
       </div>
 
       {/* TABLE */}
@@ -426,39 +444,56 @@ const GradeBoard = () => {
                 </td>
 
                 {/* ACTION BUTTON */}
-                <td className="py-2 px-4 border-b">
-                  {edit === student.id ? (
-                    <>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 mr-2"
-                        onClick={() => handleSave(student.id)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2"
-                        onClick={handleCancel}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 mr-2"
-                        onClick={() => handleEdit(student.id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2"
-                        onClick={() => handleDelete(student.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
+                {isClassOwner ? (
+                  <td className="py-2 px-4 border-b">
+                    {edit === student.id ? (
+                      <>
+                        <button
+                          className="bg-blue-500 text-white py-1 px-2 mr-2"
+                          onClick={() => handleSave(student.id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="bg-red-500 text-white py-1 px-2"
+                          onClick={handleCancel}
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="bg-blue-500 text-white py-1 px-2 mr-2"
+                          onClick={() => handleEdit(student.id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white py-1 px-2"
+                          onClick={() => handleDelete(student.id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
+                ) : (
+                  <td className="py-2 px-4 border-b">
+                    {edit === student.id ? (
+                      <></>
+                    ) : (
+                      <>
+                        <button
+                          className="bg-blue-500 text-white py-1 px-2 mr-2"
+                          onClick={openModal}
+                        >
+                          Feed Back
+                        </button>
+                      </>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -500,6 +535,81 @@ const GradeBoard = () => {
           </button>
         </div>
       )}
+
+      {/* Modal Edit */}
+      <Modal show={isModalOpen} handleClose={closeModal}>
+        <h2 className="text-2xl font-semibold mb-4">Feed Back</h2>
+        <form>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">
+              Type grade:
+            </label>
+            <input type="hidden" name="hidden" />
+
+            <select
+              name="grade"
+              id="grade"
+              className="mt-1 p-3 border border-gray-300 rounded-md w-full"
+            >
+              {grades.map((item, index) => (
+                <option key={index}>{item.topic}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">
+              Current grade:
+            </label>
+            <input
+              id="current-grade"
+              type="number"
+              // value={formData.title}
+              // onChange={handleChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">
+              Expectation grade:
+            </label>
+            <input
+              id="expectation-grade"
+              type="number"
+              // value={formData.className}
+              // onChange={handleChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-600">
+              Explanation:
+            </label>
+            <textarea
+              id="explanation" // Thay đổi id thành "description"
+              type="text"
+              placeholder="Write your explanation here..."
+              // value={newHomework.description}
+              // onChange={handleNewHomeworkChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none"
+            />
+          </div>
+        </form>
+
+        <div className="flex justify-end">
+          <button
+            // onClick={handleEditClass}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+          >
+            Send
+          </button>
+          <button
+            onClick={closeModal}
+            className="border border-gray-300 px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
 
       {/* TOAST */}
       <ToastContainer
