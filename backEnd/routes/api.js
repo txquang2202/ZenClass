@@ -56,6 +56,12 @@ import {
   getAllHomework,
   getHomeworkByID,
 } from "../controller/homeworkController.js";
+import {
+  deleteGradeStruct,
+  editGradeStruct,
+  addGradeStruct,
+  getAllGradeStructs,
+} from "../controller/gradeController.js";
 
 import passport from "passport";
 import "../middleware/passport.js";
@@ -123,6 +129,11 @@ const initApi = (app) => {
   router.get("/getComments/:id", getAllUsersComments);
   router.post("/addComments/:id", addComment);
   router.delete("/deleteComment/:id", deleteComment);
+  //GradeStructs
+  router.get("/getAllGradeStructs/:id", getAllGradeStructs);
+  router.post("/addGradeStruct/:id", addGradeStruct);
+  router.put("/editGradeStruct/:id", editGradeStruct);
+  router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
   // router.post("/addComments", authenticateToken, addComment);
   return app.use("/api/v1/", router);
 };

@@ -48,7 +48,6 @@ const createClass = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
-
 const getAllClasses = async (req, res) => {
   const userID = req.params.id;
   try {

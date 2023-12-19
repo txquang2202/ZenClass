@@ -106,7 +106,6 @@ const deleteHomeworkByID = async (req, res) => {
     res.status(500).send("Error while deleting homework");
   }
 };
-
 const editHomeworkByID = async (req, res) => {
   try {
     const { title, description } = req.body;
