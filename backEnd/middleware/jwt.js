@@ -22,7 +22,7 @@ const createToken = (user) => {
       },
       secretKey,
       {
-        expiresIn: "1h",
+        // expiresIn: "1h",
         algorithm: "HS256",
       }
     );

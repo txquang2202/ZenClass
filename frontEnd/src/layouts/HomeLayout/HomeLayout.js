@@ -16,7 +16,8 @@ function Default({ children }) {
             <div className="mt-10 container w-full lg:max-w-[calc(100%-7rem)] mx-auto max-w-4xl pb-10 flex min-h-96">
               <SideBar />
               <div className="w-11/12 pl-6 flex-1">
-                <IsBlocked>{children}</IsBlocked>
+                {/* <IsBlocked>{children}</IsBlocked> */}
+                {children}
               </div>
             </div>
           </CourseProvider>

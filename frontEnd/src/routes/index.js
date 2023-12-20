@@ -26,7 +26,7 @@ import ManageUser from "../Pages/ManageUser/ManageUser";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
-// import GradeReviewPage from "../Pages/GradeReviewPage/GradeReviewPage";
+import GradeReviewPage from "../Pages/GradeReviewPage/GradeReviewPage";
 
 const routes = [
   {
@@ -120,6 +120,12 @@ const routes = [
   //   layout: DetailLayout,
   //   isProtected: true,
   // },
+  {
+    path: "/home/classes/detail/grade-review/:id",
+    page: GradeReviewPage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
   {
     path: "/home/classes/detail/:id1/homework/:id2",
     page: HomeWorkPage,

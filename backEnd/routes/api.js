@@ -129,6 +129,7 @@ const initApi = (app) => {
   router.get("/getComments/:id", getAllUsersComments);
   router.post("/addComments/:id", addComment);
   router.delete("/deleteComment/:id", deleteComment);
+  
   //GradeStructs
   router.get("/getAllGradeStructs/:id", getAllGradeStructs);
   router.post("/addGradeStruct/:id", addGradeStruct);

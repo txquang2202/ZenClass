@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { getClassByID } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
+import { Menu, MenuItem } from "@material-ui/core";
 
 function NavDetail(props) {
   const [activeLink, setActiveLink] = useState("general");
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   let dataUser;
   if (token) dataUser = jwtDecode(token);
@@ -17,81 +20,126 @@ function NavDetail(props) {
     setActiveLink(link);
   };
 
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const { detailClass } = useClassDetailContext();
 
-  // // // APIgetClass
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await getClassByID(id, token);
-  //       const data = response.data.classInfo;
-  //       setDetailClass({
-  //         id: data._id || "",
-  //         title: data.title || "",
-  //         teacher: data.teachers[0].fullname || data.teachers[0].username || "",
-  //         className: data.className || "",
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching classes:", error);
-  //       navigate("/500");
-  //     }
-  //   };
+  function extractFinalId(input) {
+    if (input.includes("/homework")) {
+      // Trích xuất ID nếu có phần "/homework" trong input
+      var match = input.match(/\/([^\/]+)\/homework/);
+      return match ? match[1] : null;
+    } else {
+      // Trích xuất ID từ cuối đường dẫn nếu không có phần "/homework"
+      const parts = input.split("/");
+      return parts[parts.length - 1];
+    }
+  }
 
-  //   fetchUserData();
-  // }, [navigate, token, id]);
+  var urlString = window.location.href;
+  var id1 = extractFinalId(urlString);
 
   return (
     <div>
       <nav>
-        <div className="container border-b-2 border-gray-100 mx-auto flex flex-col md:flex-row justify-between items-center">
-          {/* Các liên kết điều hướng */}
-          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-20  px-10 text-sm">
+        {/* <div className=" mx-auto flex flex-col md:flex-row justify-between items-center"> */}
+        {/* Các liên kết điều hướng */}
+        <ul className="flex border-b">
+          <li className="-mb-px mr-16 ml-10">
             <Link
-              to={`/home/classes/detail/${detailClass.id}`}
+              to={`/home/classes/detail/${id1}`}
               className={`${
                 activeLink === "general"
-                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2 "
+                  ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium"
                   : ""
               }`}
               onClick={() => handleLinkClick("general")}
             >
               General
             </Link>
+          </li>
+          <li class="-mb-px mr-16">
             <Link
-              to={`/home/classes/detail/people/${detailClass.id}`}
+              to={`/home/classes/detail/people/${id1}`}
               className={` ${
                 activeLink === "people"
-                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2 "
+                  ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium "
                   : ""
               }`}
               onClick={() => handleLinkClick("people")}
             >
               People
             </Link>
+          </li>
+          <li class="-mb-px mr-16">
             <Link
-              to={`/home/classes/detail/grade-board/${detailClass.id}`}
               className={` ${
-                activeLink === "grade-board"
-                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2 "
+                activeLink === "grade"
+                  ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium "
                   : ""
               }`}
-              onClick={() => handleLinkClick("grade-board")}
+              onClick={() => handleLinkClick("grade")}
             >
-              Grade board
+              <div onClick={handleMenu}>Grade</div>
             </Link>
-            <Link
-              to={`/home/classes/detail/grade-structure/${detailClass.id}`}
-              className={` ${
-                activeLink === "grade-structure"
-                  ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2"
-                  : ""
-              }`}
-              onClick={() => handleLinkClick("grade-structure")}
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+              }}
+              className="mt-12"
             >
-              Grade structure
-            </Link>
-          </div>
-        </div>
+              <MenuItem onClick={handleClose}>
+                <Link
+                  to={`/home/classes/detail/grade-board/${id1}`}
+                  className={` ${
+                    activeLink === "grade-board" ? "text-[#2E80CE] " : ""
+                  }`}
+                >
+                  Grade Board
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link
+                  to={`/home/classes/detail/grade-structure/${id1}`}
+                  className={` ${
+                    activeLink === "grade-structure"
+                      ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2"
+                      : ""
+                  }`}
+                >
+                  Grade Structure
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link
+                  to={`/home/classes/detail/grade-review/${id1}`}
+                  className={` ${
+                    activeLink === "grade-review"
+                      ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2"
+                      : ""
+                  }`}
+                >
+                  Grade Review
+                </Link>
+              </MenuItem>
+            </Menu>
+          </li>
+        </ul>
+        {/* </div> */}
       </nav>
     </div>
   );

@@ -22,25 +22,35 @@ const getAllGradeStructs = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
+
 const addGradeStruct = async (req, res) => {
   try {
     const classID = req.params.id;
-    const { topic, ratio } = req.body;
+    let { topic, ratio } = req.body;
 
     if (!topic) {
-      return res.status(400).json({ message: "Topic is empty!" });
+      topic = "New Topic";
     }
     if (!ratio) {
-      return res.status(400).json({ message: "Ratio is empty!" });
+      ratio = 0;
     }
 
-    const existTopic = await GradeStruct.findOne({ topic });
-    if (existTopic) {
+    const existTopic = await Class.findOne(
+      { _id: classID },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
+    const topicToCheck = topic;
+
+    if (
+      existTopic &&
+      existTopic.gradestructs.some((item) => item.topic === topicToCheck)
+    ) {
       return res.status(400).json({ message: "Topic already taken!" });
     }
+
     const newStruct = new GradeStruct({
-      topic,
-      ratio,
+      topic: topic,
+      ratio: ratio,
     });
     await newStruct.save();
     const classGD = await Class.findById(classID);
@@ -58,6 +68,7 @@ const addGradeStruct = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
+
 const deleteGradeStruct = async (req, res) => {
   try {
     const structID = req.params.id;

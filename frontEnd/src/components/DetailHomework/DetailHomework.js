@@ -131,7 +131,7 @@ function DetailHomework() {
         </section>
         <hr className="mb-3 mt-3 border-gray-200 border-b-gray-100" />
         <div>
-          <pre className="overflow-hidden overflow-wrap break-word text-base font-normal ">
+          <pre className="whitespace-pre-wrap break-words overflow-wrap-break-word text-base font-normal ">
             {post.description}
           </pre>
         </div>
