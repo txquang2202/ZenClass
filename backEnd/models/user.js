@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
-  studentID: String,
+  userID: { type: Number, unique: true, default: 20127000 },
   username: String,
   password: String,
   email: String,
@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema({
   status: String,
   courses: [{ type: Schema.Types.ObjectId, ref: "classes" }],
   classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
-  
 });
 
 // Tạo một Model từ Schema

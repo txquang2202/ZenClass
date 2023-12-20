@@ -1,5 +1,6 @@
 import Class from "../models/classes.js";
 import User from "../models/user.js";
+import Homework from "../models/homeworks.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
 
