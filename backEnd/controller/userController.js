@@ -12,19 +12,20 @@ env.config();
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    const lastUser = await User.findOne({}, {}, { sort: { userID: -1 } });
+    console.log(lastUser.userID);
+    const newUserID = lastUser ? Number(lastUser.userID) + 1 : 20127001;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateUniqueToken();
 
     const newUser = new User({
       username,
+      userID: newUserID,
       password: hashedPassword,
       email,
       verificationToken,
       isVerified: false,
-      role: 0,
-      img: "",
-      fullname: "",
-      birthdate: "",
       role: 0,
       img: "",
       fullname: "",
@@ -48,6 +49,7 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Email already taken!" });
     }
 
+    // Bước 3: Lưu trữ người dùng mới vào cơ sở dữ liệu
     await newUser.save();
 
     await sendEmail(email, verificationToken);
@@ -57,15 +59,19 @@ const createUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Đã xảy ra lỗi.");
+    res.status(500).send("Error occurred: " + error.message);
   }
 };
+
 const createUserOauth = async (username, email, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    const lastUser = await User.findOne({}, {}, { sort: { userID: -1 } });
 
+    const newUserID = lastUser ? lastUser.userID + 1 : 20127001;
     const newUser = new User({
       username,
+      userID: newUserID,
       password: hashedPassword,
       email,
       isVerified: true,
@@ -78,8 +84,8 @@ const createUserOauth = async (username, email, password) => {
       street: "",
       city: "",
       status: "Normal",
-      courses: "",
-      classes: "",
+      courses: [],
+      classes: [],
     });
 
     await newUser.save();
@@ -87,7 +93,7 @@ const createUserOauth = async (username, email, password) => {
     return newUser;
   } catch (error) {
     console.error(error);
-    throw new Error("Đã xảy ra lỗi.");
+    throw new Error("Error: " + error.message);
   }
 };
 
