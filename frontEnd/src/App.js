@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useEffect,useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
@@ -8,8 +8,18 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./i18en/i18n";
 import LanguageSwitcher from "./components/SwitchLanguage/SwitchLanguage";
 import CreateRouter from "./routes/CreateRouter";
+import { jwtDecode } from "jwt-decode";
+//import routes from "./routes/index"
 
-function App() {
+const App = () => {
+  const [router1,setRouter1] = useState([]);
+  const [token,setToken] = useState();
+  useEffect(() => {
+    setRouter1(CreateRouter());
+    setToken(localStorage.getItem("token"));
+    console.log(token,"app.js")
+  }, []);
+  console.log(token)
   const routes = CreateRouter();
   return (
     <>

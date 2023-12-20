@@ -27,6 +27,24 @@ import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
 
+import { jwtDecode } from "jwt-decode";
+import { getUserID } from "../services/userServices";
+
+const urlParams = new URLSearchParams(window.location.search);
+let token = urlParams.get("token");
+if (token === null) {
+  token = localStorage.getItem("token");
+}
+
+if (token !== null) {
+  const session = jwtDecode(token);
+  const response = await getUserID(session._id, token);
+  const userData = response.data.user;
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(userData));
+}
+console.log(token,"index.js");
+
 const routes = [
   {
     path: "/signin",

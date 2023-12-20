@@ -77,7 +77,7 @@ const SignIn = ({ handleChange }) => {
       localStorage.setItem("token", response.data.token);
       const decodedToken = jwtDecode(response.data.token);
 
-
+      
       if (response.status === 200) {
         if (decodedToken.isVerified) {
           if (decodedToken.role === 3) {

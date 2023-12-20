@@ -46,7 +46,6 @@ const Navbar = () => {
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(userData));
         }
-
         const data = localStorage.getItem("user");
         if (data !== null) {
           const user = JSON.parse(data);

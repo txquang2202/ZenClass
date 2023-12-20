@@ -221,7 +221,6 @@ function ManageUser() {
 
 
   const userinfor = (user) => {
-    console.log(user);
     return(
       <>
         <div>Username: {user.username}</div>

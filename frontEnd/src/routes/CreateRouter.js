@@ -33,9 +33,14 @@ import { getUserID } from "../services/userServices";
 import { jwtDecode } from "jwt-decode";
 
 const CreateRouter = () => {
-  const [user, setUser] = useState();
+  const user = "Normal";
 
-  useEffect(() => {
+  /*useEffect(() => {
+    setUser("Normal");
+    
+  }, []);*/
+
+  /*useEffect(() => {
     const fetchUserData = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -51,14 +56,14 @@ const CreateRouter = () => {
         const response = await getUserID(session._id, data);
         const userData = response.data.user;
         setUser(userData.status);
+        console.log(token,"token in creact router");
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }
     };
 
     fetchUserData();
-  }, []);
-
+  }, []);*/
   const routes = [
     {
       path: "/signin",
@@ -99,67 +104,67 @@ const CreateRouter = () => {
 
     {
       path: "/home/:id",
-      page: user === "Normal" ? HomePage : BlockPage,
+      page: user && user === "Blocked" ? BlockPage : HomePage ,
       layout: HomeLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/:id",
-      page: user === "Normal" ? ClassPage : BlockPage,
+      page: user === "Blocked" ? BlockPage : ClassPage,
       layout: HomeLayout,
       isProtected: true,
     },
     {
       path: "/home/courses/:id",
-      page: user === "Normal" ? CoursePage : BlockPage,
+      page: user === "Blocked" ? BlockPage : CoursePage ,
       layout: HomeLayout,
       isProtected: true,
     },
     {
       path: "/home/notifications/:id",
-      page: user === "Normal" ? NotiPage : BlockPage,
+      page: user === "Blocked" ? BlockPage : NotiPage ,
       layout: NotiLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/detail/:id",
-      page: user === "Normal" ? DetailPage : BlockPage,
+      page: user === "Blocked" ? BlockPage : DetailPage ,
       layout: DetailLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/detail/people/:id",
-      page: user === "Normal" ? PeoplePage : BlockPage,
+      page: user === "Blocked" ? BlockPage : PeoplePage ,
       layout: DetailLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/detail/grade-structure/:id",
-      page: user === "Normal" ? GradeStructurePage : BlockPage,
+      page: user === "Blocked" ? BlockPage : GradeStructurePage,
       layout: DetailLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/detail/grade-board/:id",
-      page: user === "Normal" ? GradeBoardPage : BlockPage,
+      page: user === "Blocked" ? BlockPage : GradeBoardPage,
       layout: DetailLayout,
       isProtected: true,
     },
     {
       path: "/home/classes/detail/:id1/homework/:id2",
-      page: user === "Normal" ? HomeWorkPage : BlockPage,
+      page: user === "Blocked" ? BlockPage : HomeWorkPage ,
       layout: DetailLayout,
       isProtected: true,
     },
     {
       path: "/home/",
-      page: user === "Normal" ? HomePage : BlockPage,
+      page: user === "Blocked" ? BlockPage : HomePage ,
       layout: HomeLayout,
       isProtected: true,
     },
     {
       path: "/profile/:id",
-      page: user === "Normal" ? ResponsiveDrawer : BlockPage,
+      page: user === "Blocked" ? BlockPage : ResponsiveDrawer ,
       layout: UserLayout,
       isProtected: true,
     },
