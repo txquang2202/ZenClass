@@ -10,14 +10,19 @@ export const useCourseContext = () => useContext(CourseContext);
 
 export const CourseProvider = ({ children }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const data = jwtDecode(token);
+  // const token = localStorage.getItem("token");
+  // let data;
+  // if (token) data = jwtDecode(token);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        let data;
+        let token;
+        token = localStorage.getItem("token");
+        if (token) data = jwtDecode(token);
         const response = await getCourseByUser(data._id, token);
         const courseData = response.data.courseInfo;
         if (courseData) {
@@ -37,7 +42,7 @@ export const CourseProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [navigate, token]);
+  }, []);
 
   const addCourse = (newCourse) => {
     setCourses((prevCourses) => [...prevCourses, newCourse]);

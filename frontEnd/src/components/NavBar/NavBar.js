@@ -35,6 +35,7 @@ const Navbar = () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         let token = urlParams.get("token");
+
         if (token === null) {
           token = localStorage.getItem("token");
         }
@@ -43,7 +44,7 @@ const Navbar = () => {
           const session = jwtDecode(token);
           const response = await getUserID(session._id, token);
           const userData = response.data.user;
-          localStorage.setItem("token", token);
+          //localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(userData));
         }
 

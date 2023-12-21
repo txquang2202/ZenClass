@@ -16,7 +16,7 @@ function App() {
       <Router>
         <div className="Container">
           <Routes>
-            {routes.map((route) => {
+            {routes.map((route, index) => {
               const Page = route.page;
               // const Layout = route.isShowHeader ? DefaultLayout : Fragment;
               const Protect = route.isProtected ? ProtectedRoute : Fragment;
@@ -32,9 +32,10 @@ function App() {
               return (
                 <Route
                   path={route.path}
+                  key={index}
                   element={
                     <Layout>
-                      <Protect roleRequired={route.roleRequired}>
+                      <Protect>
                         <I18nextProvider i18n={i18n}>
                           <Page />
                         </I18nextProvider>

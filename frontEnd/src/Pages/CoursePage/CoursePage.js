@@ -12,7 +12,8 @@ function CoursePage() {
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const data = jwtDecode(token);
+  let data;
+  if (token) data = jwtDecode(token);
   const { courses, loading } = useCourseContext();
 
   // useEffect(() => {
