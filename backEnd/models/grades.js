@@ -7,6 +7,7 @@ const GradeSchema = new mongoose.Schema({
   grades: [
     {
       topic: String,
+      ratio: Number,
       score: { type: Number, default: 0 },
     },
   ],

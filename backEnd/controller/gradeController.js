@@ -2,8 +2,6 @@ import Class from "../models/classes.js";
 import User from "../models/user.js";
 import Grade from "../models/grades.js";
 import GradeStruct from "../models/gradestructs.js";
-import transporter from "../middleware/nodemailer.js";
-import mongoose from "mongoose";
 
 const getAllGradeStructs = async (req, res) => {
   const classID = req.params.id;
@@ -47,7 +45,6 @@ const addGradeStruct = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Topic already taken!" });
     }
-
     const newStruct = new GradeStruct({
       topic: topic,
       ratio: ratio,
@@ -59,7 +56,23 @@ const addGradeStruct = async (req, res) => {
       classGD.gradestructs.push(newStruct._id);
       await classGD.save();
     }
+    //them vao bang grade
+    const classGrade = await Class.findOne({ _id: classID }, "grades");
+    const newStructGrade = {
+      topic: newStruct.topic,
+      ratio: newStruct.ratio,
+    };
+    for (const gradeID of classGrade.grades) {
+      const newGrade = await Grade.findOne({ _id: gradeID });
 
+      if (
+        newGrade &&
+        !newGrade.grades.some((grade) => grade.topic === newStructGrade.topic)
+      ) {
+        newGrade.grades.push(newStructGrade);
+        await newGrade.save();
+      }
+    }
     res.json({
       message: "Create new struct successfully!!",
       gradeStruct: newStruct,
@@ -72,15 +85,12 @@ const addGradeStruct = async (req, res) => {
 const deleteGradeStruct = async (req, res) => {
   try {
     const structID = req.params.id;
-    //const homeworkCMT = await Homework.findById(homeworkID);
 
     const classWithStruct = await Class.findOne({ gradestructs: structID });
 
     if (!classWithStruct) {
       return res.status(404).json({ message: "Structs not found!" });
     }
-
-    // await Comment.deleteMany({ _id: { $in: homeworkCMT.comments } });
 
     classWithStruct.gradestructs = classWithStruct.gradestructs.filter(
       (id) => id.toString() !== structID
@@ -101,14 +111,39 @@ const editGradeStruct = async (req, res) => {
     const { topic, ratio } = req.body;
     const structID = req.params.id;
     const updatedStruct = await GradeStruct.findById(structID);
-
     if (!updatedStruct) {
       return res.status(404).json({ message: "Grade struct not found!" });
     }
-
+    const topicToBeUpdated = updatedStruct.topic;
+    const ratioToBeUpdated = updatedStruct.ratio;
     updatedStruct.topic = topic;
     updatedStruct.ratio = ratio;
     await updatedStruct.save();
+
+    //sua bang grade
+    const classGrade = await Class.findOne(
+      { gradestructs: structID },
+      "grades"
+    );
+    // console.log(classGrade.grades);
+    const updatingValue = {
+      topic: topic,
+      ratio: ratio,
+    };
+    for (const gradeID of classGrade.grades) {
+      const updateGrade = await Grade.findOne({ _id: gradeID });
+      if (updateGrade) {
+        const index = updateGrade.grades.findIndex(
+          (item) => item.topic === topicToBeUpdated
+        );
+        if (index !== -1) {
+          updateGrade.grades[index].topic = updatingValue.topic;
+          updateGrade.grades[index].ratio = updatingValue.ratio;
+
+          await updateGrade.save();
+        }
+      }
+    }
 
     res.json({ message: "Grade struct updated successfully", updatedStruct });
   } catch (error) {

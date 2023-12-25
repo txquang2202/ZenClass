@@ -35,7 +35,6 @@ const addGradeReviewByID = async (req, res) => {
       expectationGrade,
       explaination,
     } = req.body;
-
     if (!typeGrade) {
       return res.status(400).json({ message: "Type grade is empty!" });
     }
