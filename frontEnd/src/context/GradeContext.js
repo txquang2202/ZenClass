@@ -3,35 +3,18 @@ import Papa from "papaparse";
 import { toast } from "react-toastify";
 import { getAllGradeStructs } from "../services/gradeStructureServices";
 import { useNavigate } from "react-router-dom";
+import { getAllGradeClass } from "../services/gradeServices";
 
 export const GradeContext = createContext();
 
 export const GradeProvider = ({ children }) => {
-  const [grades, setGrades] = useState([
-    // {
-    //   topic: "Assignments",
-    //   ratio: 30,
-    // },
-    // {
-    //   topic: "Projects",
-    //   ratio: 30,
-    // },
-    // {
-    //   topic: "Exams",
-    //   ratio: 40,
-    // },
-  ]);
-
-  const [board, setBoard] = useState([
-    { id: 20127145, name: "Ho Quoc Duy", total: 0 },
-    { id: 20127146, name: "Cao Nhu Y", total: 0 },
-    { id: 20127147, name: "Tran Xuan Quang", total: 0 },
-    { id: 20127148, name: "Le Ngoc Yen Nhi", total: 0 },
-  ]);
-  
-  // New state to store temporary values entered in text fields
-  const [tempValues, setTempValues] = useState({});
+  var urlString = window.location.href;
+  var id1 = extractFinalId(urlString);
+  const [grades, setGrades] = useState([]);
   const token = localStorage.getItem("token");
+  const [board, setBoard] = useState([]);
+  // console.log(board);
+  const [tempValues, setTempValues] = useState({});
   const navigate = useNavigate();
 
   const updateTempValues = (studentId, topic, value) => {
@@ -66,10 +49,7 @@ export const GradeProvider = ({ children }) => {
                 total: item.Total || 0,
               };
             });
-
-            // Update the board state with the imported data
             setBoard(importedData);
-
             // Update the tempValues state based on the new board data
             let updatedTempValues = {};
             importedData.forEach((student) => {
@@ -100,9 +80,6 @@ export const GradeProvider = ({ children }) => {
     }
   }
 
-  var urlString = window.location.href;
-  var id1 = extractFinalId(urlString);
-
   //API get gradestructure
   useEffect(() => {
     const fetchUserData = async () => {
@@ -121,7 +98,26 @@ export const GradeProvider = ({ children }) => {
     };
     fetchUserData();
   }, [id1, token, navigate]);
-
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await getAllGradeClass(id1, token);
+        const students = response.data.grades;
+        if (students) {
+          const mappedStudents = students.map((data) => ({
+            id: data.studentId || "",
+            name: data.fullName || "",
+          }));
+          // setTempValues(updatedBoard);
+          setBoard(mappedStudents);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        navigate("/500");
+      }
+    };
+    fetchStudentData();
+  }, [id1, token, navigate]);
   return (
     <GradeContext.Provider
       value={{

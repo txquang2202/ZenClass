@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import Homework from "../models/homeworks.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
+import Grade from "../models/grades.js";
 
 const createClass = async (req, res) => {
   try {
@@ -72,8 +73,8 @@ const getClassMembers = async (req, res) => {
   const classId = req.params.id;
   try {
     const classWithMembers = await Class.findById(classId)
-      .populate("students", "_id username fullname img")
-      .populate("teachers", "_id username fullname img");
+      .populate("students", "_id userID username fullname img")
+      .populate("teachers", "_id userID username fullname img");
 
     if (!classWithMembers) {
       return res.status(404).json({ error: "Invalid Class ID" });
@@ -121,7 +122,37 @@ const joinByCode = async (req, res) => {
       student.courses.push(classId);
       await student.save();
     }
+    //them vao grades schema
+    const gradestructs = await Class.findOne(
+      { _id: classId },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
 
+    if (!gradestructs || !gradestructs.gradestructs) {
+      return res.status(400).json({
+        message: `Gradestruct not found in the specified class`,
+      });
+    }
+    const newGrades = gradestructs.gradestructs.map((gradestruct) => ({
+      topic: gradestruct.topic,
+      score: 0,
+    }));
+
+    const newGrade = new Grade({
+      studentId: student.userID,
+      fullName: student.fullname,
+      grades: newGrades,
+    });
+
+    await newGrade.save();
+
+    const classGrades = await Class.findById(classId);
+
+    if (!classGrades.grades.includes(newGrade._id)) {
+      classGrades.grades.push(newGrade._id);
+      await classGrades.save();
+    }
+    //tra ve du lieu
     const reciver = await Class.findByIdAndUpdate(
       classId,
       {
@@ -207,7 +238,35 @@ const addStudent = async (req, res) => {
       },
       { new: true }
     );
+    const gradestructs = await Class.findOne(
+      { _id: classId },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
 
+    if (!gradestructs || !gradestructs.gradestructs) {
+      return res.status(400).json({
+        message: `Gradestruct not found in the specified class`,
+      });
+    }
+    const newGrades = gradestructs.gradestructs.map((gradestruct) => ({
+      topic: gradestruct.topic,
+      score: 0,
+    }));
+
+    const newGrade = new Grade({
+      studentId: student.userID,
+      fullName: student.fullname,
+      grades: newGrades,
+    });
+
+    await newGrade.save();
+
+    const classGrades = await Class.findById(classId);
+
+    if (!classGrades.grades.includes(newGrade._id)) {
+      classGrades.grades.push(newGrade._id);
+      await classGrades.save();
+    }
     return res.redirect(
       `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
     );
@@ -437,7 +496,6 @@ const deleteClassbyID = async (req, res) => {
     res.status(500).send("Error while deleting class");
   }
 };
-
 const editClass = async (req, res) => {
   try {
     const { title, className } = req.body;

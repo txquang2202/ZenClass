@@ -121,8 +121,8 @@ const GradeStructure = () => {
 
       toast.success("Grade added successfully");
     } catch (error) {
-      console.error("Error creating grade:", error);
-      toast.error("Error adding grade");
+      //  console.error("Error creating grade:", error);
+      toast.error(error.response.data.message);
       // navigate("/500");
     }
   };

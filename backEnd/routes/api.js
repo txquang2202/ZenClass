@@ -61,6 +61,8 @@ import {
   editGradeStruct,
   addGradeStruct,
   getAllGradeStructs,
+  getAllGradeByClass,
+  editClassGrade,
 } from "../controller/gradeController.js";
 
 import {
@@ -75,7 +77,6 @@ import {
   deleteReply,
 } from "../controller/cmtReviewController.js";
 
-import passport from "passport";
 import "../middleware/passport.js";
 
 const router = express.Router();
@@ -116,7 +117,6 @@ const initApi = (app) => {
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
-
   router.get("/addStudentsToClass/:id", addStudent);
   router.get("/addTeacherToClass/:id", addTeacher);
   router.get("/getclassmembers/:id", getClassMembers);
@@ -147,14 +147,15 @@ const initApi = (app) => {
   router.post("/addGradeStruct/:id", addGradeStruct);
   router.put("/editGradeStruct/:id", editGradeStruct);
   router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
+  //Grade
+  router.get("/getAllGradeClass/:id", getAllGradeByClass);
+  router.put("/editClassGrade/:id", editClassGrade);
   // router.post("/addComments", authenticateToken, addComment);
 
   // GradeReviews
   router.get("/getAllGradeReviews/:id", getAllGradeReviews);
   router.post("/addGradeReview/:id", addGradeReviewByID);
   router.delete("/deleteReviewByID/:id", deleteReviewByID);
-
-  // Reply in grade review
   router.get("/getAllUsersReplies/:id", getAllUsersReplies);
   router.post("/addReply/:id", addReply);
   router.delete("/deleteReply/:id", deleteReply);

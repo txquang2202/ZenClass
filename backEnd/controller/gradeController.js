@@ -1,5 +1,6 @@
 import Class from "../models/classes.js";
 import User from "../models/user.js";
+import Grade from "../models/grades.js";
 import GradeStruct from "../models/gradestructs.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
@@ -14,7 +15,7 @@ const getAllGradeStructs = async (req, res) => {
       path: "gradestructs",
       select: "topic ratio",
     });
-    console.log(gradestructs.gradestructs);
+    //console.log(gradestructs.gradestructs);
 
     res.json({ gradestructs: gradestructs.gradestructs });
   } catch (error) {
@@ -22,7 +23,6 @@ const getAllGradeStructs = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
-
 const addGradeStruct = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -59,6 +59,7 @@ const addGradeStruct = async (req, res) => {
       classGD.gradestructs.push(newStruct._id);
       await classGD.save();
     }
+
     res.json({
       message: "Create new struct successfully!!",
       gradeStruct: newStruct,
@@ -68,7 +69,6 @@ const addGradeStruct = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
-
 const deleteGradeStruct = async (req, res) => {
   try {
     const structID = req.params.id;
@@ -116,10 +116,49 @@ const editGradeStruct = async (req, res) => {
     res.status(500).send("Error while updating struct");
   }
 };
-
+const getAllGradeByClass = async (req, res) => {
+  const classID = req.params.id;
+  try {
+    const grades = await Class.findOne({ _id: classID }, "grades").populate({
+      path: "grades",
+      select: "studentId fullName grades",
+    });
+    res.json({ grades: grades.grades });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching");
+  }
+};
+const editClassGrade = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const { studentID, newScore } = req.body;
+    const classroom = await Class.findById(classID);
+    if (!classroom) {
+      return res.status(404).json({ message: "Class not found!" });
+    }
+    const updatedGrade = await Grade.findOne({
+      studentId: studentID,
+      _id: { $in: classroom.grades },
+    });
+    if (!updatedGrade) {
+      return res.status(404).json({ message: "Grade not found!" });
+    }
+    updatedGrade.grades.forEach((score, index) => {
+      score.score = newScore[index];
+    });
+    await updatedGrade.save();
+    res.json({ message: "Grade updated successfully", updatedGrade });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while updating grade");
+  }
+};
 export {
   deleteGradeStruct,
   editGradeStruct,
   addGradeStruct,
   getAllGradeStructs,
+  getAllGradeByClass,
+  editClassGrade,
 };
