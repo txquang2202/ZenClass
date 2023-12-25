@@ -34,7 +34,7 @@ const GradeStructure = () => {
         setGrades((prevGrades) =>
           prevGrades.filter((grade) => grade.id !== id)
         );
-        toast.success("Comment deleted successfully");
+        toast.success("Grade deleted successfully");
       } catch (error) {
         console.error("Error deleting grade:", error);
         toast.error("Error deleting grade");

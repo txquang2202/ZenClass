@@ -26,7 +26,7 @@ function ServerErrorPage(props) {
             </p>
             <p className="text-xl mt-[20px]">{error}</p>
             <Link
-              to="/"
+              to="/home"
               className="link_500 text-white font-bold py-2 px-4 bg-green-500 rounded mt-5 inline-block"
             >
               Go to Home

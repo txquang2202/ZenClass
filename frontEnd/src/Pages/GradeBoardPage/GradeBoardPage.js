@@ -1,9 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { GradeContext } from "../../context/GradeContext";
 import { ToastContainer } from "react-toastify";
 import TextField from "@mui/material/TextField";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import Modal from "../../components/Modal/ClassDetailModal";
+import { addGradeReviewByID } from "../../services/gradeReviewServices";
+import { format } from "date-fns";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const GradeBoard = () => {
   const {
@@ -28,6 +34,65 @@ const GradeBoard = () => {
   const shouldDisplayPagination = board.length > 8;
 
   const { isClassOwner } = useClassDetailContext();
+
+  const { id } = useParams();
+
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  let data;
+  if (token) data = jwtDecode(token);
+
+  const dataUser = localStorage.getItem("user");
+  const user = JSON.parse(dataUser);
+  const avtPath = `/assets/imgs/${user.img}`;
+
+  const [reviewData, setReviewData] = useState({
+    avt: "",
+    fullname: "",
+    userID: "",
+    date: "",
+    typeGrade: "",
+    currentGrade: "",
+    expectationGrade: "",
+    explaination: "",
+  });
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, "dd MMMM yyyy");
+      // Gọi hàm API
+      const response = await addGradeReviewByID(
+        id,
+        token,
+        reviewData.avt,
+        data.fullname,
+        data.userID,
+        currentDate,
+        reviewData.typeGrade,
+        reviewData.currentGrade,
+        reviewData.expectationGrade,
+        reviewData.explaination
+      );
+      closeModal();
+      toast.success("Review added successfully!");
+      console.log(response.data); // In ra kết quả từ server
+    } catch (error) {
+      console.error("Error adding grade review:", error);
+    }
+  };
+
+  // Updated handleReviewDataChange function
+  const handleReviewDataChange = (e, field) => {
+    const { value } = e.target;
+    setReviewData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
 
   // FILE
   const handleExportCSV = () => {
@@ -195,7 +260,6 @@ const GradeBoard = () => {
   };
 
   const calculateTotalForExport = (student) => {
-    // Tính tổng giá trị nhân với ratio/100 cho từng môn học
     const total = grades.reduce((acc, item) => {
       const value = student[item.topic] !== undefined ? student[item.topic] : 0;
       const weightedValue = (value * item.ratio) / 100;
@@ -547,8 +611,10 @@ const GradeBoard = () => {
             <input type="hidden" name="hidden" />
 
             <select
-              name="grade"
+              name="typeGrade"
               id="grade"
+              value={reviewData.typeGrade}
+              onChange={(e) => handleReviewDataChange(e, "typeGrade")}
               className="mt-1 p-3 border border-gray-300 rounded-md w-full"
             >
               {grades.map((item, index) => (
@@ -561,10 +627,10 @@ const GradeBoard = () => {
               Current grade:
             </label>
             <input
-              id="current-grade"
+              id="current-currentGrade"
               type="number"
-              // value={formData.title}
-              // onChange={handleChange}
+              value={reviewData.currentGrade}
+              onChange={(e) => handleReviewDataChange(e, "currentGrade")}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
             />
           </div>
@@ -573,10 +639,10 @@ const GradeBoard = () => {
               Expectation grade:
             </label>
             <input
-              id="expectation-grade"
+              id="expectationGrade"
               type="number"
-              // value={formData.className}
-              // onChange={handleChange}
+              value={reviewData.expectationGrade}
+              onChange={(e) => handleReviewDataChange(e, "expectationGrade")}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
             />
           </div>
@@ -585,11 +651,11 @@ const GradeBoard = () => {
               Explanation:
             </label>
             <textarea
-              id="explanation" // Thay đổi id thành "description"
+              id="explaination" // Thay đổi id thành "description"
               type="text"
               placeholder="Write your explanation here..."
-              // value={newHomework.description}
-              // onChange={handleNewHomeworkChange}
+              value={reviewData.explaination}
+              onChange={(e) => handleReviewDataChange(e, "explaination")}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none"
             />
           </div>
@@ -597,6 +663,7 @@ const GradeBoard = () => {
 
         <div className="flex justify-end">
           <button
+            onClick={handleReviewSubmit}
             // onClick={handleEditClass}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >

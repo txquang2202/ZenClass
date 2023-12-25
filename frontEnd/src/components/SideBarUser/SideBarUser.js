@@ -26,7 +26,7 @@ const Sidebar = () => {
       <ul className="py-4 font-bold">
         <li>
           <Link
-            to={`/home/${id}`}
+            to={`/home`}
             className="block py-6 px-8 text-white text-lg"
             style={{
               color: activeLink === "main" ? "#2E80CE" : "white",

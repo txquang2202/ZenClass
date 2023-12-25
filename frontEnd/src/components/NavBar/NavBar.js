@@ -75,31 +75,26 @@ const Navbar = () => {
     <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10">
       <div className="container w-full lg:max-w-screen-xl mx-auto">
         <div className="flex items-center justify-between space-x-4 ">
-          <div>
-            <Link to="/" className="text-white text-lg">
+          <div className="flex items-center">
+            <Link
+              to="/home"
+              className="text-white text-lg font-sans font-semibold flex gap-3 items-center"
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/icons/class.ico`}
+                alt="ZenClass"
+                width="50"
+                height="60"
+              />
               ZenClass
             </Link>
           </div>
-          {/* <LanguageSwitcher /> */}
-          <div className="flex items-center justify-between space-x-4 lg:gap-12">
-            <Link to={`/home/${user?._id}`} className="text-white">
-              Home
-            </Link>
-            <Link to="#!" className="text-white">
-              About
-            </Link>
-            <Link to="#!" className="text-white">
-              Services
-            </Link>
-            <Link to="#!" className="text-white">
-              Contact
-            </Link>
-          </div>
+
           <div className="flex items-center justify-between space-x-4">
             {user !== null ? (
               <>
                 <Noti />
-                <span className="text-white cursor-pointer">
+                <span className="text-white cursor-pointer font-sans font-semibold">
                   {user.username}
                 </span>
                 <Avatar
@@ -133,12 +128,15 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/signin" className="text-white">
+                <Link
+                  to="/signin"
+                  className="text-white  font-sans font-semibold"
+                >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="text-white bg-[#2E80CE] px-4 py-2 rounded-full"
+                  className="text-white bg-[#2E80CE] px-4 py-2 rounded-full  font-sans font-semibold"
                 >
                   Sign Up
                 </Link>

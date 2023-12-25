@@ -98,7 +98,7 @@ function SideBar() {
         <li>
           <button
             onClick={handleMenu}
-            className="btn bg-[#2E80CE] text-white px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+            className="btn bg-[#2E80CE] text-white  px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           >
             +
           </button>
@@ -122,10 +122,11 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/${id}`}
-            className={`flex flex-col items-center text-gray-700  text-xs  ${
-              activeLink === "main" ? "text-blue-300" : ""
-            }`}
+            to={`/home`}
+            className={`flex flex-col items-center text-gray-600  text-xs font-semibold font-sans`}
+            style={{
+              color: activeLink === "main" ? "#2E80CE" : "",
+            }}
             onClick={() => handleLinkClick("main")}
           >
             <span className="w-8 h-8 ">
@@ -136,10 +137,11 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/classes/${id}`}
-            className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "classes" ? "text-blue-300" : ""
-            }`}
+            to={`/home/classes/a`}
+            className={`flex flex-col items-center text-gray-600  text-xs font-semibold font-sans`}
+            style={{
+              color: activeLink === "classes" ? "#2E80CE" : "",
+            }}
             onClick={() => handleLinkClick("classes")}
           >
             <span className="w-8 h-8">
@@ -150,10 +152,11 @@ function SideBar() {
         </li>
         <li>
           <Link
-            to={`/home/courses/${id}`}
-            className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "courses" ? "text-blue-300" : ""
-            }`}
+            to={`/home/courses/b`}
+            className={`flex flex-col items-center text-gray-600  text-xs font-semibold font-sans`}
+            style={{
+              color: activeLink === "courses" ? "#2E80CE" : "",
+            }}
             onClick={() => handleLinkClick("courses")}
           >
             <span className="w-8 h-8">

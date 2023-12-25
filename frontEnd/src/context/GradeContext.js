@@ -28,6 +28,7 @@ export const GradeProvider = ({ children }) => {
     { id: 20127147, name: "Tran Xuan Quang", total: 0 },
     { id: 20127148, name: "Le Ngoc Yen Nhi", total: 0 },
   ]);
+  
   // New state to store temporary values entered in text fields
   const [tempValues, setTempValues] = useState({});
   const token = localStorage.getItem("token");

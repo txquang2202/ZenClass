@@ -63,6 +63,18 @@ import {
   getAllGradeStructs,
 } from "../controller/gradeController.js";
 
+import {
+  getAllGradeReviews,
+  addGradeReviewByID,
+  deleteReviewByID,
+} from "../controller/gradeReviewController.js";
+
+import {
+  getAllUsersReplies,
+  addReply,
+  deleteReply,
+} from "../controller/cmtReviewController.js";
+
 import passport from "passport";
 import "../middleware/passport.js";
 
@@ -129,13 +141,24 @@ const initApi = (app) => {
   router.get("/getComments/:id", getAllUsersComments);
   router.post("/addComments/:id", addComment);
   router.delete("/deleteComment/:id", deleteComment);
-  
+
   //GradeStructs
   router.get("/getAllGradeStructs/:id", getAllGradeStructs);
   router.post("/addGradeStruct/:id", addGradeStruct);
   router.put("/editGradeStruct/:id", editGradeStruct);
   router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
   // router.post("/addComments", authenticateToken, addComment);
+
+  // GradeReviews
+  router.get("/getAllGradeReviews/:id", getAllGradeReviews);
+  router.post("/addGradeReview/:id", addGradeReviewByID);
+  router.delete("/deleteReviewByID/:id", deleteReviewByID);
+
+  // Reply in grade review
+  router.get("/getAllUsersReplies/:id", getAllUsersReplies);
+  router.post("/addReply/:id", addReply);
+  router.delete("/deleteReply/:id", deleteReply);
+
   return app.use("/api/v1/", router);
 };
 

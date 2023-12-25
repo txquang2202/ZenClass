@@ -57,7 +57,7 @@ function NavDetail(props) {
               className={`${
                 activeLink === "general"
                   ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium"
-                  : ""
+                  : "py-1 px-4"
               }`}
               onClick={() => handleLinkClick("general")}
             >
@@ -70,7 +70,7 @@ function NavDetail(props) {
               className={` ${
                 activeLink === "people"
                   ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium "
-                  : ""
+                  : "py-1 px-4"
               }`}
               onClick={() => handleLinkClick("people")}
             >
@@ -106,7 +106,7 @@ function NavDetail(props) {
                 <Link
                   to={`/home/classes/detail/grade-board/${id1}`}
                   className={` ${
-                    activeLink === "grade-board" ? "text-[#2E80CE] " : ""
+                    activeLink === "grade-board" ? "text-[#2E80CE] " : "p-1"
                   }`}
                 >
                   Grade Board
@@ -118,7 +118,7 @@ function NavDetail(props) {
                   className={` ${
                     activeLink === "grade-structure"
                       ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2"
-                      : ""
+                      : "p-1"
                   }`}
                 >
                   Grade Structure
@@ -130,7 +130,7 @@ function NavDetail(props) {
                   className={` ${
                     activeLink === "grade-review"
                       ? "text-[#2E80CE] border-b-2 border-[#2E80CE] pb-2"
-                      : ""
+                      : "p-1"
                   }`}
                 >
                   Grade Review
