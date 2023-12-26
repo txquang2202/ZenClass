@@ -147,6 +147,7 @@ const initApi = (app) => {
   router.post("/addGradeStruct/:id", addGradeStruct);
   router.put("/editGradeStruct/:id", editGradeStruct);
   router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
+  
   //Grade
   router.get("/getAllGradeClass/:id", getAllGradeByClass);
   router.put("/editClassGrade/:id", editClassGrade);

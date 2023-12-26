@@ -99,11 +99,13 @@ export const GradeProvider = ({ children }) => {
     };
     fetchUserData();
   }, [id1, token, navigate]);
+
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
         const response = await getAllGradeClass(id1, token);
         const students = response.data.grades;
+
         if (students) {
           const mappedStudents = students.map((data) => ({
             id: data.studentId || "",

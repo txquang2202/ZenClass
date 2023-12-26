@@ -242,7 +242,7 @@ function GradeReviewPage(props) {
         {reviews.map((item, index) => (
           <div
             key={index}
-            className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca]"
+            className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
           >
             {/* Review */}
             <div className="flex flex-col justify-start rounded-lg p-6">

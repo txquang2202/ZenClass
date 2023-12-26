@@ -227,13 +227,13 @@ const GradeStructure = () => {
                   ) : (
                     <>
                       <button
-                        className="bg-blue-500 text-white py-1 px-2 mr-2"
+                        className="bg-blue-500 text-white py-1 px-2 mr-2 font-semibold font-sans rounded "
                         onClick={() => handleEdit(grade.id)}
                       >
                         Edit
                       </button>
                       <button
-                        className="bg-red-500 text-white py-1 px-2"
+                        className="bg-red-500 text-white py-1 px-2 font-semibold font-sans rounded "
                         onClick={() => handleDelete(grade.id)}
                       >
                         Delete
@@ -253,7 +253,7 @@ const GradeStructure = () => {
           <button
             type="button"
             onClick={handleAddGrade}
-            class="text-blue-400 mt-3 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            className="bg-blue-500 text-white mt-3  border-blue-400  hover:bg-blue-400  font-semibold font-sans rounded-full text-sm px-5 py-2.5  mb-2 "
           >
             Add Grade
           </button>
