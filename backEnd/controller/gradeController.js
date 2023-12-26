@@ -87,11 +87,28 @@ const deleteGradeStruct = async (req, res) => {
     const structID = req.params.id;
 
     const classWithStruct = await Class.findOne({ gradestructs: structID });
+    const classWithGrade = await Class.findOne(
+      { gradestructs: structID },
+      "grades"
+    );
+    const topicToBeUpdated = await GradeStruct.findById(structID);
 
     if (!classWithStruct) {
       return res.status(404).json({ message: "Structs not found!" });
     }
-
+    //console.log(classWithGrade.grades);
+    for (const gradeID of classWithGrade.grades) {
+      const deleteGrade = await Grade.findOne({ _id: gradeID });
+      if (deleteGrade) {
+        const index = deleteGrade.grades.findIndex(
+          (item) => item.topic === topicToBeUpdated.topic
+        );
+        if (index !== -1) {
+          deleteGrade.grades.splice(index, 1);
+          await deleteGrade.save();
+        }
+      }
+    }
     classWithStruct.gradestructs = classWithStruct.gradestructs.filter(
       (id) => id.toString() !== structID
     );
@@ -115,7 +132,7 @@ const editGradeStruct = async (req, res) => {
       return res.status(404).json({ message: "Grade struct not found!" });
     }
     const topicToBeUpdated = updatedStruct.topic;
-    const ratioToBeUpdated = updatedStruct.ratio;
+    //const ratioToBeUpdated = updatedStruct.ratio;
     updatedStruct.topic = topic;
     updatedStruct.ratio = ratio;
     await updatedStruct.save();

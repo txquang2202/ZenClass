@@ -89,6 +89,7 @@ function ResponsiveDrawer(props) {
       toast.success("Update successful");
     } catch (error) {
       console.error("Error editing profile:", error);
+      toast.error(error.response.data.message);
       Navigate("/500");
     }
   };

@@ -20,7 +20,6 @@ const getAllHomework = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
-
 const getHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;
@@ -36,7 +35,6 @@ const getHomeworkByID = async (req, res) => {
     res.status(500).send("Error while fetching homework info");
   }
 };
-
 const createHomeworkByID = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -80,7 +78,6 @@ const createHomeworkByID = async (req, res) => {
     res.status(500).send("Server Error.");
   }
 };
-
 const deleteHomeworkByID = async (req, res) => {
   try {
     const homeworkID = req.params.id;

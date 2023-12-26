@@ -61,7 +61,7 @@ function GradeReviewPage(props) {
         }
       } catch (error) {
         console.error("Error fetching review:", error);
-        navigate("/500");
+        toast.error(error.response.message.data);
       }
     };
     fetchUserData();
@@ -116,7 +116,7 @@ function GradeReviewPage(props) {
         }
       } catch (error) {
         console.error("Error fetching comments:", error);
-        navigate("/500");
+        toast.error(error.response.message.data);
       }
     };
 
@@ -163,7 +163,7 @@ function GradeReviewPage(props) {
       toast.success("Comment created successfully");
     } catch (error) {
       console.error("Error creating comment:", error);
-      navigate("/500");
+      toast.error(error.response.message.data);
     }
   };
 

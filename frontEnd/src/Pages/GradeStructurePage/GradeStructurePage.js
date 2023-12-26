@@ -26,7 +26,7 @@ const GradeStructure = () => {
   // API delete grade
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to delete this grade?"
+      "Are you sure you want to delete this grade struct?"
     );
     if (isConfirmed) {
       try {
@@ -36,8 +36,7 @@ const GradeStructure = () => {
         );
         toast.success("Grade deleted successfully");
       } catch (error) {
-        console.error("Error deleting grade:", error);
-        toast.error("Error deleting grade");
+        toast.error(error.response.data.message);
       }
     }
   };
@@ -66,8 +65,7 @@ const GradeStructure = () => {
         ratio: 0,
       });
     } catch (error) {
-      console.error("Error editing grade:", error);
-      toast.error("Error editing grade");
+      toast.error(error.response.data.message);
     }
   };
 

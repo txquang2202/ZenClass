@@ -59,6 +59,7 @@ function ResetPassword(props) {
         toast.error(response.data.message);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error updating password:", error);
       navigate("/500");
     }

@@ -4,6 +4,7 @@ import Homework from "../models/homeworks.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
 import Grade from "../models/grades.js";
+import Comment from "../models/comments.js";
 
 const createClass = async (req, res) => {
   try {
@@ -238,6 +239,7 @@ const addStudent = async (req, res) => {
       },
       { new: true }
     );
+    //them vao bang grade
     const gradestructs = await Class.findOne(
       { _id: classId },
       "gradestructs"
@@ -468,6 +470,7 @@ const deleteClassbyID = async (req, res) => {
   try {
     const classID = req.params.id;
     const deletedClass = await Class.findById(classID);
+    const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found!" });
@@ -485,6 +488,12 @@ const deleteClassbyID = async (req, res) => {
         },
       }
     );
+    for (const homeworkID of deletedHomeWork.homeworks) {
+      const homework = await Homework.findOne({ _id: homeworkID });
+      if (homework) {
+        await Comment.deleteMany({ _id: { $in: homework.comments } });
+      }
+    }
 
     await Homework.deleteMany({ _id: { $in: deletedClass.homeworks } });
 
@@ -520,10 +529,17 @@ const getClassByID = async (req, res) => {
   try {
     const classID = req.params.id;
 
-    const classInfo = await Class.findById(classID).populate(
-      "teachers",
-      "_id username fullname img"
-    );
+    const classInfo = await Class.findById(classID).populate([
+      {
+        path: "teachers",
+        select: "_id username fullname img",
+      },
+      {
+        path: "gradestructs",
+        select: "topic ratio",
+      },
+    ]);
+
     if (!classInfo) {
       return res.status(404).json({ message: "Class not found!" });
     }

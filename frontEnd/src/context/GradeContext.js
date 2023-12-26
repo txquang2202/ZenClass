@@ -93,6 +93,7 @@ export const GradeProvider = ({ children }) => {
         setGrades(data || []);
       } catch (error) {
         console.error("Error fetching grade structure:", error);
+        toast.error(error.response.data.message);
         navigate("/500");
       }
     };
