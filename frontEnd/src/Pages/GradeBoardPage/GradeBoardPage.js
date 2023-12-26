@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllGradeClass, editClassGrade } from "../../services/gradeServices";
+import {
+  getAllGradeClass,
+  editClassGrade,
+  addGradeToClass,
+} from "../../services/gradeServices";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { toast } from "react-toastify";
 import Modal from "../../components/Modal/ClassDetailModal";
@@ -114,26 +118,30 @@ const YourComponent = () => {
     );
   };
 
-  const updateStateWithImportedData = (importedData) => {
+  const updateStateWithImportedData = async (importedData) => {
     // Update your state or perform other actions with the imported data
 
     // Example: Assuming your CSV data has a structure similar to your existing data
-    const updatedGrades = importedData.map((row) => {
-      const studentId = row["Student ID"];
-      const fullName = row["Full Name"];
-      const scores = allTopics.map((topic) => parseFloat(row[topic]) || 0);
-      
-      return {
-        studentId,
-        fullName,
-        grades: allTopics.map((topic, index) => ({
-          topic,
-          score: scores[index],
-        })),
-      };
-    });
-
-    
+    const updatedGrades = await Promise.all(
+      importedData.map(async (row) => {
+        const studentId = row["Student ID"];
+        const fullName = row["Full Name"];
+        const scores = allTopics.map((topic) => parseFloat(row[topic]) || 0);
+        try {
+          await addGradeToClass(id, studentId, fullName, scores, token);
+        } catch (error) {
+          toast.error(error.response.data.message);
+        }
+        return {
+          studentId,
+          fullName,
+          grades: allTopics.map((topic, index) => ({
+            topic,
+            score: scores[index],
+          })),
+        };
+      })
+    );
 
     // Example: Update state with the imported data
     setGrades(updatedGrades);

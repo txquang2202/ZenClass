@@ -206,6 +206,59 @@ const editClassGrade = async (req, res) => {
     res.status(500).send("Error while updating grade");
   }
 };
+const addGradeToClass = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const { studentID, fullName, scores } = req.body;
+    const gradestructs = await Class.findOne(
+      { _id: classID },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
+
+    if (!gradestructs || !gradestructs.gradestructs) {
+      return res.status(400).json({
+        message: `Gradestruct not found in the specified class`,
+      });
+    }
+    const findDuplicates = await Class.findOne(
+      { _id: classID },
+      "grades"
+    ).populate({ path: "grades", select: "studentId" });
+    const studentIDs = findDuplicates.grades.map((grade) => grade.studentId);
+
+    if (studentIDs.includes(parseInt(studentID, 10))) {
+      const editingGrade = await Grade.findOne({ studentId: studentID });
+      // console.log(editingGrade.grades);
+      editingGrade.grades.map((grade, index) => {
+        grade.score = scores[index];
+      });
+      await editingGrade.save();
+      return res.json({ message: "Grade edited successfully" });
+    }
+    const newGrades = gradestructs.gradestructs.map((gradestruct, index) => ({
+      topic: gradestruct.topic,
+      score: scores[index],
+    }));
+
+    const newGrade = new Grade({
+      studentId: studentID,
+      fullName: fullName,
+      grades: newGrades,
+    });
+    await newGrade.save();
+
+    const classGrades = await Class.findById(classID);
+
+    if (!classGrades.grades.includes(newGrade._id)) {
+      classGrades.grades.push(newGrade._id);
+      await classGrades.save();
+    }
+    res.json({ message: "Grade added successfully", newGrade });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error while adding grade" });
+  }
+};
 export {
   deleteGradeStruct,
   editGradeStruct,
@@ -213,4 +266,5 @@ export {
   getAllGradeStructs,
   getAllGradeByClass,
   editClassGrade,
+  addGradeToClass,
 };

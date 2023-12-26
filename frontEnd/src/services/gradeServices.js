@@ -7,7 +7,17 @@ const getAllGradeClass = (id, token) => {
     },
   });
 };
-
+const addGradeToClass = async (id, studentID, fullName, scores, token) => {
+  return axios.post(
+    `/api/v1/addGradeToClass/${id}`,
+    { studentID, fullName, scores },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 const editClassGrade = (id, token, updatedGrade) => {
   return axios.put(`/api/v1/editClassGrade/${id}`, updatedGrade, {
     headers: {
@@ -24,4 +34,4 @@ const deleteGradeClass = (id, token) => {
   });
 };
 
-export { getAllGradeClass, deleteGradeClass, editClassGrade };
+export { getAllGradeClass, deleteGradeClass, editClassGrade, addGradeToClass };
