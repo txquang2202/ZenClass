@@ -5,6 +5,8 @@ import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
 import Grade from "../models/grades.js";
 import Comment from "../models/comments.js";
+import GradeStruct from "../models/gradestructs.js";
+import gradesReview from "../models/gradesReview.js";
 
 const createClass = async (req, res) => {
   try {
@@ -392,6 +394,7 @@ const deleteStudentFromClass = async (req, res) => {
   try {
     const classID = req.params.id;
     const personID = req.body.personID;
+    const findUserID = await User.findOne({ _id: personID });
 
     const isStudentExists = await Class.exists({
       _id: classID,
@@ -417,6 +420,13 @@ const deleteStudentFromClass = async (req, res) => {
         },
         { new: true }
       );
+      const gradeToBeDeleted = await Class.findOne({ _id: classID }, "grades");
+      for (const gradeID of gradeToBeDeleted.grades) {
+        const grade = await Grade.findOne({ _id: gradeID });
+        if (grade.studentId === findUserID.userID) {
+          await Grade.findOneAndDelete({ _id: gradeID });
+        }
+      }
 
       res.json({ message: "Delete successfully!" });
     } else {
@@ -471,6 +481,7 @@ const deleteClassbyID = async (req, res) => {
     const classID = req.params.id;
     const deletedClass = await Class.findById(classID);
     const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
+    const deletedReview = await Class.findOne({ _id: classID }, "gradereviews");
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found!" });
@@ -494,6 +505,23 @@ const deleteClassbyID = async (req, res) => {
         await Comment.deleteMany({ _id: { $in: homework.comments } });
       }
     }
+    for (const homeworkID of deletedHomeWork.homeworks) {
+      const homework = await Homework.findOne({ _id: homeworkID });
+      if (homework) {
+        await Comment.deleteMany({ _id: { $in: homework.comments } });
+      }
+    }
+    for (const reviewID of deletedReview.gradereviews) {
+      const review = await gradesReview.findOne({ _id: reviewID });
+      if (review) {
+        await Comment.deleteMany({ _id: { $in: review.comments } });
+      }
+    }
+    await GradeStruct.deleteMany({ _id: { $in: deletedClass.gradestructs } });
+
+    await Grade.deleteMany({ _id: { $in: deletedClass.grades } });
+
+    await gradesReview.deleteMany({ _id: { $in: deletedClass.gradereviews } });
 
     await Homework.deleteMany({ _id: { $in: deletedClass.homeworks } });
 

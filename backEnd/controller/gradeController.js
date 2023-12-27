@@ -131,6 +131,18 @@ const editGradeStruct = async (req, res) => {
     if (!updatedStruct) {
       return res.status(404).json({ message: "Grade struct not found!" });
     }
+    const existTopic = await Class.findOne(
+      { gradestructs: structID },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
+    const topicToCheck = topic;
+
+    if (
+      existTopic &&
+      existTopic.gradestructs.some((item) => item.topic === topicToCheck)
+    ) {
+      return res.status(400).json({ message: "Topic already taken!" });
+    }
     const topicToBeUpdated = updatedStruct.topic;
     //const ratioToBeUpdated = updatedStruct.ratio;
     updatedStruct.topic = topic;
