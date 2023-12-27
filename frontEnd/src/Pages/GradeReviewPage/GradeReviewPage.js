@@ -17,6 +17,7 @@ import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { format } from "date-fns";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import SearchIcon from "@mui/icons-material/Search";
 
 function GradeReviewPage(props) {
   const { id } = useParams();
@@ -41,8 +42,6 @@ function GradeReviewPage(props) {
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
   const myAvtPath = `/assets/imgs/${user.img}`;
-
-  console.log(avtPath);
 
   // API get Review
   useEffect(() => {
@@ -209,180 +208,181 @@ function GradeReviewPage(props) {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <div>
       <h2 className="mt-10 text-2xl text-[#10375c] font-bold mb-4">
         Grade Review
       </h2>
       {/* SEARCH BAR */}
-      <div className="flex justify-center mb-5">
-        <div className="relative">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="search"
-            id="default-search"
-            className="block w-full p-1 px-3 py-3 ps-10 text-sm border-b-[1px] border-gray-200 focus:outline-none shadow-md"
-            placeholder="Search..."
-            required
-          />
+      <div className="relative mt-2 flex items-center mb-4">
+        <input
+          type="text"
+          placeholder="Search by Full Name or Student ID"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="p-2 pl-10 border border-gray-300 rounded-md w-1/3 text-sm focus:outline-none focus:ring focus:border-blue-300"
+        />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+          <SearchIcon />
         </div>
       </div>
 
       <section className="feature pt-[34px] pb-[16px] ">
-        {reviews.map(
-          (item, index) =>
-            (isClassOwner || data.userID === item.userID) && (
-              <div
-                key={index}
-                className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
-              >
-                {/* Review */}
-                <div className="flex flex-col justify-start rounded-lg p-6">
-                  <div className="flex justify-between">
-                    <div className="flex">
-                      <Avatar
-                        alt={item.fullname}
-                        src={item.avt}
-                        className="mt-1 h-10 w-10"
+        {reviews
+          .filter(
+            (item) =>
+              (isClassOwner || data.userID === item.userID) &&
+              (item.fullname
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+                (item.userID &&
+                  item.userID
+                    .toString()
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())))
+          )
+          .map(
+            (item, index) =>
+              (isClassOwner || data.userID === item.userID) && (
+                <div
+                  key={index}
+                  className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
+                >
+                  {/* Review */}
+                  <div className="flex flex-col justify-start rounded-lg p-6">
+                    <div className="flex justify-between">
+                      <div className="flex">
+                        <Avatar
+                          alt={item.fullname}
+                          src={item.avt}
+                          className="mt-1 h-10 w-10"
+                        />
+                        <div className="ml-3">
+                          <span className="font-semibold">
+                            {item.fullname} - {item.userID}
+                          </span>
+                          <span className="text-[#10375c] font-bold text-sm block">
+                            {item.date}
+                          </span>
+                        </div>
+                      </div>
+                      <CheckCircleOutlineIcon
+                        onClick={() => handleDeleteReview(item.id)}
+                        className="text-blue-300 cursor-pointer hover:text-blue-500"
                       />
-                      <div className="ml-3">
-                        <span className="font-semibold">
-                          {item.fullname} - {item.userID}
-                        </span>
-                        <span className="text-[#10375c] font-bold text-sm block">
-                          {item.date}
-                        </span>
+                    </div>
+                    <div className="mt-3">
+                      <table className="min-w-full bg-white border border-gray-300">
+                        {/* HEADER */}
+                        <thead>
+                          <tr>
+                            <th className="py-2 px-4 border-b">Type grade</th>
+                            <th className="py-2 px-4 border-b">
+                              Current grade
+                            </th>
+                            <th className="py-2 px-4 border-b">
+                              Expectation grade
+                            </th>
+                          </tr>
+                        </thead>
+                        {/* CONTENT */}
+                        <tbody>
+                          <tr className="text-center">
+                            <td className="py-2 px-4 border-b">
+                              {item.typeGrade}
+                            </td>
+                            <td className="py-2 px-4 border-b">
+                              {item.currentGrade}
+                            </td>
+                            <td className="py-2 px-4 border-b">
+                              {item.expectationGrade}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div className="mt-2">
+                        <span>Explanation:</span>
+                        <p className="whitespace-pre-wrap break-words overflow-wrap-break-word text-base font-normal">
+                          {item.explaination}
+                        </p>
                       </div>
                     </div>
-                    <CheckCircleOutlineIcon
-                      onClick={() => handleDeleteReview(item.id)}
-                      className="text-blue-300 cursor-pointer hover:text-blue-500"
-                    />
                   </div>
-                  <div className="mt-3">
-                    <table className="min-w-full bg-white border border-gray-300">
-                      {/* HEADER */}
-                      <thead>
-                        <tr>
-                          <th className="py-2 px-4 border-b">Type grade</th>
-                          <th className="py-2 px-4 border-b">Current grade</th>
-                          <th className="py-2 px-4 border-b">
-                            Expectation grade
-                          </th>
-                        </tr>
-                      </thead>
-                      {/* CONTENT */}
-                      <tbody>
-                        <tr className="text-center">
-                          <td className="py-2 px-4 border-b">
-                            {item.typeGrade}
-                          </td>
-                          <td className="py-2 px-4 border-b">
-                            {item.currentGrade}
-                          </td>
-                          <td className="py-2 px-4 border-b">
-                            {item.expectationGrade}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div className="mt-2">
-                      <span>Explanation:</span>
-                      <p className="whitespace-pre-wrap break-words overflow-wrap-break-word text-base font-normal">
-                        {item.explaination}
-                      </p>
+
+                  <hr className="text-gray-200 h-1" />
+
+                  {/* Comment */}
+                  <div className="flex flex-col space-y-1 pb-5 pl-2 pr-2">
+                    <div className="flex rounded-lg p-4">
+                      <section className="w-full">
+                        <h2 className="text-base text-[#10375c]">Comments</h2>
+                        {comments[item.id] &&
+                          comments[item.id].map((comment, index) => (
+                            <div
+                              key={index}
+                              className="flex mt-6 justify-between items-center"
+                            >
+                              <div className="flex">
+                                {/* Console log for debugging */}
+
+                                <Avatar
+                                  alt={comment.username}
+                                  src={comment.avt}
+                                />
+                                <div className="ml-3">
+                                  <span className="font-semibold">
+                                    {comment.username}
+                                  </span>
+                                  <span className="text-gray-500 text-xs ml-2">
+                                    {comment.date}
+                                  </span>
+                                  <p className="text-base">{comment.content}</p>
+                                </div>
+                              </div>
+                              <span className="">
+                                <RemoveCircleOutlineIcon
+                                  onClick={() =>
+                                    handleDeleteComment(item.id, comment.id)
+                                  }
+                                  className="text-gray-300 cursor-pointer hover:text-blue-400"
+                                />
+                              </span>
+                            </div>
+                          ))}
+
+                        <form
+                          onSubmit={(e) => handleCreateComment(e, item.id)}
+                          className="mt-6 flex justify-between"
+                        >
+                          <Avatar
+                            alt={data.fullname}
+                            src={myAvtPath}
+                            className="mr-3"
+                          />
+                          <textarea
+                            rows="1"
+                            name="content" // Set the name to "content" only
+                            value={newComment[item.id]?.content || ""}
+                            onChange={(e) => handleNewCommentChange(e, item.id)}
+                            className="flex-1 p-2 border border-gray-300 rounded-full mr-1 focus:outline-none focus:border-gray-500"
+                            placeholder="Add a comment..."
+                            style={{ textIndent: "10px" }}
+                          />
+                          <button
+                            type="submit"
+                            className="text-[#2E80CE] px-2 py-1 rounded hover:bg-gray-100"
+                          >
+                            <SendIcon />
+                          </button>
+                        </form>
+                      </section>
                     </div>
                   </div>
                 </div>
-
-                <hr className="text-gray-200 h-1" />
-
-                {/* Comment */}
-                <div className="flex flex-col space-y-1 pb-5 pl-2 pr-2">
-                  <div className="flex rounded-lg p-4">
-                    <section className="w-full">
-                      <h2 className="text-base text-[#10375c]">Comments</h2>
-                      {comments[item.id] &&
-                        comments[item.id].map((comment, index) => (
-                          <div
-                            key={index}
-                            className="flex mt-6 justify-between items-center"
-                          >
-                            <div className="flex">
-                              {/* Console log for debugging */}
-
-                              <Avatar
-                                alt={comment.username}
-                                src={comment.avt}
-                              />
-                              <div className="ml-3">
-                                <span className="font-semibold">
-                                  {comment.username}
-                                </span>
-                                <span className="text-gray-500 text-xs ml-2">
-                                  {comment.date}
-                                </span>
-                                <p className="text-base">{comment.content}</p>
-                              </div>
-                            </div>
-                            <span className="">
-                              <RemoveCircleOutlineIcon
-                                onClick={() =>
-                                  handleDeleteComment(item.id, comment.id)
-                                }
-                                className="text-gray-300 cursor-pointer hover:text-blue-400"
-                              />
-                            </span>
-                          </div>
-                        ))}
-
-                      <form
-                        onSubmit={(e) => handleCreateComment(e, item.id)}
-                        className="mt-6 flex justify-between"
-                      >
-                        <Avatar
-                          alt={data.fullname}
-                          src={myAvtPath}
-                          className="mr-3"
-                        />
-                        <textarea
-                          rows="1"
-                          name="content" // Set the name to "content" only
-                          value={newComment[item.id]?.content || ""}
-                          onChange={(e) => handleNewCommentChange(e, item.id)}
-                          className="flex-1 p-2 border border-gray-300 rounded-full mr-1 focus:outline-none focus:border-gray-500"
-                          placeholder="Add a comment..."
-                          style={{ textIndent: "10px" }}
-                        />
-                        <button
-                          type="submit"
-                          className="text-[#2E80CE] px-2 py-1 rounded hover:bg-gray-100"
-                        >
-                          <SendIcon />
-                        </button>
-                      </form>
-                    </section>
-                  </div>
-                </div>
-              </div>
-            )
-        )}
+              )
+          )}
       </section>
     </div>
   );

@@ -99,15 +99,26 @@ const YourComponent = () => {
   const handleExportCSV = () => {
     const csvData = [["Student ID", "Full Name", ...allTopics, "Total"]];
     grades.forEach((student) => {
-      const row = [
-        student.studentId,
-        student.fullName,
-        ...allTopics.map((topic) =>
-          getScoreByTopic(student.grades, topic).toString()
-        ),
-        calculateWeightedTotal(student.grades).toString(),
-      ];
-      csvData.push(row);
+      // Check if any value is empty or undefined in the row
+      if (
+        student.studentId &&
+        student.fullName &&
+        allTopics.every(
+          (topic) =>
+            getScoreByTopic(student.grades, topic) !== undefined &&
+            getScoreByTopic(student.grades, topic) !== ""
+        )
+      ) {
+        const row = [
+          student.studentId,
+          student.fullName,
+          ...allTopics.map((topic) =>
+            getScoreByTopic(student.grades, topic).toString()
+          ),
+          calculateWeightedTotal(student.grades).toString(),
+        ];
+        csvData.push(row);
+      }
     });
 
     const csv = Papa.unparse(csvData);
@@ -504,9 +515,9 @@ const YourComponent = () => {
           placeholder="Search by Full Name or Student ID"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 pl-4 border border-gray-300 rounded-md w-1/3 text-sm focus:outline-none focus:ring focus:border-blue-300"
+          className="p-2 pl-10 border border-gray-300 rounded-md w-1/3 text-sm focus:outline-none focus:ring focus:border-blue-300"
         />
-        <div className="absolute inset-y-0 left-0 flex items-center ml-[330px]">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
           <SearchIcon />
         </div>
       </div>

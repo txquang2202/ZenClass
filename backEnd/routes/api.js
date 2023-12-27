@@ -78,6 +78,11 @@ import {
   deleteReply,
 } from "../controller/cmtReviewController.js";
 
+import {
+  getAllNotifications,
+  addNotification,
+} from "../controller/notificationController.js";
+
 import "../middleware/passport.js";
 
 const router = express.Router();
@@ -162,6 +167,10 @@ const initApi = (app) => {
   router.get("/getAllUsersReplies/:id", getAllUsersReplies);
   router.post("/addReply/:id", addReply);
   router.delete("/deleteReply/:id", deleteReply);
+
+  // Notifications
+  router.get("/getAllNotifications/:id", getAllNotifications);
+  router.post("/addNotification/:id", addNotification);
 
   return app.use("/api/v1/", router);
 };

@@ -1,9 +1,9 @@
-import Notification from "../models/notifications";
+import Notification from "../models/notifications.js";
 import User from "../models/user.js";
 import Class from "../models/classes.js";
 
-const getAllNotification = async (req, res) => {
-  const classID = req.parmas.id;
+const getAllNotifications = async (req, res) => {
+  const classID = req.params.id;
   try {
     const notifications = await Class.findOne(
       { _id: classID },
@@ -23,7 +23,7 @@ const getAllNotification = async (req, res) => {
 const addNotification = async (req, res) => {
   try {
     const classID = req.params.id;
-    const { fullname, content, avt, date, link, userID } = req.body;
+    const { content, avt, date, link, userID } = req.body;
     const teacher = await User.findOne({ userID: userID });
     const newNoti = new Notification({
       fullname: teacher.fullname,
@@ -34,13 +34,13 @@ const addNotification = async (req, res) => {
     });
     await newNoti.save();
     const classNoti = await Class.findById(classID);
-
-    if (!classNoti.notifications.includes(newNoti._id)) {
-      classNoti.notifications.push(newNoti._id);
+    // console.log(classNoti);
+    if (!classNoti.notifications?.includes(newNoti._id)) {
+      classNoti.notifications?.push(newNoti._id);
       await classNoti.save();
     }
     res.json({
-      message: "Create noti successfully!!",
+      message: "Create notification successfully!!",
       class: newNoti,
     });
   } catch (error) {
@@ -49,4 +49,4 @@ const addNotification = async (req, res) => {
   }
 };
 
-export { getAllNotification, addNotification };
+export { getAllNotifications, addNotification };
