@@ -31,14 +31,12 @@ function GradeReviewPage(props) {
   const avtPath = `/assets/imgs/${user.img}`;
 
   const [reviews, setReviews] = useState([]);
-
   const [comments, setComments] = useState({}); // Use an object instead of an array
 
   const [newComment, setNewComment] = useState({
     content: "",
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
-
 
   // API get Review
   useEffect(() => {
@@ -251,8 +249,8 @@ function GradeReviewPage(props) {
               <div className="flex justify-between">
                 <div className="flex">
                   <Avatar
-                    alt={data.fullname}
-                    src={avtPath}
+                    alt={item.fullname}
+                    src={item.avt}
                     className="mt-1 h-10 w-10"
                   />
                   <div className="ml-3">

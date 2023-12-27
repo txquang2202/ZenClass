@@ -38,13 +38,13 @@ const joinByCode = (id, studentId, token) => {
 //     teacherId,
 //   });
 // };
-const createClass = (title, teacherName, className, token) => {
+const createClass = (title, userID, className, token) => {
   return axios.post("/api/v1/createClass", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     title,
-    teacherName,
+    userID,
     className,
   });
 };

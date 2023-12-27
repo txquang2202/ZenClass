@@ -47,7 +47,7 @@ function SideBar() {
     try {
       const response = await createClass(
         newClassInfo.title,
-        data.fullname,
+        data.userID,
         newClassInfo.className,
         token
       );

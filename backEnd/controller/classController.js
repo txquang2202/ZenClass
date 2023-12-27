@@ -8,7 +8,7 @@ import Comment from "../models/comments.js";
 
 const createClass = async (req, res) => {
   try {
-    const { title, teacherName, className } = req.body;
+    const { title, userID, className } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is empty!" });
@@ -21,7 +21,7 @@ const createClass = async (req, res) => {
     if (existTitle) {
       return res.status(400).json({ message: "Class title already taken!" });
     }
-    const teacher = await User.findOne({ fullname: teacherName });
+    const teacher = await User.findOne({ userID: userID });
     if (!teacher) {
       return res.status(400).json({ message: "Teacher not found!" });
     }
@@ -33,7 +33,7 @@ const createClass = async (req, res) => {
     });
     const returnClass = {
       title: title,
-      teacher: teacherName,
+      teacher: teacher.fullname,
       className: className,
       id: newClass._id,
     };
