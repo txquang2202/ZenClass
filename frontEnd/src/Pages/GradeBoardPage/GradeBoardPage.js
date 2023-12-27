@@ -41,9 +41,11 @@ const YourComponent = () => {
   let data;
   if (token) data = jwtDecode(token);
 
-  // const dataUser = localStorage.getItem("user");
-  // const user = JSON.parse(dataUser);
-  // const avtPath = `/assets/imgs/${user.img}`;
+  console.log(data.userID);
+
+  const dataUser = localStorage.getItem("user");
+  const user = JSON.parse(dataUser);
+  const avtPath = `/assets/imgs/${user.img}`;
 
   const [reviewData, setReviewData] = useState({
     avt: "",
@@ -66,7 +68,7 @@ const YourComponent = () => {
       const response = await addGradeReviewByID(
         id,
         token,
-        reviewData.avt,
+        avtPath,
         data.fullname,
         data.userID,
         currentDate,
@@ -77,6 +79,7 @@ const YourComponent = () => {
       );
       closeModal();
       toast.success("Review added successfully!");
+      closeModal1();
       console.log(response.data); // In ra kết quả từ server
     } catch (error) {
       console.error("Error adding grade review:", error);
@@ -623,39 +626,47 @@ const YourComponent = () => {
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()))
               )
-              .map((student) => (
-                <tr key={student._id} className="text-center">
-                  <td className="py-2 px-4 border-b">{student.studentId}</td>
-                  <td className="py-2 px-4 border-b">{student.fullName}</td>
-                  {allTopics.map((topic) => (
-                    <td key={topic} className="py-2 px-4 border-b">
-                      {getScoreByTopic(student.grades, topic)}
-                    </td>
-                  ))}
-                  <td className="py-2 px-4 border-b">
-                    {calculateWeightedTotal(student.grades)}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {isClassOwner ? (
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 font-semibold font-sans rounded "
-                        onClick={() => openModal(student)}
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          className="bg-blue-500 text-white py-1 px-2 font-semibold font-sans rounded"
-                          onClick={openModal1}
-                        >
-                          Feed Back
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              .map(
+                (student) =>
+                  // Conditionally render the entire row
+                  (isClassOwner || data.userID === student.studentId) && (
+                    <tr key={student._id} className="text-center">
+                      <td className="py-2 px-4 border-b">
+                        {student.studentId}
+                      </td>
+                      <td className="py-2 px-4 border-b">{student.fullName}</td>
+                      {allTopics.map((topic) => (
+                        <td key={topic} className="py-2 px-4 border-b">
+                          {getScoreByTopic(student.grades, topic)}
+                        </td>
+                      ))}
+                      <td className="py-2 px-4 border-b">
+                        {calculateWeightedTotal(student.grades)}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        {isClassOwner ? (
+                          <button
+                            className="bg-blue-500 text-white py-1 px-2 font-semibold font-sans rounded"
+                            onClick={() => openModal(student)}
+                          >
+                            Edit
+                          </button>
+                        ) : (
+                          <>
+                            {data.userID === student.studentId && (
+                              <button
+                                className="bg-blue-500 text-white py-1 px-2 font-semibold font-sans rounded"
+                                onClick={openModal1}
+                              >
+                                Feedback
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  )
+              )}
           </tbody>
         </table>
 

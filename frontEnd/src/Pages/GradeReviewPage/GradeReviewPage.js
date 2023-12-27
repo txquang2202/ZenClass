@@ -39,6 +39,7 @@ function GradeReviewPage(props) {
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
 
+
   // API get Review
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,7 +49,8 @@ function GradeReviewPage(props) {
         if (ReviewData) {
           const mappedReview = ReviewData.map((data) => ({
             id: data._id || "",
-            avt: data.avt || "",
+            // avt: data.avt || "",
+            avt: "/assets/imgs/" + data.avt,
             fullname: data.fullname || "",
             userID: data.userID || "",
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
@@ -248,7 +250,11 @@ function GradeReviewPage(props) {
             <div className="flex flex-col justify-start rounded-lg p-6">
               <div className="flex justify-between">
                 <div className="flex">
-                  <Avatar className="mt-1 h-10 w-10" />
+                  <Avatar
+                    alt={data.fullname}
+                    src={avtPath}
+                    className="mt-1 h-10 w-10"
+                  />
                   <div className="ml-3">
                     <span className="font-semibold">
                       {item.fullname} - {item.userID}
