@@ -82,6 +82,7 @@ const YourComponent = () => {
       closeModal1();
     } catch (error) {
       console.error("Error adding grade review:", error);
+      toast.error(error.response.data.message);
     }
   };
 

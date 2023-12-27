@@ -35,12 +35,6 @@ function GradeReviewPage(props) {
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
 
-  console.log("comments");
-  console.log(comments);
-
-  console.log("newComment");
-  console.log(newComment);
-
   const { isClassOwner } = useClassDetailContext();
 
   const dataUser = localStorage.getItem("user");

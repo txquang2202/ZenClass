@@ -2,6 +2,7 @@ import Class from "../models/classes.js";
 import User from "../models/user.js";
 import gradesReview from "../models/gradesReview.js";
 import Comment from "../models/comments.js";
+import Grade from "../models/grades.js";
 
 const getAllGradeReviews = async (req, res) => {
   const classID = req.params.id;
@@ -35,8 +36,18 @@ const addGradeReviewByID = async (req, res) => {
       expectationGrade,
       explaination,
     } = req.body;
+    const classGR = await Class.findById(classID);
+
     if (!typeGrade) {
       return res.status(400).json({ message: "Type grade is empty!" });
+    }
+    if (currentGrade < 0 || currentGrade > 10) {
+      return res.status(400).json({ message: "Invalid current grade range!!" });
+    }
+    if (expectationGrade < 0 || expectationGrade > 10) {
+      return res
+        .status(400)
+        .json({ message: "Invalid expectation grade range!!" });
     }
     if (!currentGrade) {
       return res.status(400).json({ message: "Current grade is empty!" });
@@ -47,7 +58,19 @@ const addGradeReviewByID = async (req, res) => {
     if (!explaination) {
       return res.status(400).json({ message: "Explaination is empty!" });
     }
-
+    for (const gradeID of classGR.grades) {
+      const grade = await Grade.findOne({ _id: gradeID });
+      if (grade.studentId === userID) {
+        for (const topic of grade.grades) {
+          if (topic.topic === typeGrade) {
+            if (topic.score !== parseInt(currentGrade)) {
+              //   console.log(typeof topic.score, typeof currentGrade);
+              return res.status(400).json({ message: "Wrong current grade!!" });
+            }
+          }
+        }
+      }
+    }
     const newGR = new gradesReview({
       avt: avt,
       fullname: fullname,
@@ -59,7 +82,6 @@ const addGradeReviewByID = async (req, res) => {
       explaination: explaination,
     });
     await newGR.save();
-    const classGR = await Class.findById(classID);
 
     if (!classGR.gradereviews?.includes(newGR._id)) {
       classGR.gradereviews?.push(newGR._id);
