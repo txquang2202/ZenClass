@@ -45,7 +45,10 @@ function GradeReviewPage(props) {
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
-  const avtPath = `/assets/imgs/${user.img}`;
+  const avtPath = `${user.img}`;
+  const myAvtPath = `/assets/imgs/${user.img}`;
+
+  console.log(avtPath);
 
   // API get Review
   useEffect(() => {
@@ -106,7 +109,7 @@ function GradeReviewPage(props) {
             id: data._id || "",
             username: data.username || "",
             content: data.content || "",
-            avt: "/assets/imgs/" + user.img,
+            avt: "/assets/imgs/" + data.avt,
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
           }));
           setComments((prevComments) => ({
@@ -139,6 +142,7 @@ function GradeReviewPage(props) {
     try {
       const currentDate = new Date();
       const formattedDate = format(currentDate, "dd MMMM yyyy");
+
       const response = await addReply(
         reviewId,
         token,
@@ -153,7 +157,7 @@ function GradeReviewPage(props) {
         username: data.fullname || "",
         content: response.data.comment.content || "",
         date: formattedDate || "",
-        avt: avtPath || "",
+        avt: myAvtPath || "",
       };
 
       setComments((prevComments) => ({
@@ -165,10 +169,9 @@ function GradeReviewPage(props) {
         ...prevNewComment,
         [reviewId]: {
           content: "",
-          avt: avtPath,
+          avt: myAvtPath,
         },
       }));
-
       toast.success("Comment created successfully");
     } catch (error) {
       console.error("Error creating comment:", error);
@@ -328,6 +331,8 @@ function GradeReviewPage(props) {
                             className="flex mt-6 justify-between items-center"
                           >
                             <div className="flex">
+                              {/* Console log for debugging */}
+
                               <Avatar
                                 alt={comment.username}
                                 src={comment.avt}
@@ -359,7 +364,7 @@ function GradeReviewPage(props) {
                       >
                         <Avatar
                           alt={data.fullname}
-                          src={avtPath}
+                          src={myAvtPath}
                           className="mr-3"
                         />
                         <textarea

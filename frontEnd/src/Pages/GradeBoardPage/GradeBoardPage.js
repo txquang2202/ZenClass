@@ -80,7 +80,6 @@ const YourComponent = () => {
       closeModal();
       toast.success("Review added successfully!");
       closeModal1();
-      console.log(response.data); // In ra kết quả từ server
     } catch (error) {
       console.error("Error adding grade review:", error);
     }

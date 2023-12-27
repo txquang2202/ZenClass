@@ -2,10 +2,11 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const notificationsSchema = new mongoose.Schema({
-  username: String,
+  fullname: String,
   content: String,
   avt: String,
   date: Date,
+  link: String,
 });
 
 const Notification = mongoose.model("notifications", notificationsSchema);
