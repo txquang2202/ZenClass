@@ -70,10 +70,18 @@ const GradeStructure = () => {
   };
 
   const handleTextFieldChange = (e, field) => {
+    let value;
+
+    if (field === "ratio") {
+      // Ensure the value is a valid integer and restrict it to the range [0, 100]
+      value = Math.min(100, Math.max(0, parseInt(e.target.value, 10))) || 0;
+    } else {
+      value = e.target.value;
+    }
+
     setNewGrades((prevGrades) => ({
       ...prevGrades,
-      [field]:
-        field === "ratio" ? parseInt(e.target.value, 10) : e.target.value,
+      [field]: value,
     }));
   };
 
@@ -125,7 +133,14 @@ const GradeStructure = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = async (id) => {
+    try {
+      await deleteGradeStruct(id, token);
+      setGrades((prevGrades) => prevGrades.filter((grade) => grade.id !== id));
+      toast.success("Grade cancel successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
     setEdit(null);
   };
 
@@ -149,7 +164,7 @@ const GradeStructure = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl text-[#10375c] font-bold mb-4">
-        Grade structure
+        Grade Structure
       </h1>
       {/* ... (rest of the code remains unchanged) */}
       <table className="w-full border-collapse border border-gray-300 mb-3">
@@ -178,6 +193,7 @@ const GradeStructure = () => {
                   <TextField
                     id="outlined-text"
                     type="text"
+                    placeholder="New topic"
                     value={newGrades.topic}
                     size="small"
                     InputLabelProps={{
@@ -219,7 +235,7 @@ const GradeStructure = () => {
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2"
-                        onClick={handleCancel}
+                        onClick={() => handleCancel(grade.id)}
                       >
                         Cancel
                       </button>
@@ -253,7 +269,10 @@ const GradeStructure = () => {
           <button
             type="button"
             onClick={handleAddGrade}
-            className="bg-blue-500 text-white mt-3  border-blue-400  hover:bg-blue-400  font-semibold font-sans rounded-full text-sm px-5 py-2.5  mb-2 "
+            disabled={edit !== null}
+            className={`bg-${
+              edit !== null ? "gray-500" : "blue-500"
+            } text-white mt-3 border-blue-400 hover:bg-blue-400 font-semibold font-sans rounded-full text-sm px-5 py-2.5 mb-2`}
           >
             Add Grade
           </button>
