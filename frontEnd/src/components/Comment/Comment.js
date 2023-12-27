@@ -67,7 +67,7 @@ const ListComment = () => {
       const response = await addComment(
         finalId,
         token,
-        data.fullname,
+        data.userID,
         newComment.content,
         avtPath, // Use avtPath instead of user.img
         currentDate

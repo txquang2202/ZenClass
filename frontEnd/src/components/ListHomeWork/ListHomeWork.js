@@ -38,7 +38,7 @@ function ListHomeWork(props) {
         id,
         token,
         newHomework.title,
-        data.fullname,
+        data.userID,
         newHomework.description,
         currentDate
       );

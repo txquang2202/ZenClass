@@ -8,12 +8,12 @@ const getAllUsersComments = (id, token) => {
   });
 };
 
-const addComment = (id, token, username, content, avt, date) => {
+const addComment = (id, token, userID, content, avt, date) => {
   return axios.post(`/api/v1/addComments/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    username,
+    userID,
     content,
     avt,
     date,

@@ -38,7 +38,7 @@ const getHomeworkByID = async (req, res) => {
 const createHomeworkByID = async (req, res) => {
   try {
     const classID = req.params.id;
-    const { title, teacherName, description, date } = req.body;
+    const { title, userID, description, date } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is empty!" });
@@ -51,14 +51,14 @@ const createHomeworkByID = async (req, res) => {
     if (existTitle) {
       return res.status(400).json({ message: "Homework title already taken!" });
     }
-    const teacher = await User.findOne({ fullname: teacherName });
+    const teacher = await User.findOne({ userID: userID });
     if (!teacher) {
       return res.status(400).json({ message: "Teacher not found!" });
     }
 
     const newHW = new Homework({
       title: title,
-      teacher: teacherName,
+      teacher: teacher.fullname,
       description: description,
       date: date,
     });

@@ -13,6 +13,7 @@ import {
   deleteReplyByID,
 } from "../../services/replyReviewServices";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { format } from "date-fns";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
@@ -26,10 +27,6 @@ function GradeReviewPage(props) {
   let data;
   if (token) data = jwtDecode(token);
 
-  const dataUser = localStorage.getItem("user");
-  const user = JSON.parse(dataUser);
-  const avtPath = `/assets/imgs/${user.img}`;
-
   const [reviews, setReviews] = useState([]);
   const [comments, setComments] = useState({}); // Use an object instead of an array
 
@@ -37,6 +34,18 @@ function GradeReviewPage(props) {
     content: "",
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
+
+  console.log("comments");
+  console.log(comments);
+
+  console.log("newComment");
+  console.log(newComment);
+
+  const { isClassOwner } = useClassDetailContext();
+
+  const dataUser = localStorage.getItem("user");
+  const user = JSON.parse(dataUser);
+  const avtPath = `/assets/imgs/${user.img}`;
 
   // API get Review
   useEffect(() => {
@@ -239,132 +248,142 @@ function GradeReviewPage(props) {
       </div>
 
       <section className="feature pt-[34px] pb-[16px] ">
-        {reviews.map((item, index) => (
-          <div
-            key={index}
-            className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
-          >
-            {/* Review */}
-            <div className="flex flex-col justify-start rounded-lg p-6">
-              <div className="flex justify-between">
-                <div className="flex">
-                  <Avatar
-                    alt={item.fullname}
-                    src={item.avt}
-                    className="mt-1 h-10 w-10"
-                  />
-                  <div className="ml-3">
-                    <span className="font-semibold">
-                      {item.fullname} - {item.userID}
-                    </span>
-                    <span className="text-[#10375c] font-bold text-sm block">
-                      {item.date}
-                    </span>
-                  </div>
-                </div>
-                <CheckCircleOutlineIcon
-                  onClick={() => handleDeleteReview(item.id)}
-                  className="text-blue-300 cursor-pointer hover:text-blue-500"
-                />
-              </div>
-              <div className="mt-3">
-                <table className="min-w-full bg-white border border-gray-300">
-                  {/* HEADER */}
-                  <thead>
-                    <tr>
-                      <th className="py-2 px-4 border-b">Type grade</th>
-                      <th className="py-2 px-4 border-b">Current grade</th>
-                      <th className="py-2 px-4 border-b">Expectation grade</th>
-                    </tr>
-                  </thead>
-                  {/* CONTENT */}
-                  <tbody>
-                    <tr className="text-center">
-                      <td className="py-2 px-4 border-b">{item.typeGrade}</td>
-                      <td className="py-2 px-4 border-b">
-                        {item.currentGrade}
-                      </td>
-                      <td className="py-2 px-4 border-b">
-                        {item.expectationGrade}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div className="mt-2">
-                  <span>Explanation:</span>
-                  <p className="whitespace-pre-wrap break-words overflow-wrap-break-word text-base font-normal">
-                    {item.explaination}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <hr className="text-gray-200 h-1" />
-
-            {/* Comment */}
-            <div className="flex flex-col space-y-1 pb-5 pl-2 pr-2">
-              <div className="flex rounded-lg p-4">
-                <section className="w-full">
-                  <h2 className="text-base text-[#10375c]">Comments</h2>
-                  {comments[item.id] &&
-                    comments[item.id].map((comment, index) => (
-                      <div
-                        key={index}
-                        className="flex mt-6 justify-between items-center"
-                      >
-                        <div className="flex">
-                          <Avatar alt={comment.username} src={comment.avt} />
-                          <div className="ml-3">
-                            <span className="font-semibold">
-                              {comment.username}
-                            </span>
-                            <span className="text-gray-500 text-xs ml-2">
-                              {comment.date}
-                            </span>
-                            <p className="text-base">{comment.content}</p>
-                          </div>
-                        </div>
-                        <span className="">
-                          <RemoveCircleOutlineIcon
-                            onClick={() =>
-                              handleDeleteComment(item.id, comment.id)
-                            }
-                            className="text-gray-300 cursor-pointer hover:text-blue-400"
-                          />
+        {reviews.map(
+          (item, index) =>
+            (isClassOwner || data.userID === item.userID) && (
+              <div
+                key={index}
+                className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
+              >
+                {/* Review */}
+                <div className="flex flex-col justify-start rounded-lg p-6">
+                  <div className="flex justify-between">
+                    <div className="flex">
+                      <Avatar
+                        alt={item.fullname}
+                        src={item.avt}
+                        className="mt-1 h-10 w-10"
+                      />
+                      <div className="ml-3">
+                        <span className="font-semibold">
+                          {item.fullname} - {item.userID}
+                        </span>
+                        <span className="text-[#10375c] font-bold text-sm block">
+                          {item.date}
                         </span>
                       </div>
-                    ))}
+                    </div>
+                    <CheckCircleOutlineIcon
+                      onClick={() => handleDeleteReview(item.id)}
+                      className="text-blue-300 cursor-pointer hover:text-blue-500"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <table className="min-w-full bg-white border border-gray-300">
+                      {/* HEADER */}
+                      <thead>
+                        <tr>
+                          <th className="py-2 px-4 border-b">Type grade</th>
+                          <th className="py-2 px-4 border-b">Current grade</th>
+                          <th className="py-2 px-4 border-b">
+                            Expectation grade
+                          </th>
+                        </tr>
+                      </thead>
+                      {/* CONTENT */}
+                      <tbody>
+                        <tr className="text-center">
+                          <td className="py-2 px-4 border-b">
+                            {item.typeGrade}
+                          </td>
+                          <td className="py-2 px-4 border-b">
+                            {item.currentGrade}
+                          </td>
+                          <td className="py-2 px-4 border-b">
+                            {item.expectationGrade}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div className="mt-2">
+                      <span>Explanation:</span>
+                      <p className="whitespace-pre-wrap break-words overflow-wrap-break-word text-base font-normal">
+                        {item.explaination}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-                  <form
-                    onSubmit={(e) => handleCreateComment(e, item.id)}
-                    className="mt-6 flex justify-between"
-                  >
-                    <Avatar
-                      alt={data.fullname}
-                      src={avtPath}
-                      className="mr-3"
-                    />
-                    <textarea
-                      rows="1"
-                      name="content" // Set the name to "content" only
-                      value={newComment[item.id]?.content || ""}
-                      onChange={(e) => handleNewCommentChange(e, item.id)}
-                      className="flex-1 p-2 border border-gray-300 rounded-full mr-1 focus:outline-none focus:border-gray-500"
-                      placeholder="Add a comment..."
-                      style={{ textIndent: "10px" }}
-                    />
-                    <button
-                      type="submit"
-                      className="text-[#2E80CE] px-2 py-1 rounded hover:bg-gray-100"
-                    >
-                      <SendIcon />
-                    </button>
-                  </form>
-                </section>
+                <hr className="text-gray-200 h-1" />
+
+                {/* Comment */}
+                <div className="flex flex-col space-y-1 pb-5 pl-2 pr-2">
+                  <div className="flex rounded-lg p-4">
+                    <section className="w-full">
+                      <h2 className="text-base text-[#10375c]">Comments</h2>
+                      {comments[item.id] &&
+                        comments[item.id].map((comment, index) => (
+                          <div
+                            key={index}
+                            className="flex mt-6 justify-between items-center"
+                          >
+                            <div className="flex">
+                              <Avatar
+                                alt={comment.username}
+                                src={comment.avt}
+                              />
+                              <div className="ml-3">
+                                <span className="font-semibold">
+                                  {comment.username}
+                                </span>
+                                <span className="text-gray-500 text-xs ml-2">
+                                  {comment.date}
+                                </span>
+                                <p className="text-base">{comment.content}</p>
+                              </div>
+                            </div>
+                            <span className="">
+                              <RemoveCircleOutlineIcon
+                                onClick={() =>
+                                  handleDeleteComment(item.id, comment.id)
+                                }
+                                className="text-gray-300 cursor-pointer hover:text-blue-400"
+                              />
+                            </span>
+                          </div>
+                        ))}
+
+                      <form
+                        onSubmit={(e) => handleCreateComment(e, item.id)}
+                        className="mt-6 flex justify-between"
+                      >
+                        <Avatar
+                          alt={data.fullname}
+                          src={avtPath}
+                          className="mr-3"
+                        />
+                        <textarea
+                          rows="1"
+                          name="content" // Set the name to "content" only
+                          value={newComment[item.id]?.content || ""}
+                          onChange={(e) => handleNewCommentChange(e, item.id)}
+                          className="flex-1 p-2 border border-gray-300 rounded-full mr-1 focus:outline-none focus:border-gray-500"
+                          placeholder="Add a comment..."
+                          style={{ textIndent: "10px" }}
+                        />
+                        <button
+                          type="submit"
+                          className="text-[#2E80CE] px-2 py-1 rounded hover:bg-gray-100"
+                        >
+                          <SendIcon />
+                        </button>
+                      </form>
+                    </section>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            )
+        )}
       </section>
     </div>
   );

@@ -45,7 +45,7 @@ const YourComponent = () => {
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
-  const avtPath = `/assets/imgs/${user.img}`;
+  const avtPath = `${user.img}`;
 
   const [reviewData, setReviewData] = useState({
     avt: "",
