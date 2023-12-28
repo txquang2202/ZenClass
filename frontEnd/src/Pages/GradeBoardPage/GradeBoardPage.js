@@ -42,8 +42,6 @@ const YourComponent = () => {
   let data;
   if (token) data = jwtDecode(token);
 
-  console.log(data.userID);
-
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
@@ -66,7 +64,7 @@ const YourComponent = () => {
       const content = "blablablabal";
       const link = "#!";
       const currentDate = new Date();
-      const response = await addNotification(
+      await addNotification(
         id,
         token,
         content,

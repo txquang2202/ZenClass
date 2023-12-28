@@ -66,7 +66,6 @@ export const NotificationProvider = ({ children }) => {
         //console.log(data._id);
         const response = await getAllNotifications(data._id, token);
         const notiData = response.data.notifications;
-        console.log(notiData);
         if (notiData) {
           const mappedNoti = notiData.map((data) => ({
             id: data._id || "",
