@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import Modal from "../../components/Modal/ClassDetailModal";
 import Papa from "papaparse";
 import { getClassByID } from "../../services/classServices";
+import { addNotification } from "../../services/notificationServices";
 import SearchIcon from "@mui/icons-material/Search";
 // import { format } from "date-fns";
 import { jwtDecode } from "jwt-decode";
@@ -22,7 +23,6 @@ const YourComponent = () => {
 
   const [allTopics, setAllTopics] = useState([]);
   const [allRatios, setAllRatios] = useState([]);
-  // console.log(allTopics);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -58,6 +58,30 @@ const YourComponent = () => {
     explaination: "",
   });
 
+  // Submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const content = "blablablabal";
+      const link = "#!";
+      const currentDate = new Date();
+      const response = await addNotification(
+        id,
+        token,
+        content,
+        avtPath,
+        currentDate,
+        link,
+        data.userID
+      );
+      toast.success("Submit successfully!");
+    } catch (error) {
+      console.error("Error adding  submit:", error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  // feedback
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
@@ -686,6 +710,7 @@ const YourComponent = () => {
           <div className="text-center">
             <button
               type="button"
+              onClick={handleSubmit}
               className="bg-blue-500 text-white mt-3  border-blue-400  hover:bg-blue-400  font-semibold font-sans rounded-full text-sm px-5 py-2.5  mb-2 "
             >
               Submit

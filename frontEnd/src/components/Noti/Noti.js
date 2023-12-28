@@ -75,20 +75,24 @@ function Noti(props) {
                 <Link to={"#"}>
                   <div className="flex rounded-lg">
                     <Avatar
-                      alt={item.name}
+                      alt={item.fullname}
                       src={item.avatarSrc}
                       className="ml-[-10px] mt-2 h-12 w-12"
                     />
                     <div className="ml-3">
-                      <span className="font-semibold">{item.name} </span>
+                      <span className="font-semibold">{item.fullname} </span>
                       <p
-                        className="text-base inline"
-                        style={{ whiteSpace: "pre-line" }}
+                        className="text-base inline overflow-hidden line-clamp-2"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          whiteSpace: "normal",
+                        }}
                       >
                         {item.content}
                       </p>
                       <span className="text-[#10375c] font-bold text-sm block mt-2">
-                        {item.timestamp}
+                        {item.date}
                       </span>
                     </div>
                   </div>

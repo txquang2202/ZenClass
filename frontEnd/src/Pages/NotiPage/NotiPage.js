@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 function NotiPage(props) {
   const { menuItemsData } = useNotificationContext();
@@ -18,25 +19,33 @@ function NotiPage(props) {
             {menuItemsData.map((item) => (
               <div
                 key={item.id}
-                className="flex rounded-lg  p-4 cursor-pointer hover:bg-gray-100"
+                className="flex rounded-lg justify-between items-center  p-4 cursor-pointer hover:bg-gray-100"
               >
-                <Avatar
-                  alt={item.name}
-                  src={item.avatarSrc}
-                  className=" mt-1 h-12 w-12"
-                />
-                <div className="ml-3">
-                  <span className="font-semibold">{item.name} </span>
-                  <p
-                    className="text-base inline"
-                    style={{ whiteSpace: "pre-line" }}
-                  >
-                    {item.content}
-                  </p>
-                  <span className="text-[#10375c] font-bold text-sm block mt-2">
-                    {item.timestamp}
-                  </span>
+                <div className="flex">
+                  <Avatar
+                    alt={item.fullname}
+                    src={item.avatarSrc}
+                    className=" mt-1 h-12 w-12"
+                  />
+                  <div className="ml-3">
+                    <span className="font-semibold">{item.fullname} </span>
+                    <p
+                      className="text-base inline"
+                      style={{ whiteSpace: "pre-line" }}
+                    >
+                      {item.content}
+                    </p>
+                    <span className="text-[#10375c] font-bold text-sm block mt-2">
+                      {item.date}
+                    </span>
+                  </div>
                 </div>
+                <span className="">
+                  <RemoveCircleOutlineIcon
+                    // onClick={() => handleDeleteComment(comment.id)}
+                    className="text-gray-300 cursor-pointer hover:text-blue-400"
+                  />
+                </span>
               </div>
             ))}
           </div>

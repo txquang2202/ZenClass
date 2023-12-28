@@ -8,4 +8,17 @@ const getAllNotifications = (id, token) => {
   });
 };
 
-export { getAllNotifications };
+const addNotification = (id, token, content, avt, date, link, userID) => {
+  return axios.post(`/api/v1/addNotification/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    content,
+    avt,
+    date,
+    link,
+    userID,
+  });
+};
+
+export { getAllNotifications, addNotification };
