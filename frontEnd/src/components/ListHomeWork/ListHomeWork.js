@@ -38,7 +38,7 @@ function ListHomeWork(props) {
         id,
         token,
         newHomework.title,
-        data.fullname,
+        data.userID,
         newHomework.description,
         currentDate
       );
@@ -63,7 +63,7 @@ function ListHomeWork(props) {
       toast.success("Homework added successfully!");
     } catch (error) {
       console.error("Error fetching classes:", error);
-      navigate("/500");
+      toast.error(error.response.data.message);
     }
   };
 

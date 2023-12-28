@@ -7,7 +7,7 @@ env.config();
 const app = express();
 
 const createToken = (user) => {
-  const { _id, username, role, isVerified, status, fullname } = user;
+  const { _id, username, role, isVerified, status, fullname, userID } = user;
   const secretKey = process.env.SECRET_KEY;
 
   try {
@@ -19,10 +19,11 @@ const createToken = (user) => {
         isVerified,
         status,
         fullname,
+        userID,
       },
       secretKey,
       {
-        expiresIn: "1h",
+        // expiresIn: "1h",
         algorithm: "HS256",
       }
     );

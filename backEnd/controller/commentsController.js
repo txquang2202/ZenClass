@@ -1,14 +1,16 @@
 import Comment from "../models/comments.js";
 import Class from "../models/classes.js";
+import User from "../models/user.js";
 import Homework from "../models/homeworks.js";
 
 const addComment = async (req, res) => {
   try {
     const homeworkID = req.params.id;
-    const { username, content, avt, date } = req.body;
+    const { userID, content, avt, date } = req.body;
     // console.log(req.body);
+    const user = await User.findOne({ userID: userID });
     const newComment = new Comment({
-      username,
+      username: user.fullname,
       content,
       avt,
       date,
@@ -46,7 +48,6 @@ const getAllUsersComments = async (req, res) => {
     res.status(500).send("Error while fetching users");
   }
 };
-
 const deleteComment = async (req, res) => {
   try {
     const commentID = req.params.id;

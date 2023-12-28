@@ -9,6 +9,8 @@ import { useNotificationContext } from "../../context/NotificationContext";
 function Noti(props) {
   const { menuItemsData } = useNotificationContext();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [click, setClick] = useState();
+  const [hideBadge, setHideBadge] = useState(false);
   const { id } = useParams();
 
   const handleMenu = (event) => {
@@ -19,6 +21,11 @@ function Noti(props) {
     setAnchorEl(null);
   };
 
+  const handleClick = () => {
+    setAnchorEl(null); // Close the menu when the icon is clicked
+    setHideBadge(true); // Hide the badge when the icon is clicked
+  };
+
   return (
     <>
       <IconButton
@@ -27,9 +34,13 @@ function Noti(props) {
         color="inherit"
         onClick={handleMenu}
       >
-        <Badge badgeContent={3} color="error">
-          <NotificationsIcon className="text-white" />
-        </Badge>
+        {!hideBadge ? (
+          <Badge badgeContent={menuItemsData.length} color="error">
+            <NotificationsIcon className="text-white" onClick={handleClick} />
+          </Badge>
+        ) : (
+          <NotificationsIcon className="text-white" onClick={handleClick} />
+        )}
       </IconButton>
       <Menu
         id="simple-menu"

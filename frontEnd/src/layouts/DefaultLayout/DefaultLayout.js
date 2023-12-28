@@ -7,7 +7,6 @@ function Default({ children }) {
   return (
     <div>
       <NavBar />
-
       {children}
       <Footer />
     </div>

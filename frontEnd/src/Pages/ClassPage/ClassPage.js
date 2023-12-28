@@ -5,7 +5,6 @@ import { useClassContext } from "../../context/ClassContext";
 
 const ClassPage = () => {
   const { classes, loading } = useClassContext();
-
   return (
     <>
       <div>

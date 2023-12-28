@@ -8,8 +8,16 @@ const Footer = () => {
           <div className="col-span-1">
             {/* <!-- Logo --> */}
             <a href="/">
-              <div className="logo">
-                <div className="text-white text-lg">ZenClass</div>
+              <div className="logo flex items-center gap-3">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/icons/class.ico`}
+                  alt="ZenClass"
+                  width="50"
+                  height="60"
+                />
+                <div className="text-white text-lg font-sans font-semibold">
+                  ZenClass
+                </div>
               </div>
             </a>
             <p className="footer__desc mt-5 w-48 text-[#A9B3BB] font-open-sans text-base font-normal leading-[28px]">

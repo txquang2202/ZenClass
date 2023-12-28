@@ -31,7 +31,6 @@ const handleLogin = (req, res, next) => {
     });
   })(req, res, next);
 };
-
 //google login
 const initGG = passport.authenticate("google", {
   scope: ["profile", "email"],
@@ -41,7 +40,7 @@ const authenticateGG = passport.authenticate("google", {
 });
 const handleAuthenticationGG = (req, res) => {
   const token = req.user.token;
-  res.redirect(`${process.env.BASE_URL}?token=${token}`);
+  res.redirect(`${process.env.BASE_URL}/home?token=${token}`);
 };
 //facebook login
 const initFB = passport.authenticate("facebook", {
@@ -52,7 +51,7 @@ const authenticateFB = passport.authenticate("facebook", {
 });
 const handleAuthenticationFB = (req, res) => {
   const token = req.user.token;
-  res.redirect(`${process.env.BASE_URL}?token=${token}`);
+  res.redirect(`${process.env.BASE_URL}/home?token=${token}`);
 };
 
 const generateUniqueToken = () => {

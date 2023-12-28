@@ -1,6 +1,6 @@
 import React, { Fragment,useEffect,useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-//import routes from "./routes";
+import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
@@ -11,14 +11,19 @@ import CreateRouter from "./routes/CreateRouter";
 import { jwtDecode } from "jwt-decode";
 //import routes from "./routes/index"
 
+<<<<<<< HEAD
 const App = () => {
   const routes = CreateRouter();
+=======
+function App() {
+  // const routes = CreateRouter();
+>>>>>>> 9346e2bad202a947c8979cc85277ebe9a7e1524c
   return (
     <>
       <Router>
         <div className="Container">
           <Routes>
-            {routes.map((route) => {
+            {routes.map((route, index) => {
               const Page = route.page;
               // const Layout = route.isShowHeader ? DefaultLayout : Fragment;
               const Protect = route.isProtected ? ProtectedRoute : Fragment;
@@ -34,9 +39,10 @@ const App = () => {
               return (
                 <Route
                   path={route.path}
+                  key={index}
                   element={
                     <Layout>
-                      <Protect roleRequired={route.roleRequired}>
+                      <Protect>
                         <I18nextProvider i18n={i18n}>
                           <Page />
                         </I18nextProvider>

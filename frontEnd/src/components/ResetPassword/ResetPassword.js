@@ -14,11 +14,6 @@ function ResetPassword(props) {
     confirmPassword: "",
   });
   const { id } = useParams();
-  // let data;
-  // const token = localStorage.getItem("token");
-  // if (token) {
-  //   data = jwtDecode(token);
-  // }
   const navigate = useNavigate();
 
   const paperStyle = {
@@ -49,6 +44,10 @@ function ResetPassword(props) {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    if (userDetails.password !== userDetails.confirmPassword) {
+      toast.error("Confirm password does not match!!");
+      return;
+    }
     try {
       const response = await updatePassword(id, userDetails);
       if (response.status === 200) {
@@ -60,6 +59,7 @@ function ResetPassword(props) {
         toast.error(response.data.message);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error updating password:", error);
       navigate("/500");
     }

@@ -3,10 +3,14 @@ import User from "../models/user.js";
 import Homework from "../models/homeworks.js";
 import transporter from "../middleware/nodemailer.js";
 import mongoose from "mongoose";
+import Grade from "../models/grades.js";
+import Comment from "../models/comments.js";
+import GradeStruct from "../models/gradestructs.js";
+import gradesReview from "../models/gradesReview.js";
 
 const createClass = async (req, res) => {
   try {
-    const { title, teacherName, className } = req.body;
+    const { title, userID, className } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is empty!" });
@@ -19,7 +23,7 @@ const createClass = async (req, res) => {
     if (existTitle) {
       return res.status(400).json({ message: "Class title already taken!" });
     }
-    const teacher = await User.findOne({ fullname: teacherName });
+    const teacher = await User.findOne({ userID: userID });
     if (!teacher) {
       return res.status(400).json({ message: "Teacher not found!" });
     }
@@ -31,7 +35,7 @@ const createClass = async (req, res) => {
     });
     const returnClass = {
       title: title,
-      teacher: teacherName,
+      teacher: teacher.fullname,
       className: className,
       id: newClass._id,
     };
@@ -72,8 +76,8 @@ const getClassMembers = async (req, res) => {
   const classId = req.params.id;
   try {
     const classWithMembers = await Class.findById(classId)
-      .populate("students", "_id username fullname img")
-      .populate("teachers", "_id username fullname img");
+      .populate("students", "_id userID username fullname img")
+      .populate("teachers", "_id userID username fullname img");
 
     if (!classWithMembers) {
       return res.status(404).json({ error: "Invalid Class ID" });
@@ -121,7 +125,37 @@ const joinByCode = async (req, res) => {
       student.courses.push(classId);
       await student.save();
     }
+    //them vao grades schema
+    const gradestructs = await Class.findOne(
+      { _id: classId },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
 
+    if (!gradestructs || !gradestructs.gradestructs) {
+      return res.status(400).json({
+        message: `Gradestruct not found in the specified class`,
+      });
+    }
+    const newGrades = gradestructs.gradestructs.map((gradestruct) => ({
+      topic: gradestruct.topic,
+      score: 0,
+    }));
+
+    const newGrade = new Grade({
+      studentId: student.userID,
+      fullName: student.fullname,
+      grades: newGrades,
+    });
+
+    await newGrade.save();
+
+    const classGrades = await Class.findById(classId);
+
+    if (!classGrades.grades.includes(newGrade._id)) {
+      classGrades.grades.push(newGrade._id);
+      await classGrades.save();
+    }
+    //tra ve du lieu
     const reciver = await Class.findByIdAndUpdate(
       classId,
       {
@@ -207,7 +241,36 @@ const addStudent = async (req, res) => {
       },
       { new: true }
     );
+    //them vao bang grade
+    const gradestructs = await Class.findOne(
+      { _id: classId },
+      "gradestructs"
+    ).populate({ path: "gradestructs", select: "topic" });
 
+    if (!gradestructs || !gradestructs.gradestructs) {
+      return res.status(400).json({
+        message: `Gradestruct not found in the specified class`,
+      });
+    }
+    const newGrades = gradestructs.gradestructs.map((gradestruct) => ({
+      topic: gradestruct.topic,
+      score: 0,
+    }));
+
+    const newGrade = new Grade({
+      studentId: student.userID,
+      fullName: student.fullname,
+      grades: newGrades,
+    });
+
+    await newGrade.save();
+
+    const classGrades = await Class.findById(classId);
+
+    if (!classGrades.grades.includes(newGrade._id)) {
+      classGrades.grades.push(newGrade._id);
+      await classGrades.save();
+    }
     return res.redirect(
       `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
     );
@@ -331,6 +394,7 @@ const deleteStudentFromClass = async (req, res) => {
   try {
     const classID = req.params.id;
     const personID = req.body.personID;
+    const findUserID = await User.findOne({ _id: personID });
 
     const isStudentExists = await Class.exists({
       _id: classID,
@@ -356,6 +420,13 @@ const deleteStudentFromClass = async (req, res) => {
         },
         { new: true }
       );
+      const gradeToBeDeleted = await Class.findOne({ _id: classID }, "grades");
+      for (const gradeID of gradeToBeDeleted.grades) {
+        const grade = await Grade.findOne({ _id: gradeID });
+        if (grade.studentId === findUserID.userID) {
+          await Grade.findOneAndDelete({ _id: gradeID });
+        }
+      }
 
       res.json({ message: "Delete successfully!" });
     } else {
@@ -409,6 +480,8 @@ const deleteClassbyID = async (req, res) => {
   try {
     const classID = req.params.id;
     const deletedClass = await Class.findById(classID);
+    const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
+    const deletedReview = await Class.findOne({ _id: classID }, "gradereviews");
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found!" });
@@ -426,6 +499,29 @@ const deleteClassbyID = async (req, res) => {
         },
       }
     );
+    for (const homeworkID of deletedHomeWork.homeworks) {
+      const homework = await Homework.findOne({ _id: homeworkID });
+      if (homework) {
+        await Comment.deleteMany({ _id: { $in: homework.comments } });
+      }
+    }
+    for (const homeworkID of deletedHomeWork.homeworks) {
+      const homework = await Homework.findOne({ _id: homeworkID });
+      if (homework) {
+        await Comment.deleteMany({ _id: { $in: homework.comments } });
+      }
+    }
+    for (const reviewID of deletedReview.gradereviews) {
+      const review = await gradesReview.findOne({ _id: reviewID });
+      if (review) {
+        await Comment.deleteMany({ _id: { $in: review.comments } });
+      }
+    }
+    await GradeStruct.deleteMany({ _id: { $in: deletedClass.gradestructs } });
+
+    await Grade.deleteMany({ _id: { $in: deletedClass.grades } });
+
+    await gradesReview.deleteMany({ _id: { $in: deletedClass.gradereviews } });
 
     await Homework.deleteMany({ _id: { $in: deletedClass.homeworks } });
 
@@ -437,7 +533,6 @@ const deleteClassbyID = async (req, res) => {
     res.status(500).send("Error while deleting class");
   }
 };
-
 const editClass = async (req, res) => {
   try {
     const { title, className } = req.body;
@@ -462,10 +557,17 @@ const getClassByID = async (req, res) => {
   try {
     const classID = req.params.id;
 
-    const classInfo = await Class.findById(classID).populate(
-      "teachers",
-      "_id username fullname img"
-    );
+    const classInfo = await Class.findById(classID).populate([
+      {
+        path: "teachers",
+        select: "_id username fullname img",
+      },
+      {
+        path: "gradestructs",
+        select: "topic ratio",
+      },
+    ]);
+
     if (!classInfo) {
       return res.status(404).json({ message: "Class not found!" });
     }

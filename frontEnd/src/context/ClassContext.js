@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { getAllClasses } from "../services/classServices";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { changeLanguage } from "i18next";
 
 const ClassContext = createContext();
 
@@ -9,14 +10,18 @@ export const useClassContext = () => useContext(ClassContext);
 
 export const ClassProvider = ({ children }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const data = jwtDecode(token);
+        let data;
+        let token;
+        token = localStorage.getItem("token");
+        if (token) data = jwtDecode(token);
+        //console.log(data);
         const response = await getAllClasses(data._id, token);
         const classesData = response.data.classInfo;
         if (classesData) {
@@ -37,7 +42,7 @@ export const ClassProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [navigate, token]);
+  }, []);
 
   const addClass = (newClass) => {
     setClasses((prevClasses) => [...prevClasses, newClass]);

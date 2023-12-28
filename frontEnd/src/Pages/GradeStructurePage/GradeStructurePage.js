@@ -1,276 +1,285 @@
 import React, { useContext, useState } from "react";
-import TextField from "@mui/material/TextField";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { GradeContext } from "../../context/GradeContext";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
-
-const ItemType = "TABLE_ROW";
-
-const DraggableRow = ({
-  index,
-  data,
-  moveRow,
-  handleEdit,
-  handleDelete,
-  handleSave,
-  handleCancel,
-  handleTextFieldChange,
-  tempRatio,
-  tempTopic,
-  edit,
-}) => {
-  const [, ref] = useDrag({
-    type: ItemType,
-    item: { index },
-  });
-
-  const { isClassOwner } = useClassDetailContext();
-
-  const [, drop] = useDrop({
-    accept: ItemType,
-    hover: (draggedItem) => {
-      if (draggedItem.index !== index) {
-        moveRow(draggedItem.index, index);
-        draggedItem.index = index;
-      }
-    },
-  });
-
-  const renderCell = (field) => {
-    if (field === "topic") {
-      return (
-        <>
-          {edit === data.id ? (
-            <TextField
-              id="outlined-text"
-              type="text"
-              value={tempTopic}
-              size="small"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              className="w-32"
-              onChange={(e) => handleTextFieldChange(e, "topic")}
-            />
-          ) : (
-            data.topic
-          )}
-        </>
-      );
-    } else if (field === "ratio") {
-      return (
-        <>
-          {edit === data.id ? (
-            <TextField
-              id="outlined-number"
-              type="number"
-              value={tempRatio}
-              size="small"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              className="w-20"
-              onChange={(e) => handleTextFieldChange(e, "ratio")}
-            />
-          ) : (
-            `${data.ratio}%`
-          )}
-        </>
-      );
-    }
-    return null;
-  };
-
-  const renderEditButtons = () => (
-    <>
-      <button
-        className="bg-blue-500 text-white py-1 px-2 mr-2"
-        onClick={() => handleSave(data.id)}
-      >
-        Save
-      </button>
-      <button
-        className="bg-red-500 text-white py-1 px-2"
-        onClick={handleCancel}
-      >
-        Cancel
-      </button>
-    </>
-  );
-
-  const renderDefaultButtons = (id) => (
-    <>
-      <button
-        className="bg-blue-500 text-white py-1 px-2 mr-2"
-        onClick={() => handleEdit(id)}
-      >
-        Edit
-      </button>
-      <button
-        className="bg-red-500 text-white py-1 px-2"
-        onClick={() => handleDelete(id)}
-      >
-        Delete
-      </button>
-    </>
-  );
-
-  return (
-    <tr
-      ref={(node) => ref(drop(node))}
-      className="hover:bg-gray-50 cursor-pointer"
-    >
-      <td className="py-2 px-4 border-b ">{data.gradeCode}</td>
-      <td className="py-2 px-4 border-b">{renderCell("topic")}</td>
-      <td className="py-2 px-4 border-b">{renderCell("ratio")}</td>
-      {isClassOwner && (
-        <td className="py-2 px-4 border-b">
-          {edit === data.id
-            ? renderEditButtons()
-            : renderDefaultButtons(data.id)}
-        </td>
-      )}
-    </tr>
-  );
-};
+import {
+  addGradeStruct,
+  editGradeStruct,
+  deleteGradeStruct,
+} from "../../services/gradeStructureServices";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import TextField from "@mui/material/TextField";
 
 const GradeStructure = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const { id } = useParams();
   const { grades, setGrades } = useContext(GradeContext);
+  const { isClassOwner } = useClassDetailContext();
+  const [newGrades, setNewGrades] = useState({
+    topic: "",
+    ratio: 0,
+  });
   const [edit, setEdit] = useState(null);
-  const [tempRatio, setTempRatio] = useState(0);
-  const [tempTopic, setTempTopic] = useState("New Grade");
   const [sortOrder, setSortOrder] = useState("");
 
-  const { isClassOwner } = useClassDetailContext();
+  // API delete grade
+  const handleDelete = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this grade struct?"
+    );
+    if (isConfirmed) {
+      try {
+        await deleteGradeStruct(id, token);
+        setGrades((prevGrades) =>
+          prevGrades.filter((grade) => grade.id !== id)
+        );
+        toast.success("Grade deleted successfully");
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
 
-  const moveRow = (fromIndex, toIndex) => {
-    const updatedGrades = [...grades];
-    const [movedRow] = updatedGrades.splice(fromIndex, 1);
-    updatedGrades.splice(toIndex, 0, movedRow);
-    setGrades(updatedGrades);
+  // API edit grade
+  const handleSave = async (id) => {
+    try {
+      const formSub = {
+        topic: newGrades.topic,
+        ratio: newGrades.ratio,
+      };
+
+      await editGradeStruct(id, token, formSub);
+
+      toast.success("Grade edited successfully");
+      setEdit(null);
+
+      setGrades((prevGrades) =>
+        prevGrades.map((grade) =>
+          grade.id === id ? { ...grade, ...formSub } : grade
+        )
+      );
+      // Đặt lại state newGrades sau khi lưu thành công
+      setNewGrades({
+        topic: "",
+        ratio: 0,
+      });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleTextFieldChange = (e, field) => {
+    let value;
+
+    if (field === "ratio") {
+      // Ensure the value is a valid integer and restrict it to the range [0, 100]
+      value = Math.min(100, Math.max(0, parseInt(e.target.value, 10))) || 0;
+    } else {
+      value = e.target.value;
+    }
+
+    setNewGrades((prevGrades) => ({
+      ...prevGrades,
+      [field]: value,
+    }));
   };
 
   const handleEdit = (id) => {
     setEdit(id);
-    setTempRatio(grades.find((grade) => grade.id === id).ratio);
-    setTempTopic(grades.find((grade) => grade.id === id).topic);
+    const editingGrade = grades.find((grade) => grade.id === id);
+    setNewGrades({
+      topic: editingGrade.topic,
+      ratio: editingGrade.ratio,
+    });
   };
 
-  const handleDelete = (id) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this grade?"
-    );
-    if (isConfirmed) {
-      const updatedGrades = grades.filter((grade) => grade.id !== id);
-      setGrades(updatedGrades);
+  // API add grade
+  const handleAddGrade = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await addGradeStruct(
+        id,
+        token,
+        newGrades.topic,
+        newGrades.ratio
+      );
+      const newGrade = {
+        id: response.data.gradeStruct._id || "",
+        topic: response.data.gradeStruct.topic || "",
+        ratio: response.data.gradeStruct.ratio || 0,
+      };
+
+      setGrades((prevGrades) => [
+        ...prevGrades,
+        {
+          id: response.data.gradeStruct._id || "",
+          topic: response.data.gradeStruct.topic || "",
+          ratio: response.data.gradeStruct.ratio || 0,
+        },
+      ]);
+      setEdit(newGrade.id);
+      setNewGrades({
+        topic: "",
+        ratio: 0,
+      });
+
+      toast.success("Grade added successfully");
+    } catch (error) {
+      //  console.error("Error creating grade:", error);
+      toast.error(error.response.data.message);
+      // navigate("/500");
     }
   };
 
-  const handleSave = (id) => {
-    const updatedGrades = grades.map((grade) =>
-      grade.id === id ? { ...grade, ratio: tempRatio, topic: tempTopic } : grade
-    );
-    setGrades(updatedGrades);
-    setEdit(null);
-  };
-
-  const handleCancel = () => {
-    setEdit(null);
-  };
-
-  const handleTextFieldChange = (e, field) => {
-    if (field === "ratio") {
-      setTempRatio(parseInt(e.target.value, 10));
-    } else if (field === "topic") {
-      setTempTopic(e.target.value);
+  const handleCancel = async (id) => {
+    try {
+      await deleteGradeStruct(id, token);
+      setGrades((prevGrades) => prevGrades.filter((grade) => grade.id !== id));
+      toast.success("Grade cancel successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
+    setEdit(null);
   };
 
+  // TOTAL
+  const calculateTotal = () => {
+    return grades.reduce((acc, grade) => acc + grade.ratio, 0);
+  };
+
+  const isTotalValid = calculateTotal() === 100;
+
+  // SORT
   const handleSortByRatio = () => {
     const sortedGrades = [...grades].sort((a, b) => {
-      if (sortOrder === "asc") {
-        return a.ratio - b.ratio;
-      } else {
-        return b.ratio - a.ratio;
-      }
+      return sortOrder === "asc" ? a.ratio - b.ratio : b.ratio - a.ratio;
     });
 
     setGrades(sortedGrades);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
-  const calculateTotal = () => {
-    const total = grades.reduce((acc, grade) => acc + grade.ratio, 0);
-    return total;
-  };
-
-  const isTotalValid = calculateTotal() === 100;
-
-  const handleAddGrade = () => {
-    const newId = Math.max(...grades.map((grade) => grade.id), 0) + 1;
-    const newGrade = {
-      id: newId,
-      gradeCode: `GR00${newId}`,
-      topic: "New Grade",
-      ratio: 0,
-    };
-    setGrades([...grades, newGrade]);
-    setEdit(newId);
-  };
-
   return (
     <div className="p-4">
       <h1 className="text-2xl text-[#10375c] font-bold mb-4">
-        Grade structure
+        Grade Structure
       </h1>
-      <DndProvider backend={HTML5Backend}>
-        <table className="w-full border-collapse border border-gray-300 mb-3">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Topic</th>
-              <th
-                className="py-2 px-4 border-b cursor-pointer"
-                onClick={handleSortByRatio}
-              >
-                Ratio
-                {sortOrder === "asc" ? " ▲" : " ▼"}
-              </th>
-              {isClassOwner && <th className="py-2 px-4 border-b">Action</th>}
+      {/* ... (rest of the code remains unchanged) */}
+      <table className="w-full border-collapse border border-gray-300 mb-3">
+        {/* HEADER  */}
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b">Topic</th>
+            <th
+              className="py-2 px-4 border-b cursor-pointer"
+              onClick={handleSortByRatio}
+            >
+              Ratio
+              {sortOrder === "asc" ? " ▲" : " ▼"}
+            </th>
+            {isClassOwner && <th className="py-2 px-4 border-b">Action</th>}
+          </tr>
+        </thead>
+
+        {/* CONTENT */}
+        <tbody className="text-center">
+          {/* GRADES */}
+          {grades.map((grade) => (
+            <tr key={grade.id}>
+              <td className="py-2 px-4 border-b">
+                {edit === grade.id ? (
+                  <TextField
+                    id="outlined-text"
+                    type="text"
+                    placeholder="New topic"
+                    value={newGrades.topic}
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    className="w-32"
+                    onChange={(e) => handleTextFieldChange(e, "topic")}
+                  />
+                ) : (
+                  grade.topic
+                )}
+              </td>
+              <td className="py-2 px-4 border-b">
+                {edit === grade.id ? (
+                  <TextField
+                    id="outlined-number"
+                    type="number"
+                    value={newGrades.ratio}
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    className="w-20"
+                    onChange={(e) => handleTextFieldChange(e, "ratio")}
+                  />
+                ) : (
+                  `${grade.ratio}%`
+                )}
+              </td>
+              {isClassOwner && (
+                <td className="py-2 px-4 border-b">
+                  {edit === grade.id ? (
+                    <>
+                      <button
+                        className="bg-blue-500 text-white py-1 px-2 mr-2"
+                        onClick={() => handleSave(grade.id)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="bg-red-500 text-white py-1 px-2"
+                        onClick={() => handleCancel(grade.id)}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="bg-blue-500 text-white py-1 px-2 mr-2 font-semibold font-sans rounded "
+                        onClick={() => handleEdit(grade.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 text-white py-1 px-2 font-semibold font-sans rounded "
+                        onClick={() => handleDelete(grade.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+              )}
             </tr>
-          </thead>
-          <tbody className="text-center">
-            {grades.map((grade, index) => (
-              <DraggableRow
-                key={index}
-                index={index}
-                data={grade}
-                moveRow={moveRow}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-                handleSave={handleSave}
-                handleCancel={handleCancel}
-                handleTextFieldChange={handleTextFieldChange}
-                tempRatio={tempRatio}
-                tempTopic={tempTopic}
-                edit={edit}
-              />
-            ))}
-          </tbody>
-        </table>
-      </DndProvider>
-      <div className="text-center">
-        {isClassOwner && (
+          ))}
+        </tbody>
+      </table>
+
+      {/* ADD GRADE */}
+      {isClassOwner && (
+        <div className="text-center">
           <button
             type="button"
             onClick={handleAddGrade}
-            className="text-blue-400 mt-3 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            disabled={edit !== null}
+            className={`bg-${
+              edit !== null ? "gray-500" : "blue-500"
+            } text-white mt-3 border-blue-400 hover:bg-blue-400 font-semibold font-sans rounded-full text-sm px-5 py-2.5 mb-2`}
           >
             Add Grade
           </button>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* TOTAL */}
       {isTotalValid ? (
         <h2 className="text-xl font-semibold text-[#10375c]">
           Total: {calculateTotal() + "%"}

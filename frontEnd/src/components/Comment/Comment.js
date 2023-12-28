@@ -32,7 +32,8 @@ const ListComment = () => {
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
-  const avtPath = `/assets/imgs/${user.img}`;
+  const avtPath = `${user.img}`;
+  const myAvtPath = `/assets/imgs/${user.img}`;
 
   // API getComment
   useEffect(() => {
@@ -45,7 +46,7 @@ const ListComment = () => {
             id: data._id || "",
             username: data.username || "",
             content: data.content || "",
-            avt: "/assets/imgs/" + user.img,
+            avt: "/assets/imgs/" + data.avt,
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
           }));
           setComments(mappedComment);
@@ -67,7 +68,7 @@ const ListComment = () => {
       const response = await addComment(
         finalId,
         token,
-        data.fullname,
+        data.userID,
         newComment.content,
         avtPath, // Use avtPath instead of user.img
         currentDate
@@ -80,13 +81,13 @@ const ListComment = () => {
           username: data.fullname || "",
           content: response.data.comment.content || "",
           date: formattedDate || "",
-          avt: avtPath || "",
+          avt: myAvtPath || "",
         },
       ]);
 
       setNewComment({
         content: "",
-        avt: avtPath, // Use avtPath instead of user.img
+        avt: myAvtPath, // Use avtPath instead of user.img
       });
     } catch (error) {
       console.error("Error creating comment:", error);
@@ -148,7 +149,7 @@ const ListComment = () => {
         ))}
 
         <form onSubmit={handleCreateComment} className="mt-6 flex">
-          <Avatar alt={data.fullname} src={avtPath} className="mr-3" />
+          <Avatar alt={data.fullname} src={myAvtPath} className="mr-3" />
           <textarea
             rows="1"
             id="content" // added an id for targeting in handleNewCommentChange

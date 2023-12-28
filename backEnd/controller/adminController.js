@@ -173,36 +173,37 @@ const changeStatusUsers = async (req, res) => {
     const userIds = req.body;
 
     if (!userIds || userIds.length === 0) {
-      return res.status(400).json({ message: "No user IDs provided for blocking!" });
+      return res
+        .status(400)
+        .json({ message: "No user IDs provided for blocking!" });
     }
 
-    
-
-    const result = await User.updateMany(
-      { _id: { $in: userIds } },
-      [
-        {
-          $set: {
-            status: {
-              $cond: {
-                if: { $eq: ["$status", "Blocked"] },
-                then: "Normal",
-                else: "Blocked"
-              }
-            }
-          }
-        }
-      ]
-    );
+    const result = await User.updateMany({ _id: { $in: userIds } }, [
+      {
+        $set: {
+          status: {
+            $cond: {
+              if: { $eq: ["$status", "Blocked"] },
+              then: "Normal",
+              else: "Blocked",
+            },
+          },
+        },
+      },
+    ]);
 
     if (result.nModified === 0) {
-      return res.status(404).json({ message: "No users were found or updated" });
+      return res
+        .status(404)
+        .json({ message: "No users were found or updated" });
     }
 
     res.json({ message: "Users' status updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).send(`Error while updating users' status: ${error.message}`);
+    res
+      .status(500)
+      .send(`Error while updating users' status: ${error.message}`);
   }
 };
 

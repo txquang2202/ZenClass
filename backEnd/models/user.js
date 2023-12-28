@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
-  userID: { type: Number, unique: true, default: 20127000 },
+  userID: { type: Number, unique: false, default: 20127000 },
   username: String,
   password: String,
   email: String,

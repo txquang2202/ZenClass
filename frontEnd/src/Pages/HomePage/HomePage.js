@@ -3,29 +3,20 @@ import React, { useEffect, useState } from "react";
 import ClassPage from "../ClassPage/ClassPage";
 import CoursePage from "../CoursePage/CoursePage";
 // import { getUserID } from "../../services/userServices";
-
+const getToken = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  let token1 = urlParams.get("token");
+  return token1;
+};
 function HomePage() {
   // const { id } = useParams();
   const [myClasses, setMyClasses] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [token, setToken] = useState(getToken());
 
-  // useEffect(() => {
-  //   // const fetchUserData = async () => {
-  //   //   try {
-  //   //     const response = await getUserID(id);
-  //   //   } catch (error) {
-  //   //     console.error("Error fetching user profile:", error);
-  //   //     const session = JSON.parse(sessionStorage.getItem("account"));
-  //   //     if (!session || !session.userData) {
-  //   //       navigate("/signin");
-  //   //     } else {
-  //   //       navigate("/NotFound");
-  //   //     }
-  //   //   }
-  //   // };
-  //   // fetchUserData();
-  // }, [id]);
-
+  useEffect(() => {
+    if (token) localStorage.setItem("token", token);
+  }, [token]);
   return (
     <>
       <div>{myClasses && <ClassPage myClasses={myClasses} />}</div>

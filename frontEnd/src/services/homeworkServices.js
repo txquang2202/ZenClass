@@ -16,20 +16,13 @@ const getHomeworkByID = (id, token) => {
   });
 };
 
-const createHomeworkByID = (
-  id,
-  token,
-  title,
-  teacherName,
-  description,
-  date
-) => {
+const createHomeworkByID = (id, token, title, userID, description, date) => {
   return axios.post(`/api/v1/createHomework/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     title,
-    teacherName,
+    userID,
     description,
     date,
   });

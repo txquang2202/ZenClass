@@ -38,6 +38,7 @@ function ResponsiveDrawer(props) {
         const date = new Date(userData.birthdate).toISOString().split("T")[0];
         setFormData({
           fullname: userData.fullname || "",
+          userID: userData.userID || "",
           username: userData.username || "",
           birthdate: date || "",
           gender: userData.gender || "",
@@ -88,6 +89,7 @@ function ResponsiveDrawer(props) {
       toast.success("Update successful");
     } catch (error) {
       console.error("Error editing profile:", error);
+      toast.error(error.response.data.message);
       Navigate("/500");
     }
   };
@@ -203,20 +205,14 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="birthdate"
-                      name="birthdate" // add name attribute
-                      label="Date of Birth"
+                      id="useid"
+                      type="text"
                       variant="outlined"
-                      value={formData.birthdate}
-                      onChange={handleChange}
+                      className="bg-gray-200"
+                      value={formData.userID}
+                      disabled
+                      // onChange={handleChange}
                       fullWidth
-                      type="date"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        max: todayDate, // Set the maximum allowed date
-                      }}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -235,13 +231,20 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="phone"
-                      type="text"
-                      placeholder="Enter phone number"
+                      id="birthdate"
+                      name="birthdate" // add name attribute
+                      label="Date of Birth"
                       variant="outlined"
-                      value={formData.phone}
+                      value={formData.birthdate}
                       onChange={handleChange}
                       fullWidth
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{
+                        max: todayDate, // Set the maximum allowed date
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6}>

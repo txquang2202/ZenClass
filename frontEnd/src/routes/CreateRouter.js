@@ -28,6 +28,7 @@ import ManageUser from "../Pages/ManageUser/ManageUser";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
+import GradeReviewPage from "../Pages/GradeReviewPage/GradeReviewPage";
 
 import { getUserID } from "../services/userServices";
 import { jwtDecode } from "jwt-decode";
@@ -147,6 +148,12 @@ const CreateRouter = () => {
     {
       path: "/home/classes/detail/grade-board/:id",
       page: user === "Blocked" ? BlockPage : GradeBoardPage,
+      layout: DetailLayout,
+      isProtected: true,
+    },
+    {
+      path: "/home/classes/detail/grade-review/:id",
+      page: user === "Normal" ? GradeReviewPage : BlockPage,
       layout: DetailLayout,
       isProtected: true,
     },

@@ -63,9 +63,28 @@ import {
   editGradeStruct,
   addGradeStruct,
   getAllGradeStructs,
+  getAllGradeByClass,
+  editClassGrade,
+  addGradeToClass,
 } from "../controller/gradeController.js";
 
-import passport from "passport";
+import {
+  getAllGradeReviews,
+  addGradeReviewByID,
+  deleteReviewByID,
+} from "../controller/gradeReviewController.js";
+
+import {
+  getAllUsersReplies,
+  addReply,
+  deleteReply,
+} from "../controller/cmtReviewController.js";
+
+import {
+  getAllNotifications,
+  addNotification,
+} from "../controller/notificationController.js";
+
 import "../middleware/passport.js";
 
 const router = express.Router();
@@ -108,7 +127,6 @@ const initApi = (app) => {
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
-
   router.get("/addStudentsToClass/:id", addStudent);
   router.get("/addTeacherToClass/:id", addTeacher);
   router.get("/getclassmembers/:id", getClassMembers);
@@ -133,12 +151,31 @@ const initApi = (app) => {
   router.get("/getComments/:id", getAllUsersComments);
   router.post("/addComments/:id", addComment);
   router.delete("/deleteComment/:id", deleteComment);
+
   //GradeStructs
   router.get("/getAllGradeStructs/:id", getAllGradeStructs);
   router.post("/addGradeStruct/:id", addGradeStruct);
   router.put("/editGradeStruct/:id", editGradeStruct);
   router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
+
+  //Grade
+  router.get("/getAllGradeClass/:id", getAllGradeByClass);
+  router.put("/editClassGrade/:id", editClassGrade);
+  router.post("/addGradeToClass/:id", addGradeToClass);
   // router.post("/addComments", authenticateToken, addComment);
+
+  // GradeReviews
+  router.get("/getAllGradeReviews/:id", getAllGradeReviews);
+  router.post("/addGradeReview/:id", addGradeReviewByID);
+  router.delete("/deleteReviewByID/:id", deleteReviewByID);
+  router.get("/getAllUsersReplies/:id", getAllUsersReplies);
+  router.post("/addReply/:id", addReply);
+  router.delete("/deleteReply/:id", deleteReply);
+
+  // Notifications
+  router.get("/getAllNotifications/:id", getAllNotifications);
+  router.post("/addNotification/:id", addNotification);
+
   return app.use("/api/v1/", router);
 };
 
