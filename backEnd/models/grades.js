@@ -11,6 +11,7 @@ const GradeSchema = new mongoose.Schema({
       score: { type: Number, default: 0 },
     },
   ],
+  status: { type: Boolean, default: false },
 });
 
 const Grade = mongoose.model("grades", GradeSchema);

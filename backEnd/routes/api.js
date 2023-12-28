@@ -178,7 +178,7 @@ const initApi = (app) => {
   // GradeReviews
   router.get("/getAllGradeReviews/:id", authenticateToken, getAllGradeReviews);
   router.post("/addGradeReview/:id", authenticateToken, addGradeReviewByID);
-  router.delete("/deleteReviewByID/:id", authenticateToken, deleteReviewByID);
+  router.post("/deleteReviewByID/:id", authenticateToken, deleteReviewByID);
   router.get("/getAllUsersReplies/:id", authenticateToken, getAllUsersReplies);
   router.post("/addReply/:id", authenticateToken, addReply);
   router.delete("/deleteReply/:id", authenticateToken, deleteReply);

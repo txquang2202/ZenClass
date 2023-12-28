@@ -79,7 +79,9 @@ function GradeReviewPage(props) {
     );
     if (isConfirmed) {
       try {
-        await deleteReviewByID(id, token);
+        let approve = 1;
+        // 1 = approve #1 = reject
+        await deleteReviewByID(id, approve, token);
         setReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
         );
