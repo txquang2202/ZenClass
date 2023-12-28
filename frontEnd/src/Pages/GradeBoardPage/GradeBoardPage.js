@@ -4,6 +4,7 @@ import {
   getAllGradeClass,
   editClassGrade,
   addGradeToClass,
+  deleteAllGrade,
 } from "../../services/gradeServices";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { addGradeReviewByID } from "../../services/gradeReviewServices";
@@ -527,6 +528,26 @@ const YourComponent = () => {
     }
   }, [allTopics]);
 
+  //  API Delete grade
+  const handleDeleteGrade = async () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this grade?"
+    );
+    if (isConfirmed) {
+      try {
+        await deleteAllGrade(id, token);
+        // setComments((prevComments) =>
+        //   prevComments.filter((comment) => comment.id !== id)
+        // );
+        setGrades("");
+        toast.success("Grade deleted successfully");
+      } catch (error) {
+        console.error("Error deleting grade:", error);
+        toast.error("Error deleting grade");
+      }
+    }
+  };
+
   return (
     <div className="mt-10">
       <h2 className="mt-10 text-2xl text-[#10375c] font-bold mb-4">
@@ -547,67 +568,74 @@ const YourComponent = () => {
       </div>
       {/* IMPORT / EXPORT */}
       {isClassOwner && (
-        <div className="flex justify-end">
-          <label
-            htmlFor="test"
-            className={`flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-3 ${
-              isDragging
-                ? "fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
-                : ""
-            } mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer`}
-          >
-            <div
-              className="w-full h-full flex  items-center justify-center"
-              onDrop={(e) => {
-                e.preventDefault();
-                handleDrop(e);
-              }}
-              onDragOver={(e) => e.preventDefault()}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
+        <div className="flex justify-between items-center">
+          <div>
+            <button className="text-red-500" onClick={handleDeleteGrade}>
+              Delete Grade
+            </button>
+          </div>
+          <div className="flex">
+            <label
+              htmlFor="test"
+              className={`flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-3 ${
+                isDragging
+                  ? "fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
+                  : ""
+              } mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer`}
+            >
+              <div
+                className="w-full h-full flex  items-center justify-center"
+                onDrop={(e) => {
+                  e.preventDefault();
+                  handleDrop(e);
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+              >
+                <svg
+                  class="w-3 h-3 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 18 16"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                  />
+                </svg>
+                Import
+              </div>
+            </label>
+            <input
+              id="test"
+              type="file"
+              hidden
+              onChange={(event) => handleFileChange(event)}
+            />
+
+            <button
+              type="button"
+              onClick={handleExportCSV}
+              className=" ml-1 flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             >
               <svg
                 class="w-3 h-3 me-1"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 16"
+                fill="currentColor"
+                viewBox="0 0 20 20"
               >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                />
+                <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+                <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
               </svg>
-              Import
-            </div>
-          </label>
-          <input
-            id="test"
-            type="file"
-            hidden
-            onChange={(event) => handleFileChange(event)}
-          />
-
-          <button
-            type="button"
-            onClick={handleExportCSV}
-            className=" ml-1 flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full  px-3 py-1.5 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          >
-            <svg
-              class="w-3 h-3 me-1"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
-              <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
-            </svg>
-            Export
-          </button>
+              Export
+            </button>
+          </div>
         </div>
       )}
       {/* TABLE */}
