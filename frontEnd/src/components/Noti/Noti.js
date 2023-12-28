@@ -76,7 +76,7 @@ function Noti(props) {
                   <div className="flex rounded-lg">
                     <Avatar
                       alt={item.fullname}
-                      src={item.avatarSrc}
+                      src={item.avt}
                       className="ml-[-10px] mt-2 h-12 w-12"
                     />
                     <div className="ml-3">

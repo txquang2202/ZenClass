@@ -84,6 +84,7 @@ import {
 import {
   getAllNotifications,
   addNotification,
+  deleteNotiByID,
 } from "../controller/notificationController.js";
 
 import "../middleware/passport.js";
@@ -185,6 +186,7 @@ const initApi = (app) => {
   // Notifications
   router.get("/getAllNotifications/:id", getAllNotifications);
   router.post("/addNotification/:id", addNotification);
+  router.delete("/deleteNotiByID/:id", deleteNotiByID);
 
   return app.use("/api/v1/", router);
 };

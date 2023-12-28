@@ -1,10 +1,33 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
+import { deleteNotiByID } from "../../services/notificationServices";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 function NotiPage(props) {
-  const { menuItemsData } = useNotificationContext();
+  const { menuItemsData, setMenuItemsData } = useNotificationContext();
+  const token = localStorage.getItem("token");
+
+  const handleDeleteNoti = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this notification?"
+    );
+    if (isConfirmed) {
+      try {
+        await deleteNotiByID(id, token);
+        setMenuItemsData((prevNotifications) =>
+          prevNotifications.filter((noti) => noti.id !== id)
+        );
+        toast.success("Notification deleted successfully");
+      } catch (error) {
+        console.error("Error deleting notification:", error);
+        toast.error("Error deleting notification");
+      }
+    }
+  };
+
   return (
     <>
       <section className="feature pt-[34px] pb-[170px]">
@@ -19,12 +42,12 @@ function NotiPage(props) {
             {menuItemsData.map((item) => (
               <div
                 key={item.id}
-                className="flex rounded-lg justify-between items-center  p-4 cursor-pointer hover:bg-gray-100"
+                className="flex rounded-lg justify-between items-center gap-6 p-4 cursor-pointer hover:bg-gray-100"
               >
                 <div className="flex">
                   <Avatar
                     alt={item.fullname}
-                    src={item.avatarSrc}
+                    src={item.avt}
                     className=" mt-1 h-12 w-12"
                   />
                   <div className="ml-3">
@@ -42,7 +65,7 @@ function NotiPage(props) {
                 </div>
                 <span className="">
                   <RemoveCircleOutlineIcon
-                    // onClick={() => handleDeleteComment(comment.id)}
+                    onClick={() => handleDeleteNoti(item.id)}
                     className="text-gray-300 cursor-pointer hover:text-blue-400"
                   />
                 </span>

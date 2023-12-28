@@ -68,6 +68,33 @@ const addNotification = async (req, res) => {
   }
 };
 
-const deleteNotiByID = async (req, res) => {};
+const deleteNotiByID = async (req, res) => {
+  try {
+    const notiID = req.params.id;
+
+    // Tìm người dùng có thông báo cần xóa
+    const userWithNoti = await User.findOne({ notifications: notiID });
+
+    if (!userWithNoti) {
+      return res.status(404).json({ message: "Notification not found!" });
+    }
+
+    // Lọc bỏ thông báo cần xóa khỏi danh sách thông báo của người dùng
+    userWithNoti.notifications = userWithNoti.notifications.filter(
+      (id) => id.toString() !== notiID
+    );
+
+    // Lưu lại thông tin của người dùng sau khi xóa thông báo
+    await userWithNoti.save();
+
+    // Xóa thông báo từ cơ sở dữ liệu
+    await Notification.findByIdAndDelete(notiID);
+
+    res.json({ message: "Notification deleted successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while deleting notification");
+  }
+};
 
 export { getAllNotifications, addNotification, deleteNotiByID };

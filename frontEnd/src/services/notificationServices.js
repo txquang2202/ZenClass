@@ -21,4 +21,12 @@ const addNotification = (id, token, content, avt, date, link, userID) => {
   });
 };
 
-export { getAllNotifications, addNotification };
+const deleteNotiByID = (id, token) => {
+  return axios.delete(`/api/v1/deleteNotiByID/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export { getAllNotifications, addNotification, deleteNotiByID };

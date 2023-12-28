@@ -91,7 +91,7 @@ export const NotificationProvider = ({ children }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ menuItemsData, updateMenuItemsData }}
+      value={{ menuItemsData, updateMenuItemsData, setMenuItemsData }}
     >
       {children}
     </NotificationContext.Provider>
