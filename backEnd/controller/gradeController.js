@@ -271,6 +271,30 @@ const addGradeToClass = async (req, res) => {
     res.status(500).json({ message: "Error while adding grade" });
   }
 };
+const deleteAllGrade = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const classToBeDeleted = await Class.findById(classID);
+
+    if (classToBeDeleted.grades.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Don't have anything to delete!!" });
+    }
+
+    await Grade.deleteMany({ _id: { $in: classToBeDeleted.grades } });
+
+    classToBeDeleted.grades = [];
+
+    await classToBeDeleted.save();
+
+    res.json({ message: "Delete successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while deleting struct");
+  }
+};
+
 export {
   deleteGradeStruct,
   editGradeStruct,
@@ -279,4 +303,5 @@ export {
   getAllGradeByClass,
   editClassGrade,
   addGradeToClass,
+  deleteAllGrade,
 };

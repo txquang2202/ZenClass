@@ -1,4 +1,4 @@
-import React, { Fragment,useEffect,useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import routes from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
@@ -12,6 +12,7 @@ import { jwtDecode } from "jwt-decode";
 //import routes from "./routes/index"
 
 function App() {
+  // const routes = CreateRouter();
   return (
     <>
       <Router>
