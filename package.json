@@ -1,9 +1,12 @@
 {
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "clipboard": "^2.0.11",
-    "date-fns": "^3.0.1",
+    "date-fns": "^3.0.6",
+    "exceljs": "^4.4.0",
     "express-session": "^1.17.3",
     "jwt-decode": "^4.0.0",
+    "moment": "^2.29.4",
     "nodemailer": "^6.9.7",
     "papaparse": "^5.4.1",
     "passport": "^0.7.0",

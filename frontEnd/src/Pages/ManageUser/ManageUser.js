@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from 'react-data-table-component';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteListUserbyID,getAllUsers, blockUserbyID,changestatusbyListuser } from "../../services/adminServices";
+import { deleteListUserbyID,getAllUsers, blockUserbyID,changestatusbyListuser,changeinforwithfile,Createwithfile } from "../../services/adminServices";
 import { ToastContainer, toast } from "react-toastify";
 import Modal from "react-modal";
 import Tooltip from "../../components/Tooltip/Tooltip";
+import CSVReader from 'react-csv-reader';
+import { read, utils } from 'xlsx';
+import Papa from 'papaparse';
+import moment from 'moment';
 
 function ManageUser() {
   const columns = [
@@ -64,7 +68,9 @@ function ManageUser() {
   const [listUser, setListUser] = React.useState([]);
   const [modalDelIsOpen, setModalDelIsOpen] = useState(false);
   const [modalStatusIsOpen, setModalStatusIsOpen] = useState(false);
-  const [dataFile, setDataFile] = useState([]);
+  const [modalUploadFileIsOpen, setModalUploadFileIsOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [userData, setUserData] = useState([]);
 
   const fetchUserData = async () => {
     try {
@@ -109,21 +115,6 @@ function ManageUser() {
       console.error("Error deleting users:", error);
     }
     closeModaldel()
-    /*if (window.confirm(`Are you sure you want to delete ${username}`)) {
-      try {
-        const response = await deleteUserbyID(id);
-        if (response.status === 200) {
-          toast.success(`User ${username} deleted successfully`);
-          fetchUserData()
-        } else {
-          toast.error(`Failed to delete user ${username}`);
-        }
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        toast.error(`An error occurred while deleting user ${username}`);
-      }
-      } else {
-      }*/
   };
 
   const handleBlockUser = async  (user) => {
@@ -142,27 +133,6 @@ function ManageUser() {
       console.error("Error Block users:", error);
     }
     closeModalstatuschange()
-    /*if (window.confirm(`Are you sure you want to block ${username}`)) {
-      try {
-        const response = await blockUserbyID(id);
-        if (response.status === 200) {
-          if(status === "Normal"){
-            toast.success(`User ${username} blocked successfully`);
-          }
-          else {
-            toast.success(`User ${username} Unblocked successfully`);
-          }
-          fetchUserData()
-          console.log(status);
-        } else {
-          toast.error(`Failed to block user ${username}`);
-        }
-      } catch (error) {
-        console.error("Error block user:", error);
-        toast.error(`An error occurred while block user ${username}`);
-      }
-      } else {
-      }*/
   };
 
   const tableHeaderstyle={
@@ -217,6 +187,13 @@ function ManageUser() {
     setModalStatusIsOpen(false);
     clearList();
   };
+  const openModalUploadfile = () => {
+    setModalUploadFileIsOpen(true);
+  };
+
+  const closeModaluploadfile = () => {
+    setModalUploadFileIsOpen(false);
+  };
 
 
 
@@ -229,16 +206,148 @@ function ManageUser() {
       </>
     )
   };
+
+  const handleFile = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const processData = ( data) => {
+    // Lấy chỉ các trường cần thiết từ dữ liệu
+    const users = data.map(item => ({
+      userID: item.userID,
+      username: item.username,
+      email: item.email,
+      fullname: item.fullname,
+      birthdate: moment(item.birthdate, 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+      phone: item.phone,
+      gender: item.gender,
+      street: item.street,
+      city: item.city,
+    }));
+
+    // Set state với dữ liệu đã xử lý
+    return users;
+  };
+
+
+
+  
+
+  const processFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+  
+        // Kiểm tra loại file để xác định cách xử lý
+        if (file.name.endsWith('.csv')) {
+          // Xử lý dữ liệu từ file CSV
+          Papa.parse(file, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+              const listdata = processData(result.data);
+              console.log(listdata);
+              resolve(listdata);
+            },
+            error: (error) => {
+              console.error('Error parsing CSV:', error);
+              reject(error);
+            },
+          });
+        } else if (file.name.endsWith('.xlsx')) {
+          // Xử lý dữ liệu từ file Excel
+          const workbook = read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const excelData = utils.sheet_to_json(workbook.Sheets[sheetName], {
+            raw: false,
+            dateNF: 'mm/dd/yyyy',
+          });
+          const listdata = processData(excelData);
+          resolve(listdata);
+        }
+      };
+  
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const handleFileUploadUser = async  () => {
+    if(selectedFile){
+      const listdata = await processFile(selectedFile);
+      const true_user = listdata.filter(itemA =>
+        userlist.some(itemB => parseInt(itemA.userID) === itemB.userID && itemA.username === itemB.username) //user sửa thông tin
+      );
+      const userfail1 = listdata.filter(itemA =>
+        userlist.some(itemB => parseInt(itemA.userID) === itemB.userID && itemA.username !== itemB.username)
+      );
+      const userfail2 = listdata.filter(itemA =>
+        userlist.some(itemB => parseInt(itemA.userID) !== itemB.userID && itemA.username === itemB.username)
+      );
+      const userfail = [...new Set([...userfail1, ...userfail2])];
+      const listcreate = listdata.filter(itemA =>
+        userlist.every(itemB => parseInt(itemA.userID) !== itemB.userID || itemA.username !== itemB.username)
+      );
+      
+      if(true_user){
+        try {
+          await Promise.all(true_user.map(async (item) => {
+            const response = await changeinforwithfile(item);
+            if (response.status === 200) {
+              //toast.success("Users update file successfully");
+              fetchUserData();
+              setToggleCleared(!toggleCleared);
+            } else {
+              toast.error("Failed to update file users");
+            }
+          }));
+        
+        } catch (error) {
+          console.error("Error Block users:", error);
+        }
+      }
+      if(listcreate){
+        try {
+          await Promise.all(listcreate.map(async (item) => {
+            const response = await Createwithfile(item);
+            if (response.status === 200) {
+              
+              fetchUserData();
+              setToggleCleared(!toggleCleared);
+            } else {
+              toast.error("Failed to update file users");
+            }
+          }));
+        
+        } catch (error) {
+          console.error("Error Block users:", error);
+        }
+      }
+      console.log();
+    }else {
+      console.log("No file selected")
+    }
+  };
   return (
     <>
       <div className="relative  ">
-        <div className="flex w-[100%]  justify-between pb-2">
+        <div className="flex w-[100%] justify-between  pb-2">
           <h1 className="text-xl">
             User
           </h1>
-          <div className="flex items-center relative ">
-            <SearchIcon className="absolute ml-[85%] "/>
-            <input className=" border-black border-[1px]  p-1 " placeholder="Search User" value={search} onChange={(e)=>SetSearch(e.target.value)}></input>
+          <div className="flex">
+            <div className="flex items-center relative  pr-[10px]">
+              <button className="border-black border-[1px]  p-1 bg-[#33CC66] " onClick={()=>openModalUploadfile()}>
+                Upload file
+              </button>
+            </div>
+            <div className="flex items-center relative ">
+              <SearchIcon className="absolute ml-[85%] "/>
+              <input className=" border-black border-[1px]  p-1 " placeholder="Search User" value={search} onChange={(e)=>SetSearch(e.target.value)}></input>
+            </div>
           </div>
         </div>
 
@@ -338,6 +447,44 @@ function ManageUser() {
                 </button>
                 <button
                   onClick={closeModalstatuschange}
+                  className="border border-gray-300 px-4 py-2 rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            isOpen={modalUploadFileIsOpen}
+            onRequestClose={closeModaluploadfile}
+            contentLabel="Create Class Modal"
+            // className="h-36 w-[400px] hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center  md:inset-0  "
+            className="h-36 w-[400px] absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+            // overlayClassName="overlay"
+          >
+            <div className="bg-white p-8 rounded-md border-solid border-2 border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4">Upload File</h2>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-600">
+                  File:
+                </label>
+                <ul className="text-sm pl-3">
+                <input
+                  type="file"
+                  accept=".csv, .xlsx"
+                  onChange={handleFile}
+                />
+                </ul>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
+                  onClick={()=>handleFileUploadUser()}
+                >
+                  Upload
+                </button>
+                <button
+                  onClick={closeModaluploadfile}
                   className="border border-gray-300 px-4 py-2 rounded-md"
                 >
                   Cancel

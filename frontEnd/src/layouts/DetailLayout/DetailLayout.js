@@ -22,7 +22,7 @@ function Default({ children }) {
                 <div className="w-11/12 pl-6 flex-1">
                   <NavDetail />
                   <section className="container w-full lg:max-w-[calc(100%-10rem)] mx-auto mt-6">
-                    {children}
+                  <IsBlocked>{children}</IsBlocked>
                   </section>
                 </div>
               </div>

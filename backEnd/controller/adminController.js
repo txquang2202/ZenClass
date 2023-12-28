@@ -7,37 +7,38 @@ import {
   verifyEmail,
   generateUniqueToken,
 } from "./authController.js";
+import { constants } from "crypto";
 env.config();
 
-const createUser = async (req, res) => {
+const createUserwithFile = async (req, res) => {
   try {
-    const { username, password, email, fullname, birthdate, phone, gender } =
-      req.body;
+    const user = req.body;
+    const password = "111111";
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
+    
     // Generate a verification token
     const verificationToken = generateUniqueToken();
-
+    console.log(verificationToken);
     const newUser = new User({
-      username,
+      userID : user.userID,
+      username: user.username,
       password: hashedPassword,
-      email,
+      email: user.email,
       verificationToken,
-      isVerified: false,
+      isVerified: true,
       role: 0,
       img: "",
-      fullname,
-      birthdate,
-      role: 0,
-      img: "",
-      fullname: "",
-      birthdate: "",
-      phone: "",
-      gender: "",
-      street: "",
-      city: "",
+      fullname: user.fullname || "", // You can use user.fullname if it exists, or an empty string otherwise
+      birthdate: user.birthdate || "", // Similar for other optional fields
+      phone: user.phone || "",
+      gender: user.gender || "",
+      street: user.street || "",
+      city: user.city || "",
     });
-
+    
+    const username = newUser.username;
+    const email = newUser.email
     const existUsername = await User.findOne({ username });
     const existEmail = await User.findOne({ email });
 
@@ -49,38 +50,30 @@ const createUser = async (req, res) => {
     }
 
     await newUser.save();
-
-    await sendEmail(email, verificationToken);
-
-    res.json({
-      message: "Register successfully, check your email",
-    });
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Đã xảy ra lỗi.");
   }
 };
 
-const editUser = async (req, res) => {
+const changeInforUser = async (req, res) => {
   try {
-    const { fullname, birthdate, phone, gender, street, city, img } = req.body;
-    const userId = req.params.id;
-    const user = await User.findById(userId);
+    const user = req.body;
+    const id = parseInt(user.userID);
+    const userDB = await User.findOne({ userID: id });
 
-    if (!user) {
+    if (!userDB) {
       return res.status(404).json({ message: "User not found!" });
     }
-    user.fullname = fullname || user.fullname;
-    user.birthdate = birthdate || user.birthdate;
-    user.phone = phone || user.phone;
-    user.gender = gender || user.gender;
-    user.street = street || user.street;
-    user.city = city || user.city;
-    if (req.file) {
-      user.img = req.file.filename;
-    }
+    userDB.fullname = user.fullname || userDB.fullname;
+    userDB.birthdate = user.birthdate || userDB.birthdate;
+    userDB.phone = user.phone || userDB.phone;
+    userDB.gender = user.gender || userDB.gender;
+    userDB.street = user.street || userDB.street;
+    userDB.city = user.city || userDB.city;
 
-    await user.save();
+    await userDB.save();
 
     res.json({ message: "Profile updated successfully", user });
   } catch (error) {
@@ -239,8 +232,8 @@ const blockUserbyID = async (req, res) => {
 };
 
 export {
-  createUser,
-  editUser,
+  createUserwithFile,
+  changeInforUser,
   getUserProfile,
   getAllUsers,
   getAllUsersComments,

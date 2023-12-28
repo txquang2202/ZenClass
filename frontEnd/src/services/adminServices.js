@@ -48,11 +48,18 @@ const changestatusbyListuser = (userIds) => {
   return axios.post(`api/v1/changeStatusListUser`,userIds);
 };
 
+const changeinforwithfile = (datalist) => {
+  return axios.post(`api/v1/changeinforuser`,datalist);
+};
+const Createwithfile = (datalist) => {
+  return axios.post(`api/v1/registerwithfile`,datalist);
+};
 const blockUserbyID = (id) => {
   return axios.post(`api/v1/blockUserbyID/${id}`);
 };
 
 export {
+  Createwithfile,
   loginUser,
   registerUser,
   updateUser,
@@ -67,4 +74,5 @@ export {
   deleteListUserbyID,
   blockUserbyID,
   changestatusbyListuser,
+  changeinforwithfile,
 };

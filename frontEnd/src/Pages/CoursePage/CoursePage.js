@@ -14,7 +14,6 @@ function CoursePage() {
   const token = localStorage.getItem("token");
   const data = jwtDecode(token);
   const { courses, loading } = useCourseContext();
-
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {

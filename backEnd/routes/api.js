@@ -43,6 +43,8 @@ import {
   blockUserbyID,
   getAllUsers,
   changeStatusUsers,
+  changeInforUser,
+  createUserwithFile,
 } from "../controller/adminController.js";
 import {
   addComment,
@@ -99,6 +101,8 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
+  router.post("/changeinforuser",changeInforUser);
+  router.post("/registerwithfile", createUserwithFile);
   //class APIs
   router.get("/getClassID/:id", getClassByID);
   router.post("/createClass", authenticateToken, createClass);

@@ -12,14 +12,6 @@ import { jwtDecode } from "jwt-decode";
 //import routes from "./routes/index"
 
 const App = () => {
-  const [router1,setRouter1] = useState([]);
-  const [token,setToken] = useState();
-  useEffect(() => {
-    setRouter1(CreateRouter());
-    setToken(localStorage.getItem("token"));
-    console.log(token,"app.js")
-  }, []);
-  console.log(token)
   const routes = CreateRouter();
   return (
     <>
