@@ -232,6 +232,16 @@ const addGradeToClass = async (req, res) => {
         message: `Gradestruct not found in the specified class`,
       });
     }
+    const checkStudentID = await User.find();
+    // console.log(checkStudentID);
+    checkStudentID.map((student) => {
+      if (student.userID === parseInt(studentID, 10)) {
+        return res.status(400).json({
+          message: `Someone has already assigned this ID: ${studentID}`,
+        });
+      }
+    });
+
     const findDuplicates = await Class.findOne(
       { _id: classID },
       "grades"
@@ -240,7 +250,6 @@ const addGradeToClass = async (req, res) => {
 
     if (studentIDs.includes(parseInt(studentID, 10))) {
       const editingGrade = await Grade.findOne({ studentId: studentID });
-      // console.log(editingGrade.grades);
       editingGrade.grades.map((grade, index) => {
         grade.score = scores[index];
       });
@@ -265,10 +274,10 @@ const addGradeToClass = async (req, res) => {
       classGrades.grades.push(newGrade._id);
       await classGrades.save();
     }
-    res.json({ message: "Grade added successfully", newGrade });
+    res.json({ message: "Grade added successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error while adding grade" });
+    res.status(500).json({ message: "Error while adding grade", newGrade });
   }
 };
 const deleteAllGrade = async (req, res) => {
