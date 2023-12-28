@@ -62,7 +62,7 @@ const YourComponent = () => {
     e.preventDefault();
     try {
       const content = "blablablabal";
-      const link = "#!";
+      const link = id;
       const currentDate = new Date();
       await addNotification(
         id,

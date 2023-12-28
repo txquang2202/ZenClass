@@ -73,6 +73,7 @@ export const NotificationProvider = ({ children }) => {
             content: data.content || "",
             avt: "/assets/imgs/" + data.avt,
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
+            link: data.link || "",
           }));
           setMenuItemsData(mappedNoti);
         }

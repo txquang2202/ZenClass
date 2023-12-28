@@ -31,7 +31,7 @@ const addNotification = async (req, res) => {
       content: content,
       avt: avt,
       date: date,
-      link: link,
+      link: `/home/classes/detail/grade-board/${link}`,
     });
     await newNoti.save();
 
@@ -54,6 +54,47 @@ const addNotification = async (req, res) => {
   }
 };
 
-const deleteNotiByID = async (req, res) => {};
+const deleteNotiByID = async (req, res) => {
+  try {
+    const notiID = req.params.id;
 
-export { getAllNotifications, addNotification, deleteNotiByID };
+    const userWithNoti = await User.findOne({ notifications: notiID });
+
+    if (!userWithNoti) {
+      return res.status(404).json({ message: "Notification not found!" });
+    }
+
+    userWithNoti.notifications = userWithNoti.notifications.filter(
+      (id) => id.toString() !== notiID
+    );
+
+    await userWithNoti.save();
+
+    await Notification.findByIdAndDelete(notiID);
+
+    res.json({ message: "Notification deleted successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while deleting notification");
+  }
+};
+
+const deleteAllNoti = async (req, res) => {
+  try {
+    const { userID } = req.body;
+    const user = await User.findOne({ userID: userID });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.notifications = [];
+    await user.save();
+
+    res.json({ message: "Notifications deleted succesfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error deleting notifications");
+  }
+};
+
+export { getAllNotifications, addNotification, deleteNotiByID, deleteAllNoti };
