@@ -233,14 +233,24 @@ const addGradeToClass = async (req, res) => {
       });
     }
     const checkStudentID = await User.find();
-    // console.log(checkStudentID);
-    checkStudentID.map((student) => {
-      if (student.userID === parseInt(studentID, 10)) {
-        return res.status(400).json({
-          message: `Someone has already assigned this ID: ${studentID}`,
-        });
+
+    let errorStudent = null;
+
+    checkStudentID.forEach((student) => {
+      if (
+        student.userID === parseInt(studentID, 10) &&
+        student.fullname !== fullName
+      ) {
+        errorStudent = student;
       }
     });
+
+    if (errorStudent) {
+      return res.status(400).json({
+        message: `The student ${errorStudent.userID} has mismatched fullname`,
+        errorStudent: errorStudent,
+      });
+    }
 
     const findDuplicates = await Class.findOne(
       { _id: classID },
