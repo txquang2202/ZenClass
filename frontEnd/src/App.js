@@ -11,13 +11,7 @@ import CreateRouter from "./routes/CreateRouter";
 import { jwtDecode } from "jwt-decode";
 //import routes from "./routes/index"
 
-<<<<<<< HEAD
-const App = () => {
-  const routes = CreateRouter();
-=======
 function App() {
-  // const routes = CreateRouter();
->>>>>>> 9346e2bad202a947c8979cc85277ebe9a7e1524c
   return (
     <>
       <Router>

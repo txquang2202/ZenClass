@@ -326,7 +326,7 @@ function ManageUser() {
           console.error("Error Block users:", error);
         }
       }
-      console.log();
+      toast.success("Change info");
     }else {
       console.log("No file selected")
     }
