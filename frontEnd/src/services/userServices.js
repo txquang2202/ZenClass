@@ -1,10 +1,9 @@
 import axios from "../setup/axios";
 
 //unprotect
-const loginUser = (username, email, password) => {
+const loginUser = (username, password) => {
   return axios.post("/api/v1/login", {
     username: username,
-    email: email,
     password: password,
   });
 };
