@@ -188,7 +188,7 @@ const initApi = (app) => {
   router.get("/getAllNotifications/:id", getAllNotifications);
   router.post("/addNotification/:id", addNotification);
   router.delete("/deleteNotiByID/:id", deleteNotiByID);
-  router.delete("/deleteAllNoti", deleteAllNoti);
+  router.delete("/deleteAllNoti/:id", deleteAllNoti);
 
   return app.use("/api/v1/", router);
 };

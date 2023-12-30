@@ -81,19 +81,22 @@ const deleteNotiByID = async (req, res) => {
 
 const deleteAllNoti = async (req, res) => {
   try {
-    const { userID } = req.body;
-    const user = await User.findOne({ userID: userID });
+    const userID = req.params.id;
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const userWithNoti = await User.findOne({ userID: userID });
+
+    if (!userWithNoti) {
+      return res.status(404).json({ message: "Not found any notifications" });
     }
-    user.notifications = [];
-    await user.save();
 
-    res.json({ message: "Notifications deleted succesfully!" });
+    userWithNoti.notifications = [];
+
+    await userWithNoti.save();
+
+    res.json({ message: "Delete notifications succesfully!!" });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error deleting notifications");
+    res.status(500).send("Error while deleting notifications");
   }
 };
 

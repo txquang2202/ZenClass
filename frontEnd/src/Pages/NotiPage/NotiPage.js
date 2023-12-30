@@ -1,7 +1,10 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
-import { deleteNotiByID } from "../../services/notificationServices";
+import {
+  deleteNotiByID,
+  deleteAllNoti,
+} from "../../services/notificationServices";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
@@ -10,6 +13,28 @@ function NotiPage(props) {
   const { menuItemsData, setMenuItemsData } = useNotificationContext();
   const token = localStorage.getItem("token");
 
+  const handleDeleteAllNoti = async () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete all notifications?"
+    );
+    if (isConfirmed) {
+      try {
+        let data;
+        if (token) {
+          data = jwtDecode(token);
+        }
+
+        await deleteAllNoti(data.userID, token);
+
+        setMenuItemsData([]);
+
+        toast.success("Notifications deleted successfully");
+      } catch (error) {
+        console.error("Error deleting notifications:", error);
+        toast.error("Error deleting notifications");
+      }
+    }
+  };
   const handleDeleteNoti = async (id) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this notification?"
@@ -71,6 +96,11 @@ function NotiPage(props) {
                 </span>
               </div>
             ))}
+          </div>
+          <div>
+            <button className="text-red-500" onClick={handleDeleteAllNoti}>
+              Delete all
+            </button>
           </div>
         </div>
       </section>

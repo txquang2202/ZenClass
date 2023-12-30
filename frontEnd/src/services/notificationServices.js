@@ -28,5 +28,12 @@ const deleteNotiByID = (id, token) => {
     },
   });
 };
+const deleteAllNoti = (id, token) => {
+  return axios.delete(`/api/v1/deleteAllNoti/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
-export { getAllNotifications, addNotification, deleteNotiByID };
+export { getAllNotifications, addNotification, deleteNotiByID, deleteAllNoti };

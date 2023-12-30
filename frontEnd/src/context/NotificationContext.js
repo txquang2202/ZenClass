@@ -53,8 +53,6 @@ export const NotificationProvider = ({ children }) => {
     //   timestamp: "1 month ago",
     // },
   ]);
-  // const navigate = useNavigate();
-
   // API getNotification
   useEffect(() => {
     const fetchUserData = async () => {
