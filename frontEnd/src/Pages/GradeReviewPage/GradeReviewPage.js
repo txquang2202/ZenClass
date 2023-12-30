@@ -12,6 +12,10 @@ import {
   addReply,
   deleteReplyByID,
 } from "../../services/replyReviewServices";
+import {
+  addNotification,
+  addNotificationTeacher,
+} from "../../services/notificationServices";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { format } from "date-fns";
@@ -36,7 +40,7 @@ function GradeReviewPage(props) {
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
 
-  const { isClassOwner } = useClassDetailContext();
+  const { isClassOwner, detailClass } = useClassDetailContext();
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
@@ -156,6 +160,32 @@ function GradeReviewPage(props) {
     try {
       const currentDate = new Date();
       const formattedDate = format(currentDate, "dd MMMM yyyy");
+      const title = detailClass.title;
+      const content = isClassOwner
+        ? `Has add a comment for your grade review in class ${title}`
+        : `Has add a comment for a grade review in class ${title}`;
+      const link = "/home/classes/detail/grade-review/" + id;
+      if (isClassOwner) {
+        await addNotification(
+          id,
+          token,
+          content,
+          avtPath,
+          currentDate,
+          link,
+          data.userID
+        );
+      } else {
+        await addNotificationTeacher(
+          id,
+          token,
+          content,
+          avtPath,
+          currentDate,
+          link,
+          data.userID
+        );
+      }
 
       const response = await addReply(
         reviewId,
