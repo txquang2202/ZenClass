@@ -31,7 +31,7 @@ const addNotification = async (req, res) => {
       content: content,
       avt: avt,
       date: date,
-      link: `/home/classes/detail/grade-board/${link}`,
+      link: link,
     });
     await newNoti.save();
 
@@ -40,6 +40,39 @@ const addNotification = async (req, res) => {
       const student = await User.findOne({ _id: studentID });
       student.notifications.push(newNoti._id);
       await student.save();
+    }
+    classNoti.notifications.push(newNoti._id);
+    await classNoti.save();
+
+    res.json({
+      message: "Create notification successfully!!",
+      class: newNoti,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+const addNotificationTeacher = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const { content, avt, date, link, userID } = req.body;
+    const student = await User.findOne({ userID: userID });
+    //const findStudentToAdd
+    const newNoti = new Notification({
+      fullname: student.fullname,
+      content: content,
+      avt: avt,
+      date: date,
+      link: link,
+    });
+    await newNoti.save();
+
+    const classNoti = await Class.findById(classID);
+    for (const teacherID of classNoti.teachers) {
+      const teacher = await User.findOne({ _id: teacherID });
+      teacher.notifications.push(newNoti._id);
+      await teacher.save();
     }
     classNoti.notifications.push(newNoti._id);
     await classNoti.save();
@@ -100,4 +133,10 @@ const deleteAllNoti = async (req, res) => {
   }
 };
 
-export { getAllNotifications, addNotification, deleteNotiByID, deleteAllNoti };
+export {
+  getAllNotifications,
+  addNotification,
+  deleteNotiByID,
+  deleteAllNoti,
+  addNotificationTeacher,
+};

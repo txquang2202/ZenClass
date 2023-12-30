@@ -12,7 +12,10 @@ import { toast } from "react-toastify";
 import Modal from "../../components/Modal/ClassDetailModal";
 import Papa from "papaparse";
 import { getClassByID } from "../../services/classServices";
-import { addNotification } from "../../services/notificationServices";
+import {
+  addNotification,
+  addNotificationTeacher,
+} from "../../services/notificationServices";
 import SearchIcon from "@mui/icons-material/Search";
 // import { format } from "date-fns";
 import { jwtDecode } from "jwt-decode";
@@ -34,7 +37,7 @@ const YourComponent = () => {
     direction: "ascending",
   });
 
-  const { isClassOwner } = useClassDetailContext();
+  const { isClassOwner, detailClass } = useClassDetailContext();
   const [isModalOpen1, setIsModalOpen1] = useState(false);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -61,8 +64,9 @@ const YourComponent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const content = "blablablabal";
-      const link = id;
+      const title = detailClass.title;
+      const content = `The teacher has just finished finalizing your grade in your ${title} class!`;
+      const link = "/home/classes/detail/grade-board/" + id;
       const currentDate = new Date();
       await addNotification(
         id,
@@ -86,9 +90,20 @@ const YourComponent = () => {
 
     try {
       const currentDate = new Date();
-      // const formattedDate = format(currentDate, "dd MMMM yyyy");
+      const title = detailClass.title;
+      const content = `The student with id: ${data.userID} requested a review in your ${title} class!`;
+      const link = "/home/classes/detail/grade-review/" + id;
+      await addNotificationTeacher(
+        id,
+        token,
+        content,
+        avtPath,
+        currentDate,
+        link,
+        data.userID
+      );
       // Gọi hàm API
-      const response = await addGradeReviewByID(
+      await addGradeReviewByID(
         id,
         token,
         avtPath,
@@ -100,6 +115,7 @@ const YourComponent = () => {
         reviewData.expectationGrade,
         reviewData.explaination
       );
+      // await addNotificationByID();
       closeModal();
       toast.success("Review added successfully!");
       closeModal1();

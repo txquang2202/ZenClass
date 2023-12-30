@@ -20,6 +20,26 @@ const addNotification = (id, token, content, avt, date, link, userID) => {
     userID,
   });
 };
+const addNotificationTeacher = (
+  id,
+  token,
+  content,
+  avt,
+  date,
+  link,
+  userID
+) => {
+  return axios.post(`/api/v1/addNotificationTeacher/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    content,
+    avt,
+    date,
+    link,
+    userID,
+  });
+};
 
 const deleteNotiByID = (id, token) => {
   return axios.delete(`/api/v1/deleteNotiByID/${id}`, {
@@ -36,4 +56,10 @@ const deleteAllNoti = (id, token) => {
   });
 };
 
-export { getAllNotifications, addNotification, deleteNotiByID, deleteAllNoti };
+export {
+  getAllNotifications,
+  addNotification,
+  deleteNotiByID,
+  deleteAllNoti,
+  addNotificationTeacher,
+};

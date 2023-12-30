@@ -73,9 +73,9 @@ function GradeReviewPage(props) {
   }, [navigate, token, id]);
 
   // delete review
-  const handleDeleteReview = async (id) => {
+  const handleApproveReview = async (id) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to complete this review?"
+      "Are you sure you want to approve this review?"
     );
     if (isConfirmed) {
       try {
@@ -86,6 +86,25 @@ function GradeReviewPage(props) {
           prevReviews.filter((review) => review.id !== id)
         );
         toast.success("Complete this review successfully");
+      } catch (error) {
+        console.error("Error complete review:", error);
+        toast.error("Error complete review");
+      }
+    }
+  };
+  const handleRejectReview = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to reject this review?"
+    );
+    if (isConfirmed) {
+      try {
+        let approve = 0;
+        // 1 = approve #1 = reject
+        await deleteReviewByID(id, approve, token);
+        setReviews((prevReviews) =>
+          prevReviews.filter((review) => review.id !== id)
+        );
+        toast.success("Reject this review successfully");
       } catch (error) {
         console.error("Error complete review:", error);
         toast.error("Error complete review");
@@ -271,7 +290,11 @@ function GradeReviewPage(props) {
                         </div>
                       </div>
                       <CheckCircleOutlineIcon
-                        onClick={() => handleDeleteReview(item.id)}
+                        onClick={() => handleRejectReview(item.id)}
+                        className="text-red-300 cursor-pointer hover:text-blue-500"
+                      />
+                      <CheckCircleOutlineIcon
+                        onClick={() => handleApproveReview(item.id)}
                         className="text-blue-300 cursor-pointer hover:text-blue-500"
                       />
                     </div>

@@ -44,7 +44,6 @@ if (token !== null) {
   localStorage.setItem("token", token);
   localStorage.setItem("user", JSON.stringify(userData));
 }
-console.log(token, "index.js");
 
 const routes = [
   {

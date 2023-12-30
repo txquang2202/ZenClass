@@ -26,7 +26,8 @@ function Noti(props) {
     setHideBadge(true); // Hide the badge when the icon is clicked
   };
   const handleNavigate = (link) => {
-    return window.location.assign(`${process.env.REACT_APP_BASE_URL}${link}`);
+    const path = link;
+    navigate(path);
   };
 
   return (

@@ -84,6 +84,7 @@ import {
 import {
   getAllNotifications,
   addNotification,
+  addNotificationTeacher,
   deleteNotiByID,
   deleteAllNoti,
 } from "../controller/notificationController.js";
@@ -187,6 +188,7 @@ const initApi = (app) => {
   // Notifications
   router.get("/getAllNotifications/:id", getAllNotifications);
   router.post("/addNotification/:id", addNotification);
+  router.post("/addNotificationTeacher/:id", addNotificationTeacher);
   router.delete("/deleteNotiByID/:id", deleteNotiByID);
   router.delete("/deleteAllNoti/:id", deleteAllNoti);
 
