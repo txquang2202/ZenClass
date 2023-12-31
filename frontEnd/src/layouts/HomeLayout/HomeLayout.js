@@ -4,7 +4,7 @@ import Footer from "../../components/Footer/Footer";
 import SideBar from "../../components/SideBar/SideBar";
 import { ClassProvider } from "../../context/ClassContext";
 import { CourseProvider } from "../../context/CourseContext";
-import { ClassDetailProvider } from "../../context/ClassDetailContext";
+// import { ClassDetailProvider } from "../../context/ClassDetailContext";
 import IsBlocked from "../../components/IsBlocked/IsBlocked";
 
 function Default({ children }) {
@@ -17,7 +17,6 @@ function Default({ children }) {
             <SideBar />
             <div className="w-11/12 pl-6 flex-1">
               <IsBlocked>{children}</IsBlocked>
-      
             </div>
           </div>
         </CourseProvider>

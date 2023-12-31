@@ -11,16 +11,22 @@ import { createUserOauth } from "../controller/userController.js";
 env.config();
 
 passport.use(
-  new LocalStrategy(async function verify(username, password, cb) {
+  new LocalStrategy(async function verify(usernameOrEmail, password, cb) {
     try {
-      const user = await User.findOne({ username: username });
+      const user = await User.findOne({
+        $or: [
+          { username: usernameOrEmail },
+          { email: usernameOrEmail.toLowerCase() },
+        ],
+      });
+
       if (!user) {
-        return cb(null, false, { message: "The user is not exist!!" });
+        return cb(null, false, { message: "Người dùng không tồn tại!" });
       }
 
       const hashedPassword = await bcrypt.compare(password, user.password);
       if (!hashedPassword) {
-        return cb(null, false, { message: "Incorrect password." });
+        return cb(null, false, { message: "Mật khẩu không đúng." });
       }
 
       return cb(null, user);
@@ -29,6 +35,7 @@ passport.use(
     }
   })
 );
+
 passport.use(
   new GoogleStrategy(
     {

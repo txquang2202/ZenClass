@@ -8,12 +8,16 @@ const getAllGradeReviews = (id, token) => {
   });
 };
 
-const deleteReviewByID = (id, token) => {
-  return axios.delete(`/api/v1/deleteReviewByID/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const deleteReviewByID = (id, approve, token) => {
+  return axios.post(
+    `/api/v1/deleteReviewByID/${id}`,
+    { approve },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 
 const addGradeReviewByID = (

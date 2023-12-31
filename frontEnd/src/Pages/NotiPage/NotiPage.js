@@ -1,9 +1,58 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
+import {
+  deleteNotiByID,
+  deleteAllNoti,
+} from "../../services/notificationServices";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 function NotiPage(props) {
-  const { menuItemsData } = useNotificationContext();
+  const { menuItemsData, setMenuItemsData } = useNotificationContext();
+  const token = localStorage.getItem("token");
+
+  const handleDeleteAllNoti = async () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete all notifications?"
+    );
+    if (isConfirmed) {
+      try {
+        let data;
+        if (token) {
+          data = jwtDecode(token);
+        }
+
+        await deleteAllNoti(data.userID, token);
+
+        setMenuItemsData([]);
+
+        toast.success("Notifications deleted successfully");
+      } catch (error) {
+        console.error("Error deleting notifications:", error);
+        toast.error("Error deleting notifications");
+      }
+    }
+  };
+  const handleDeleteNoti = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this notification?"
+    );
+    if (isConfirmed) {
+      try {
+        await deleteNotiByID(id, token);
+        setMenuItemsData((prevNotifications) =>
+          prevNotifications.filter((noti) => noti.id !== id)
+        );
+        toast.success("Notification deleted successfully");
+      } catch (error) {
+        console.error("Error deleting notification:", error);
+        toast.error("Error deleting notification");
+      }
+    }
+  };
+
   return (
     <>
       <section className="feature pt-[34px] pb-[170px]">
@@ -18,27 +67,40 @@ function NotiPage(props) {
             {menuItemsData.map((item) => (
               <div
                 key={item.id}
-                className="flex rounded-lg  p-4 cursor-pointer hover:bg-gray-100"
+                className="flex rounded-lg justify-between items-center gap-6 p-4 cursor-pointer hover:bg-gray-100"
               >
-                <Avatar
-                  alt={item.name}
-                  src={item.avatarSrc}
-                  className=" mt-1 h-12 w-12"
-                />
-                <div className="ml-3">
-                  <span className="font-semibold">{item.name} </span>
-                  <p
-                    className="text-base inline"
-                    style={{ whiteSpace: "pre-line" }}
-                  >
-                    {item.content}
-                  </p>
-                  <span className="text-[#10375c] font-bold text-sm block mt-2">
-                    {item.timestamp}
-                  </span>
+                <div className="flex">
+                  <Avatar
+                    alt={item.fullname}
+                    src={item.avt}
+                    className=" mt-1 h-12 w-12"
+                  />
+                  <div className="ml-3">
+                    <span className="font-semibold">{item.fullname} </span>
+                    <p
+                      className="text-base inline"
+                      style={{ whiteSpace: "pre-line" }}
+                    >
+                      {item.content}
+                    </p>
+                    <span className="text-[#10375c] font-bold text-sm block mt-2">
+                      {item.date}
+                    </span>
+                  </div>
                 </div>
+                <span className="">
+                  <RemoveCircleOutlineIcon
+                    onClick={() => handleDeleteNoti(item.id)}
+                    className="text-gray-300 cursor-pointer hover:text-blue-400"
+                  />
+                </span>
               </div>
             ))}
+          </div>
+          <div>
+            <button className="text-red-500" onClick={handleDeleteAllNoti}>
+              Delete all
+            </button>
           </div>
         </div>
       </section>

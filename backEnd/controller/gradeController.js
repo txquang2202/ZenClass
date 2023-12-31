@@ -232,6 +232,26 @@ const addGradeToClass = async (req, res) => {
         message: `Gradestruct not found in the specified class`,
       });
     }
+    const checkStudentID = await User.find();
+
+    let errorStudent = null;
+
+    checkStudentID.forEach((student) => {
+      if (
+        student.userID === parseInt(studentID, 10) &&
+        student.fullname !== fullName
+      ) {
+        errorStudent = student;
+      }
+    });
+
+    if (errorStudent) {
+      return res.status(400).json({
+        message: `The student ${errorStudent.userID} has mismatched fullname`,
+        errorStudent: errorStudent,
+      });
+    }
+
     const findDuplicates = await Class.findOne(
       { _id: classID },
       "grades"
@@ -240,7 +260,6 @@ const addGradeToClass = async (req, res) => {
 
     if (studentIDs.includes(parseInt(studentID, 10))) {
       const editingGrade = await Grade.findOne({ studentId: studentID });
-      // console.log(editingGrade.grades);
       editingGrade.grades.map((grade, index) => {
         grade.score = scores[index];
       });
@@ -265,12 +284,36 @@ const addGradeToClass = async (req, res) => {
       classGrades.grades.push(newGrade._id);
       await classGrades.save();
     }
-    res.json({ message: "Grade added successfully", newGrade });
+    res.json({ message: "Grade added successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error while adding grade" });
+    res.status(500).json({ message: "Error while adding grade", newGrade });
   }
 };
+const deleteAllGrade = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const classToBeDeleted = await Class.findById(classID);
+
+    if (classToBeDeleted.grades.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Don't have anything to delete!!" });
+    }
+
+    await Grade.deleteMany({ _id: { $in: classToBeDeleted.grades } });
+
+    classToBeDeleted.grades = [];
+
+    await classToBeDeleted.save();
+
+    res.json({ message: "Delete successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while deleting struct");
+  }
+};
+
 export {
   deleteGradeStruct,
   editGradeStruct,
@@ -279,4 +322,5 @@ export {
   getAllGradeByClass,
   editClassGrade,
   addGradeToClass,
+  deleteAllGrade,
 };

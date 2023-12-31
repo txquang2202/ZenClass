@@ -34,4 +34,18 @@ const deleteGradeClass = (id, token) => {
   });
 };
 
-export { getAllGradeClass, deleteGradeClass, editClassGrade, addGradeToClass };
+const deleteAllGrade = (id, token) => {
+  return axios.delete(`/api/v1/deleteAllGrade/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export {
+  getAllGradeClass,
+  deleteGradeClass,
+  editClassGrade,
+  addGradeToClass,
+  deleteAllGrade,
+};

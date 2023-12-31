@@ -71,6 +71,7 @@ import {
   getAllGradeByClass,
   editClassGrade,
   addGradeToClass,
+  deleteAllGrade,
 } from "../controller/gradeController.js";
 
 import {
@@ -88,6 +89,9 @@ import {
 import {
   getAllNotifications,
   addNotification,
+  addNotificationTeacher,
+  deleteNotiByID,
+  deleteAllNoti,
 } from "../controller/notificationController.js";
 
 import "../middleware/passport.js";
@@ -126,66 +130,77 @@ const initApi = (app) => {
     upload.single("img"),
     editUser
   );
-  router.post("/changeinforuser",changeInforUser);
+  router.post("/changeinforuser", changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
   //class APIs
-  router.get("/getAllclass", getAllClass);
-  router.get("/getClassID/:id", getClassByID);
+  router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
   router.put("/editclass/:id", authenticateToken, editClass);
   router.get("/addStudentsToClass/:id", addStudent);
   router.get("/addTeacherToClass/:id", addTeacher);
-  router.get("/getclassmembers/:id", getClassMembers);
-  router.post("/sendInvitation/:id", invitationLink);
-  router.post("/deleteStudentFromClass/:id", deleteStudentFromClass);
-  router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
-  router.get("/getallclasses/:id", getAllClasses);
-  router.post("/joinbycode/:id", joinByCode);
+  router.get("/getclassmembers/:id", authenticateToken, getClassMembers);
+  router.post("/sendInvitation/:id", authenticateToken, invitationLink);
+  router.post(
+    "/deleteStudentFromClass/:id",
+    authenticateToken,
+    deleteStudentFromClass
+  );
+  router.post(
+    "/deleteTeacherFromClass/:id",
+    authenticateToken,
+    deleteTeacherFromClass
+  );
+  router.get("/getallclasses/:id", authenticateToken, getAllClasses);
+  router.post("/joinbycode/:id", authenticateToken, joinByCode);
 
   router.post("/changeStatusListClass", changeStatusClass);
   router.post("/deleteListclass", deleteListclasssByIds);
   router.post("/getclass", getclassbyurl);
   //coureseAPIS
-  router.get("/getCourseByUser/:id", getCourseByUser);
-  router.get("/getCourseByID/:id", getCourseByID);
+  router.get("/getCourseByUser/:id", authenticateToken, getCourseByUser);
+  router.get("/getCourseByID/:id", authenticateToken, getCourseByID);
   //HomeworkAPIS
-  router.get("/getAllHomework/:id", getAllHomework);
-  router.get("/getHomeworkByID/:id", getHomeworkByID);
-  router.post("/createHomework/:id", createHomeworkByID);
-  router.put("/editHomework/:id", editHomeworkByID);
-  router.delete("/deleteHomework/:id", deleteHomeworkByID);
+  router.get("/getAllHomework/:id", authenticateToken, getAllHomework);
+  router.get("/getHomeworkByID/:id", authenticateToken, getHomeworkByID);
+  router.post("/createHomework/:id", authenticateToken, createHomeworkByID);
+  router.put("/editHomework/:id", authenticateToken, editHomeworkByID);
+  router.delete("/deleteHomework/:id", authenticateToken, deleteHomeworkByID);
   // router.post("/createClass", authenticateToken, createHomeworkByID);
   // router.put("/editclass/:id", authenticateToken, editHomeworkByID);
   // router.delete("/deleteClass/:id", authenticateToken, deleteHomeworkByID);
   //CommentAPIS
-  router.get("/getComments/:id", getAllUsersComments);
-  router.post("/addComments/:id", addComment);
-  router.delete("/deleteComment/:id", deleteComment);
+  router.get("/getComments/:id", authenticateToken, getAllUsersComments);
+  router.post("/addComments/:id", authenticateToken, addComment);
+  router.delete("/deleteComment/:id", authenticateToken, deleteComment);
 
   //GradeStructs
-  router.get("/getAllGradeStructs/:id", getAllGradeStructs);
-  router.post("/addGradeStruct/:id", addGradeStruct);
-  router.put("/editGradeStruct/:id", editGradeStruct);
-  router.delete("/deleteGradeStruct/:id", deleteGradeStruct);
+  router.get("/getAllGradeStructs/:id", authenticateToken, getAllGradeStructs);
+  router.post("/addGradeStruct/:id", authenticateToken, addGradeStruct);
+  router.put("/editGradeStruct/:id", authenticateToken, editGradeStruct);
+  router.delete("/deleteGradeStruct/:id", authenticateToken, deleteGradeStruct);
 
   //Grade
-  router.get("/getAllGradeClass/:id", getAllGradeByClass);
-  router.put("/editClassGrade/:id", editClassGrade);
-  router.post("/addGradeToClass/:id", addGradeToClass);
+  router.get("/getAllGradeClass/:id", authenticateToken, getAllGradeByClass);
+  router.put("/editClassGrade/:id", authenticateToken, editClassGrade);
+  router.post("/addGradeToClass/:id", authenticateToken, addGradeToClass);
+  router.delete("/deleteAllGrade/:id", deleteAllGrade);
   // router.post("/addComments", authenticateToken, addComment);
 
   // GradeReviews
-  router.get("/getAllGradeReviews/:id", getAllGradeReviews);
-  router.post("/addGradeReview/:id", addGradeReviewByID);
-  router.delete("/deleteReviewByID/:id", deleteReviewByID);
-  router.get("/getAllUsersReplies/:id", getAllUsersReplies);
-  router.post("/addReply/:id", addReply);
-  router.delete("/deleteReply/:id", deleteReply);
+  router.get("/getAllGradeReviews/:id", authenticateToken, getAllGradeReviews);
+  router.post("/addGradeReview/:id", authenticateToken, addGradeReviewByID);
+  router.post("/deleteReviewByID/:id", authenticateToken, deleteReviewByID);
+  router.get("/getAllUsersReplies/:id", authenticateToken, getAllUsersReplies);
+  router.post("/addReply/:id", authenticateToken, addReply);
+  router.delete("/deleteReply/:id", authenticateToken, deleteReply);
 
   // Notifications
   router.get("/getAllNotifications/:id", getAllNotifications);
   router.post("/addNotification/:id", addNotification);
+  router.post("/addNotificationTeacher/:id", addNotificationTeacher);
+  router.delete("/deleteNotiByID/:id", deleteNotiByID);
+  router.delete("/deleteAllNoti/:id", deleteAllNoti);
 
   return app.use("/api/v1/", router);
 };

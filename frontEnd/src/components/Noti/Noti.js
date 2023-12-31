@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
 
@@ -12,7 +12,7 @@ function Noti(props) {
   const [click, setClick] = useState();
   const [hideBadge, setHideBadge] = useState(false);
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -24,6 +24,10 @@ function Noti(props) {
   const handleClick = () => {
     setAnchorEl(null); // Close the menu when the icon is clicked
     setHideBadge(true); // Hide the badge when the icon is clicked
+  };
+  const handleNavigate = (link) => {
+    const path = link;
+    navigate(path);
   };
 
   return (
@@ -71,28 +75,30 @@ function Noti(props) {
           <hr className="text-gray-200 h-1" />
           <div className="mt-2 px-2 space-y-4">
             {menuItemsData.map((item) => (
-              <MenuItem key={item.id}>
-                <Link to={"#"}>
-                  <div className="flex rounded-lg">
-                    <Avatar
-                      alt={item.name}
-                      src={item.avatarSrc}
-                      className="ml-[-10px] mt-2 h-12 w-12"
-                    />
-                    <div className="ml-3">
-                      <span className="font-semibold">{item.name} </span>
-                      <p
-                        className="text-base inline"
-                        style={{ whiteSpace: "pre-line" }}
-                      >
-                        {item.content}
-                      </p>
-                      <span className="text-[#10375c] font-bold text-sm block mt-2">
-                        {item.timestamp}
-                      </span>
-                    </div>
+              <MenuItem key={item.id} onClick={() => handleNavigate(item.link)}>
+                <div className="flex rounded-lg">
+                  <Avatar
+                    alt={item.fullname}
+                    src={item.avt}
+                    className="ml-[-10px] mt-2 h-12 w-12"
+                  />
+                  <div className="ml-3">
+                    <span className="font-semibold">{item.fullname} </span>
+                    <p
+                      className="text-base inline overflow-hidden line-clamp-2"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        whiteSpace: "normal",
+                      }}
+                    >
+                      {item.content}
+                    </p>
+                    <span className="text-[#10375c] font-bold text-sm block mt-2">
+                      {item.date}
+                    </span>
                   </div>
-                </Link>
+                </div>
               </MenuItem>
             ))}
           </div>

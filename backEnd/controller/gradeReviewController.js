@@ -100,17 +100,32 @@ const addGradeReviewByID = async (req, res) => {
 const deleteReviewByID = async (req, res) => {
   try {
     const reviewID = req.params.id;
+    const approve = req.body.approve;
     const reviewCMT = await gradesReview.findById(reviewID);
-
+    const findClass = await Class.findOne({ gradereviews: { $in: reviewID } });
+    const findUser = await User.findOne({ userID: reviewCMT.userID });
     const classWithReview = await Class.findOne({ gradereviews: reviewID });
-
+    if (approve === 1) {
+      for (const gradeID of findClass.grades) {
+        const updatingGrade = await Grade.findOne({ _id: gradeID });
+        //console.log(updatingGrade);
+        if (updatingGrade.studentId === findUser.userID) {
+          //console.log(updatingGrade);
+          for (const grade of updatingGrade.grades) {
+            if (grade.topic === reviewCMT.typeGrade) {
+              grade.score = reviewCMT.expectationGrade;
+              await updatingGrade.save();
+            }
+          }
+        }
+      }
+    }
     if (!classWithReview) {
       return res.status(404).json({ message: "Review not found!" });
     }
 
     await Comment.deleteMany({ _id: { $in: reviewCMT.comments } });
 
-    // Cập nhật và lưu classWithReview
     classWithReview.gradereviews = classWithReview.gradereviews.filter(
       (id) => id.toString() !== reviewID
     );
