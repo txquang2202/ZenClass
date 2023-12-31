@@ -31,6 +31,7 @@ export const ClassProvider = ({ children }) => {
             teacher:
               data.teachers[0].fullname || data.teachers[0].username || "",
             className: data.className || "",
+            status: data.status || "",
           }));
           setClasses(mappedClasses);
           setLoading(false);

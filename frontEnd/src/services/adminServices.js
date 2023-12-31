@@ -16,8 +16,8 @@ const registerUser = (username, email, password) => {
 const updateUser = (id, data) => {
   return axios.put(`/api/v1/editprofile/${id}`, data);
 };
-const getUserID = (id) => {
-  return axios.get(`/api/v1/getprofile/${id}`);
+const getUserID = (userIds) => {
+  return axios.post(`/api/v1/getuserbyid`, { userIds });
 };
 const getAllUsers = () => {
   return axios.get("/api/v1/getallusers");

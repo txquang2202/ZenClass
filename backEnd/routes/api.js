@@ -29,6 +29,10 @@ import {
   deleteStudentFromClass,
   deleteTeacherFromClass,
   joinByCode,
+  getAllClass,
+  changeStatusClass,
+  deleteListclasssByIds,
+  getclassbyurl
 } from "../controller/classController.js";
 import {
   getCourseByUser,
@@ -45,6 +49,7 @@ import {
   changeStatusUsers,
   changeInforUser,
   createUserwithFile,
+  getUserbyID,
 } from "../controller/adminController.js";
 import {
   addComment,
@@ -107,6 +112,7 @@ const initApi = (app) => {
   router.post("/deleteListUser", deleteListUsersByIds);
   router.post("/changeStatusListUser", changeStatusUsers);
   router.post("/blockUserbyID/:id", blockUserbyID);
+  router.post("/getuserbyid", getUserbyID);
 
   router.post("/updatePassword/:id", updatePassword);
   router.post("/resetPassword", resetPassword);
@@ -123,6 +129,7 @@ const initApi = (app) => {
   router.post("/changeinforuser",changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
   //class APIs
+  router.get("/getAllclass", getAllClass);
   router.get("/getClassID/:id", getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
@@ -135,6 +142,10 @@ const initApi = (app) => {
   router.post("/deleteTeacherFromClass/:id", deleteTeacherFromClass);
   router.get("/getallclasses/:id", getAllClasses);
   router.post("/joinbycode/:id", joinByCode);
+
+  router.post("/changeStatusListClass", changeStatusClass);
+  router.post("/deleteListclass", deleteListclasssByIds);
+  router.post("/getclass", getclassbyurl);
   //coureseAPIS
   router.get("/getCourseByUser/:id", getCourseByUser);
   router.get("/getCourseByID/:id", getCourseByID);

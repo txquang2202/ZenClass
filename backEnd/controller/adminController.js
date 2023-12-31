@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import Class from "../models/classes.js";
 import Comment from "../models/comments.js";
 import env from "dotenv";
 import bcrypt from "bcryptjs";
@@ -19,7 +20,6 @@ const createUserwithFile = async (req, res) => {
     
     // Generate a verification token
     const verificationToken = generateUniqueToken();
-    console.log(verificationToken);
     const newUser = new User({
       userID : user.userID,
       username: user.username,
@@ -31,6 +31,7 @@ const createUserwithFile = async (req, res) => {
       img: "",
       fullname: user.fullname || "", // You can use user.fullname if it exists, or an empty string otherwise
       birthdate: user.birthdate || "", // Similar for other optional fields
+      status: user.status || "Normal",
       phone: user.phone || "",
       gender: user.gender || "",
       street: user.street || "",
@@ -50,7 +51,7 @@ const createUserwithFile = async (req, res) => {
     }
 
     await newUser.save();
-    res.status(201).json({ message: "User created successfully" });
+    res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Đã xảy ra lỗi.");
@@ -232,7 +233,28 @@ const blockUserbyID = async (req, res) => {
   }
 };
 
+
+const getUserbyID = async (req, res) => {
+  try {
+    const userIds = req.body.userIds; 
+
+    const users = await User.find({ _id: { $in: userIds } });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "Users not found!" });
+    }
+
+    res.json({ message: "Users retrieved successfully", users });
+    
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while getting users");
+  }
+};
+
 export {
+  getUserbyID,
   createUserwithFile,
   changeInforUser,
   getUserProfile,

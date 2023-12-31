@@ -7,9 +7,10 @@ import { ToastContainer, toast } from "react-toastify";
 import Modal from "react-modal";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import CSVReader from 'react-csv-reader';
-import { read, utils } from 'xlsx';
+import { read, utils, write } from 'xlsx';
 import Papa from 'papaparse';
 import moment from 'moment';
+import { saveAs } from 'file-saver';
 
 function ManageUser() {
   const columns = [
@@ -275,6 +276,21 @@ function ManageUser() {
     });
   };
 
+
+  const exportToExcel = (data, fileName, sheetName, columnConfigs) => {
+    const wsData = [columnConfigs.map((config) => config.header), ...data.map((item) => columnConfigs.map((config) => item[config.key]))];
+    const ws = utils.aoa_to_sheet(wsData);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, sheetName);
+  
+    const excelBuffer = write(wb, { bookType: 'xlsx', bookSST: false, type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+  
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileName}.xlsx`;
+    link.click();
+  };
   const handleFileUploadUser = async  () => {
     if(selectedFile){
       const listdata = await processFile(selectedFile);
@@ -289,13 +305,14 @@ function ManageUser() {
       );
       const userfail = [...new Set([...userfail1, ...userfail2])];
       const listcreate = listdata.filter(itemA =>
-        userlist.every(itemB => parseInt(itemA.userID) !== itemB.userID || itemA.username !== itemB.username)
+        userlist.every(itemB => parseInt(itemA.userID) !== itemB.userID && itemA.username !== itemB.username)
       );
-      
+
       if(true_user){
         try {
           await Promise.all(true_user.map(async (item) => {
             const response = await changeinforwithfile(item);
+            
             if (response.status === 200) {
               //toast.success("Users update file successfully");
               fetchUserData();
@@ -318,7 +335,7 @@ function ManageUser() {
               fetchUserData();
               setToggleCleared(!toggleCleared);
             } else {
-              toast.error("Failed to update file users");
+              toast.error("Failed to create file users");
             }
           }));
         
@@ -326,9 +343,35 @@ function ManageUser() {
           console.error("Error Block users:", error);
         }
       }
-      toast.success("Change info");
-    }else {
-      console.log("No file selected")
+      
+      if(userfail){
+        const updatedDataUsers = userfail.map(user => ({
+          ...user,
+          error: "Initialization error due to duplicate userID or username", 
+        }));
+  
+        const columnConfigs = [
+          { header: 'userID', key: 'userID' },
+          { header: 'username', key: 'username' },
+          { header: 'email', key: 'email' },
+          { header: 'fullname', key: 'fullname' },
+          { header: 'birthdate', key: 'birthdate' },
+          { header: 'phone', key: 'phone' },
+          { header: 'gender', key: 'gender' },
+          { header: 'street', key: 'street' },
+          { header: 'city', key: 'city' },
+          { header: 'error', key: 'error' },
+        ];
+        exportToExcel(updatedDataUsers, 'error', 'Sheet 1', columnConfigs);
+      }
+      toast.success("Change infor " + true_user.length + ", created " + listcreate.length + ", error " + userfail.length);
+      true_user.splice(0, true_user.length);
+      userfail.splice(0, userfail.length);
+      listcreate.splice(0, listcreate.length);
+      console.log(true_user);
+      console.log(userfail);
+      console.log(listcreate);
+      closeModaluploadfile();
     }
   };
   return (

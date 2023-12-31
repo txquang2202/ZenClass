@@ -11,6 +11,7 @@ const classSchema = new mongoose.Schema({
   gradereviews: [{ type: Schema.Types.ObjectId, ref: "gradereviews" }],
   grades: [{ type: Schema.Types.ObjectId, ref: "grades" }],
   notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }],
+  status: String,
 });
 
 const Class = mongoose.model("classes", classSchema);

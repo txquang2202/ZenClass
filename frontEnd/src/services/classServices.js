@@ -7,6 +7,10 @@ const getAllClasses = (id, token) => {
     },
   });
 };
+
+const getClasses = () => {
+  return axios.get(`/api/v1/getAllclass`);
+};
 const getClassMembers = (id, token) => {
   return axios.get(`/api/v1/getclassmembers/${id}`, {
     headers: {
@@ -109,8 +113,21 @@ const editClass = (id, data, token) => {
     },
   });
 };
+const changestatusbyListclass = (classIds) => {
+  return axios.post(`api/v1/changeStatusListClass`,classIds);
+};
+const deleteListClassbyID = (listIdDelete) => {
+  return axios.post('http://localhost:8080/api/v1/deleteListclass',listIdDelete);
+};
 
+const getclassinfo = (classId) => {
+  return axios.post('http://localhost:8080/api/v1/getclass',classId);
+};
 export {
+  getclassinfo,
+  deleteListClassbyID,
+  changestatusbyListclass,
+  getClasses,
   getAllClasses,
   createClass,
   deleteClass,

@@ -32,6 +32,7 @@ const createClass = async (req, res) => {
       title: title,
       teachers: [teacher._id],
       className: className,
+      status: "Active",
     });
     const returnClass = {
       title: title,
@@ -58,7 +59,7 @@ const getAllClasses = async (req, res) => {
   try {
     const classInfo = await User.findOne({ _id: userID }, "classes").populate({
       path: "classes",
-      select: "title teachers className",
+      select: "title teachers className status",
       populate: {
         path: "teachers",
         model: "users",
@@ -577,7 +578,125 @@ const getClassByID = async (req, res) => {
     res.status(500).send("Error while fetching class info");
   }
 };
+
+const getAllClass = async (req, res) => {
+  try {
+    const classes = await Class.find();
+
+    if (!classes || classes.length === 0) {
+      return res.status(404).json({ message: "No Class found!" });
+    }
+
+    res.json({ classes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error while fetching Class" });
+  }
+};
+
+
+const changeStatusClass = async (req, res) => {
+  try {
+    const classIds = req.body;
+    console.log(classIds);
+    
+    if (!classIds || classIds.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No user IDs provided for blocking!" });
+    }
+
+    const result = await Class.updateMany({ _id: { $in: classIds } }, [
+      {
+        $set: {
+          status: {
+            $cond: {
+              if: { $eq: ["$status", "Inactive"] },
+              then: "Active",
+              else: "Inactive",
+            },
+          },
+        },
+      },
+    ]);
+
+    if (result.nModified === 0) {
+      return res
+        .status(404)
+        .json({ message: "No users were found or updated" });
+    }
+
+    res.json({ message: "Class' status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send(`Error while updating users' status: ${error.message}`);
+  }
+};
+
+const deleteListclasssByIds = async (req, res) => {
+  try {
+    const listIdDelete = req.body;
+
+    for (const classID of listIdDelete) {
+      const deletedClass = await Class.findById(classID);
+      const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
+      const deletedReview = await Class.findOne({ _id: classID }, "gradereviews");
+
+      if (!deletedClass) {
+        // Nếu không tìm thấy lớp, tiếp tục với lớp tiếp theo
+        console.log(`Không tìm thấy lớp với ID ${classID}!`);
+        continue;
+      }
+
+      const students = deletedClass.students;
+      const teachers = deletedClass.teachers;
+
+      await User.updateMany(
+        { _id: { $in: [...students, ...teachers] } },
+        {
+          $pull: {
+            courses: classID,
+            classes: classID,
+          },
+        }
+      );
+
+      // Thêm logic xóa bổ sung cho homeworks, reviews, v.v.
+
+      // Xóa lớp
+      await Class.findByIdAndDelete(classID);
+    }
+
+    res.json({ message: "Xóa thành công!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi khi xóa các lớp");
+  }
+};
+const getclassbyurl = async (req, res) => {
+  try {
+    const classId = req.body; 
+
+    const classinfo = await Class.find({ _id: { $in: classId } });
+
+    if (!classinfo || classinfo.length === 0) {
+      return res.status(404).json({ message: "Class not found!" });
+    }
+    res.json({ message: "Class retrieved successfully", classinfo });
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while getting Class");
+  }
+};
 export {
+  getclassbyurl,
+  deleteListclasssByIds,
+  changeStatusClass,
+  getAllClass,
   getAllClasses,
   createClass,
   deleteClassbyID,
