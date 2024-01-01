@@ -46,7 +46,6 @@ function GradeReviewPage(props) {
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
   const myAvtPath = `/assets/imgs/${user.img}`;
-
   // API get Review
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,6 +84,22 @@ function GradeReviewPage(props) {
       try {
         let approve = 1;
         // 1 = approve #1 = reject
+
+        const currentDate = new Date();
+        const title = detailClass.title;
+        const content = `Your grade review request in class ${title} has been approved!!`;
+        const link = "/home/classes/detail/grade-review/" + detailClass.id;
+        if (isClassOwner) {
+          await addNotification(
+            detailClass.id,
+            token,
+            content,
+            avtPath,
+            currentDate,
+            link,
+            data.userID
+          );
+        }
         await deleteReviewByID(id, approve, token);
         setReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
@@ -104,6 +119,21 @@ function GradeReviewPage(props) {
       try {
         let approve = 0;
         // 1 = approve #1 = reject
+        const currentDate = new Date();
+        const title = detailClass.title;
+        const content = `Your grade review request in class ${title} has been rejected`;
+        const link = "/home/classes/detail/grade-review/" + detailClass.id;
+        if (isClassOwner) {
+          await addNotification(
+            detailClass.id,
+            token,
+            content,
+            avtPath,
+            currentDate,
+            link,
+            data.userID
+          );
+        }
         await deleteReviewByID(id, approve, token);
         setReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
