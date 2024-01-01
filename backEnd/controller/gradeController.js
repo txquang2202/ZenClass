@@ -221,73 +221,119 @@ const editClassGrade = async (req, res) => {
 const addGradeToClass = async (req, res) => {
   try {
     const classID = req.params.id;
-    const { studentID, fullName, scores } = req.body;
+    const grades = req.body.grades;
+    let newGradesArray = [];
+    let errorExists = false;
+
+    const findDuplicates = await Class.findOne(
+      { _id: classID },
+      "grades"
+    ).populate({ path: "grades", select: "_id studentId" });
+
     const gradestructs = await Class.findOne(
       { _id: classID },
       "gradestructs"
-    ).populate({ path: "gradestructs", select: "topic" });
+    ).populate({ path: "gradestructs", select: " topic" });
 
+    for (const grade of grades) {
+      const newGrades = gradestructs.gradestructs.map((gradestruct, index) => ({
+        topic: gradestruct.topic,
+        score: grade.grades[index].score,
+      }));
+
+      const newGrade = {
+        studentId: grade.studentId,
+        fullName: grade.fullName,
+        grades: newGrades,
+      };
+      const existingIndex = newGradesArray.findIndex(
+        (item) => item.studentId === newGrade.studentId
+      );
+
+      if (existingIndex !== -1) {
+        newGradesArray[existingIndex].grades = newGrade.grades;
+      } else {
+        newGradesArray.push(newGrade);
+      }
+    }
     if (!gradestructs || !gradestructs.gradestructs) {
       return res.status(400).json({
         message: `Gradestruct not found in the specified class`,
       });
     }
+    //check co khop ten hay khong
     const checkStudentID = await User.find();
-
     let errorStudent = null;
-
-    checkStudentID.forEach((student) => {
-      if (
-        student.userID === parseInt(studentID, 10) &&
-        student.fullname !== fullName
-      ) {
-        errorStudent = student;
+    for (const studentGrade of grades) {
+      for (const student of checkStudentID) {
+        if (
+          student.userID === parseInt(studentGrade.studentId, 10) &&
+          student.fullname !== studentGrade.fullName
+        ) {
+          errorExists = true;
+          errorStudent = student;
+          break;
+        }
       }
-    });
-
-    if (errorStudent) {
-      return res.status(400).json({
-        message: `The student ${errorStudent.userID} has mismatched fullname`,
-        errorStudent: errorStudent,
-      });
+      if (errorStudent) {
+        return res.status(400).json({
+          message: `The student with id: ${errorStudent.userID} has a mismatched full`,
+          errorStudent: errorStudent,
+        });
+      }
     }
-
-    const findDuplicates = await Class.findOne(
-      { _id: classID },
-      "grades"
-    ).populate({ path: "grades", select: "studentId" });
+    //check neu trung thi update va loai ra khoi mang
     const studentIDs = findDuplicates.grades.map((grade) => grade.studentId);
-
-    if (studentIDs.includes(parseInt(studentID, 10))) {
-      const editingGrade = await Grade.findOne({ studentId: studentID });
-      editingGrade.grades.map((grade, index) => {
-        grade.score = scores[index];
-      });
-      await editingGrade.save();
-      return res.json({ message: "Grade edited successfully" });
+    for (const studentGrade of grades) {
+      if (studentIDs.includes(parseInt(studentGrade.studentId))) {
+        const gradeID = findDuplicates.grades
+          .filter(
+            (grade) => grade.studentId === parseInt(studentGrade.studentId)
+          )
+          .map((grade) => grade._id);
+        const editingGrade = await Grade.findOne({
+          _id: gradeID,
+        });
+        editingGrade.grades.map((grade, index) => {
+          grade.score = studentGrade.grades[index].score;
+        });
+        try {
+          await editingGrade.save();
+          const indexToRemove = newGradesArray.findIndex(
+            (item) => item.studentId === studentGrade.studentId
+          );
+          if (indexToRemove !== -1) {
+            newGradesArray.splice(indexToRemove, 1);
+          }
+        } catch (err) {
+          return res.status(400).json({ message: err.message });
+        }
+      }
     }
-    const newGrades = gradestructs.gradestructs.map((gradestruct, index) => ({
-      topic: gradestruct.topic,
-      score: scores[index],
-    }));
 
-    const newGrade = new Grade({
-      studentId: studentID,
-      fullName: fullName,
-      grades: newGrades,
-    });
-    await newGrade.save();
-
-    const classGrades = await Class.findById(classID);
-
-    if (!classGrades.grades.includes(newGrade._id)) {
-      classGrades.grades.push(newGrade._id);
-      await classGrades.save();
+    try {
+      if (errorExists === false) {
+        const addedGrades = await Grade.insertMany(newGradesArray);
+        const classGrades = await Class.findById(classID);
+        for (const grade of addedGrades) {
+          if (!classGrades.grades.includes(grade._id)) {
+            classGrades.grades.push(grade._id);
+          }
+        }
+        await classGrades.save();
+      } else {
+        return res.status(500).json({
+          message: "The student with id: ${errorStudent} has mismatch name!!!",
+        });
+      }
+    } catch (error) {
+      return res.status(400).json({ message: err.message });
     }
+
     res.json({ message: "Grade added successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error while adding grade", newGrade });
+    res.status(500).json({ message: "Error while adding grade" });
   }
 };
 const deleteAllGrade = async (req, res) => {

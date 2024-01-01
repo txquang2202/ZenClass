@@ -24,7 +24,6 @@ const YourComponent = () => {
   const token = localStorage.getItem("token");
   const { id } = useParams();
   const [grades, setGrades] = useState([]);
-
   const [allTopics, setAllTopics] = useState([]);
   const [allRatios, setAllRatios] = useState([]);
 
@@ -329,17 +328,12 @@ const YourComponent = () => {
   const updateStateWithImportedData = async (importedData) => {
     // Update your state or perform other actions with the imported data
 
-    // Example: Assuming your CSV data has a structure similar to your existing data
     const updatedGrades = await Promise.all(
       importedData.map(async (row) => {
         const studentId = row["Student ID"];
         const fullName = row["Full Name"];
         const scores = allTopics.map((topic) => parseFloat(row[topic]) || 0);
-        try {
-          await addGradeToClass(id, studentId, fullName, scores, token);
-        } catch (error) {
-          toast.error(error.response.data.message);
-        }
+
         return {
           studentId,
           fullName,
@@ -350,9 +344,12 @@ const YourComponent = () => {
         };
       })
     );
-
-    // Example: Update state with the imported data
-    setGrades(updatedGrades);
+    try {
+      await addGradeToClass(id, updatedGrades, token);
+      setGrades(updatedGrades);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   // Modal

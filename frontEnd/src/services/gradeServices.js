@@ -7,10 +7,10 @@ const getAllGradeClass = (id, token) => {
     },
   });
 };
-const addGradeToClass = async (id, studentID, fullName, scores, token) => {
+const addGradeToClass = async (id, grades, token) => {
   return axios.post(
     `/api/v1/addGradeToClass/${id}`,
-    { studentID, fullName, scores },
+    { grades },
     {
       headers: {
         Authorization: `Bearer ${token}`,
