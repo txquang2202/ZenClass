@@ -1,12 +1,22 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 // import { jwtDecode } from "jwt-decode";
-import { getClassByID } from "../services/classServices";
+import { getClassByID, checkInClass } from "../services/classServices";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const ClassDetailContext = createContext();
 
 export const useClassDetailContext = () => useContext(ClassDetailContext);
+
+const checkInClassFunc = async (id, userID, navigate) => {
+  try {
+    await checkInClass(id, userID);
+  } catch (error) {
+    toast.error("You haven't joined this class yet!!");
+    navigate("/home", { replace: true });
+  }
+};
 
 export const ClassDetailProvider = ({ children }) => {
   const { id1 } = useParams();
@@ -22,7 +32,6 @@ export const ClassDetailProvider = ({ children }) => {
     const fetchUserData = async () => {
       try {
         let finalId1;
-
         if (location.pathname.includes("homework")) {
           // Nếu đường dẫn chứa "homework", lấy id1 đầu tiên
           finalId1 = id1;
@@ -31,6 +40,7 @@ export const ClassDetailProvider = ({ children }) => {
           const parts = location.pathname.split("/");
           finalId1 = parts[parts.length - 1];
         }
+        checkInClassFunc(finalId1, dataUser._id, navigate);
 
         const response = await getClassByID(finalId1, token);
         const data = response.data.classInfo;

@@ -33,6 +33,7 @@ import {
   changeStatusClass,
   deleteListclasssByIds,
   getclassbyurl,
+  checkInClass,
 } from "../controller/classController.js";
 import {
   getCourseByUser,
@@ -158,6 +159,7 @@ const initApi = (app) => {
   router.post("/changeStatusListClass", changeStatusClass);
   router.post("/deleteListclass", deleteListclasssByIds);
   router.post("/getclass", getclassbyurl);
+  router.post("/checkInClass/:id", checkInClass);
   //coureseAPIS
   router.get("/getCourseByUser/:id", authenticateToken, getCourseByUser);
   router.get("/getCourseByID/:id", authenticateToken, getCourseByID);

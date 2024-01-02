@@ -114,14 +114,17 @@ const editClass = (id, data, token) => {
   });
 };
 const changestatusbyListclass = (classIds) => {
-  return axios.post(`api/v1/changeStatusListClass`,classIds);
+  return axios.post(`api/v1/changeStatusListClass`, classIds);
 };
 const deleteListClassbyID = (listIdDelete) => {
-  return axios.post('http://localhost:8080/api/v1/deleteListclass',listIdDelete);
+  return axios.post("api/v1/deleteListclass", listIdDelete);
 };
 
 const getclassinfo = (classId) => {
-  return axios.post('http://localhost:8080/api/v1/getclass',classId);
+  return axios.post("api/v1/getclass", classId);
+};
+const checkInClass = (classID, userID) => {
+  return axios.post(`api/v1/checkInClass/${classID}`, { userID });
 };
 export {
   getclassinfo,
@@ -139,4 +142,5 @@ export {
   deleteStudentFromClass,
   deleteTeacherFromClass,
   joinByCode,
+  checkInClass,
 };
