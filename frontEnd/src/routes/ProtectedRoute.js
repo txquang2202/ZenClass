@@ -5,16 +5,18 @@ import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children, roleRequired }) => {
   const navigate = useNavigate();
-  //console.log("object");
   useEffect(() => {
     let session = localStorage.getItem("token");
-    const items = session ? jwtDecode(session) : null;
     if (!session) {
-      navigate("/signin");
-    } else if (roleRequired && items.role !== roleRequired) {
+      navigate("/signin", { replace: true });
+      return;
+    }
+    const items = jwtDecode(session);
+    if (roleRequired && items.role !== roleRequired) {
       navigate("*");
     }
   }, [navigate, roleRequired]);
+
   return <>{children}</>;
 };
 

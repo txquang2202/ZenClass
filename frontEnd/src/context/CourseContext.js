@@ -23,6 +23,10 @@ export const CourseProvider = ({ children }) => {
         let token;
         token = localStorage.getItem("token");
         if (token) data = jwtDecode(token);
+        else {
+          navigate("/signin", { replace: true });
+          return;
+        }
         const response = await getCourseByUser(data._id, token);
         const courseData = response.data.courseInfo;
         if (courseData) {
