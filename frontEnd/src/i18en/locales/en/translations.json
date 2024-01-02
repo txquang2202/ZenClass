@@ -1,4 +1,25 @@
 {
   "Get started": "Get started",
+
+  "Create Class": "Create Class",
+  "Create New Class": "Create New Class",
+  "Title": "Title",
+  "Class Name": "Class Name",
+  "Cancel": "Cancel",
+
+  "Join Class": "Join Class",
+  "Join a Class": "Join a Class",
+  "Class Code": "Class Code",
+
+  "Main Page": "Main Page",
+  "Classes": "Classes",
+  "Courses": "Courses",
+
+  "My Classes": "My Classes",
+  "My Courses": "My Courses",
+
+  "Notifications": "Notifications",
+  "See all": "See all",
+
   "greet": "Hello, {{name}}!"
 }

@@ -5,6 +5,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 
 function Noti(props) {
   const { menuItemsData } = useNotificationContext();
@@ -13,6 +14,8 @@ function Noti(props) {
   const [hideBadge, setHideBadge] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -69,7 +72,7 @@ function Noti(props) {
         <div className="w-[350px]">
           <header className="px-4 sticky top-0 bg-white z-10 pt-3 pb-3">
             <h3 className="text-base font-semibold text-[#10375c] ">
-              Notifications
+              {t("Notifications")}
             </h3>
           </header>
           <hr className="text-gray-200 h-1" />
@@ -108,7 +111,7 @@ function Noti(props) {
               className="text-[#10375c] font-medium hover:underline"
               onClick={() => handleClose()}
             >
-              See all
+              {t("See all")}
             </Link>
           </footer>
         </div>

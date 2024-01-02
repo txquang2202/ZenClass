@@ -42,10 +42,19 @@ const deleteAllGrade = (id, token) => {
   });
 };
 
+const editStatusGrade = (id, token, gradeOfClass) => {
+  return axios.put(`/api/v1/editStatusGrade/${id}`, gradeOfClass, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export {
   getAllGradeClass,
   deleteGradeClass,
   editClassGrade,
   addGradeToClass,
   deleteAllGrade,
+  editStatusGrade,
 };

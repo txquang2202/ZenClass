@@ -10,6 +10,7 @@ import { createClass, joinByCode } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { Menu, MenuItem } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 function SideBar() {
   const { id } = useParams();
@@ -33,6 +34,7 @@ function SideBar() {
 
   const { addClass } = useClassContext();
   const { addCourse } = useCourseContext();
+  const { t } = useTranslation();
 
   const openModal = () => {
     handleClose();
@@ -116,8 +118,8 @@ function SideBar() {
             }}
             className="mt-12"
           >
-            <MenuItem onClick={openModal}>Create Class</MenuItem>
-            <MenuItem onClick={openJoinModal}>Join Class</MenuItem>
+            <MenuItem onClick={openModal}>{t("Create Class")}</MenuItem>
+            <MenuItem onClick={openJoinModal}>{t("Join Class")}</MenuItem>
           </Menu>
         </li>
         <li>
@@ -132,7 +134,7 @@ function SideBar() {
             <span className="w-8 h-8 ">
               <HomeIcon className="w-full h-full " />
             </span>
-            <span className="mt-1">Main Page</span>
+            <span className="mt-1">{t("Main Page")}</span>
           </Link>
         </li>
         <li>
@@ -147,7 +149,7 @@ function SideBar() {
             <span className="w-8 h-8">
               <SchoolIcon className="w-full h-full" />
             </span>
-            <span className="mt-1">Classes</span>
+            <span className="mt-1">{t("Classes")}</span>
           </Link>
         </li>
         <li>
@@ -162,7 +164,7 @@ function SideBar() {
             <span className="w-8 h-8">
               <AutoStoriesIcon className="w-full h-full" />
             </span>
-            <span className="mt-1">Courses</span>
+            <span className="mt-1">{t("Courses")}</span>
           </Link>
         </li>
       </ul>
@@ -175,10 +177,12 @@ function SideBar() {
         className="h-36 w-[400px] absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
       >
         <div className="bg-white p-8 rounded-md border-solid border-2 border-gray-200">
-          <h2 className="text-2xl font-semibold mb-4">Create New Class</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            {t("Create New Class")}
+          </h2>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
-              Title:
+              {t("Title")}:
             </label>
             <input
               type="text"
@@ -191,7 +195,7 @@ function SideBar() {
           </div>
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-600">
-              Class Name:
+              {t("Class Name")}:
             </label>
             <input
               type="text"
@@ -210,13 +214,13 @@ function SideBar() {
               onClick={handleCreateClass}
               className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
             >
-              Create Class
+              {t("Create Class")}
             </button>
             <button
               onClick={closeModal}
               className="border border-gray-300 px-4 py-2 rounded-md"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </div>
@@ -231,10 +235,10 @@ function SideBar() {
         className="h-36 w-[400px] absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
       >
         <div className="bg-white p-8 rounded-md border-solid border-2 border-gray-200">
-          <h2 className="text-2xl font-semibold mb-4">Join a Class</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("Join a Class")}</h2>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
-              Class Code:
+              {t("Class Code")}:
             </label>
             <input
               type="text"
@@ -248,13 +252,13 @@ function SideBar() {
               onClick={handleJoinClass}
               className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
             >
-              Join Class
+              {t("Join Class")}
             </button>
             <button
               onClick={closeJoinModal}
               className="border border-gray-300 px-4 py-2 rounded-md"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </div>

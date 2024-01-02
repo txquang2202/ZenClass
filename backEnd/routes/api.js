@@ -32,7 +32,7 @@ import {
   getAllClass,
   changeStatusClass,
   deleteListclasssByIds,
-  getclassbyurl
+  getclassbyurl,
 } from "../controller/classController.js";
 import {
   getCourseByUser,
@@ -72,6 +72,7 @@ import {
   editClassGrade,
   addGradeToClass,
   deleteAllGrade,
+  editStatusGrade,
 } from "../controller/gradeController.js";
 
 import {
@@ -183,6 +184,7 @@ const initApi = (app) => {
   //Grade
   router.get("/getAllGradeClass/:id", authenticateToken, getAllGradeByClass);
   router.put("/editClassGrade/:id", authenticateToken, editClassGrade);
+  router.put("/editStatusGrade/:id", editStatusGrade);
   router.post("/addGradeToClass/:id", authenticateToken, addGradeToClass);
   router.delete("/deleteAllGrade/:id", deleteAllGrade);
   // router.post("/addComments", authenticateToken, addComment);

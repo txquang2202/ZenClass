@@ -3,6 +3,7 @@ import { Avatar } from "@material-ui/core";
 import SendIcon from "@mui/icons-material/Send";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import {
   getAllGradeReviews,
   deleteReviewByID,
@@ -88,7 +89,7 @@ function GradeReviewPage(props) {
         const currentDate = new Date();
         const title = detailClass.title;
         const content = `Your grade review request in class ${title} has been approved!!`;
-        const link = "/home/classes/detail/grade-review/" + detailClass.id;
+        const link = "/home/classes/detail/grade-board/" + detailClass.id;
         if (isClassOwner) {
           await addNotification(
             detailClass.id,
@@ -122,7 +123,7 @@ function GradeReviewPage(props) {
         const currentDate = new Date();
         const title = detailClass.title;
         const content = `Your grade review request in class ${title} has been rejected`;
-        const link = "/home/classes/detail/grade-review/" + detailClass.id;
+        const link = "/home/classes/detail/grade-board/" + detailClass.id;
         if (isClassOwner) {
           await addNotification(
             detailClass.id,
@@ -349,14 +350,16 @@ function GradeReviewPage(props) {
                           </span>
                         </div>
                       </div>
-                      <CheckCircleOutlineIcon
-                        onClick={() => handleRejectReview(item.id)}
-                        className="text-red-300 cursor-pointer hover:text-blue-500"
-                      />
-                      <CheckCircleOutlineIcon
-                        onClick={() => handleApproveReview(item.id)}
-                        className="text-blue-300 cursor-pointer hover:text-blue-500"
-                      />
+                      <div>
+                        <CheckCircleOutlineIcon
+                          onClick={() => handleApproveReview(item.id)}
+                          className="text-blue-300 cursor-pointer hover:text-blue-500"
+                        />
+                        <CancelOutlinedIcon
+                          onClick={() => handleRejectReview(item.id)}
+                          className="text-red-300 cursor-pointer hover:text-red-500"
+                        />
+                      </div>
                     </div>
                     <div className="mt-3">
                       <table className="min-w-full bg-white border border-gray-300">

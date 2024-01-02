@@ -180,6 +180,7 @@ const editGradeStruct = async (req, res) => {
     res.status(500).send("Error while updating struct");
   }
 };
+
 const getAllGradeByClass = async (req, res) => {
   const classID = req.params.id;
   try {
@@ -193,6 +194,27 @@ const getAllGradeByClass = async (req, res) => {
     res.status(500).send("Error while fetching");
   }
 };
+
+const editStatusGrade = async (req, res) => {
+  try {
+    const { statusGrade } = req.body;
+    const classID = req.params.id;
+    const gradeOfClass = await Class.findById(classID);
+    console.log(gradeOfClass);
+
+    if (!gradeOfClass) {
+      return res.status(404).json({ message: "Class not found!" });
+    }
+
+    gradeOfClass.statusGrade = statusGrade;
+    await gradeOfClass.save();
+    res.json({ message: "Status grade updated successfully", gradeOfClass });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error while fetching");
+  }
+};
+
 const editClassGrade = async (req, res) => {
   try {
     const classID = req.params.id;
@@ -369,4 +391,5 @@ export {
   editClassGrade,
   addGradeToClass,
   deleteAllGrade,
+  editStatusGrade,
 };

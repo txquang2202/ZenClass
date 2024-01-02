@@ -77,7 +77,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link
               to="/home"
-              className="text-white text-lg font-sans font-semibold flex gap-3 items-center"
+              className="text-white text-lg font-sans font-semibold flex gap-3 items-center mr-5"
             >
               <img
                 src={`${process.env.PUBLIC_URL}/assets/icons/class.ico`}
@@ -87,6 +87,7 @@ const Navbar = () => {
               />
               ZenClass
             </Link>
+            <LanguageSwitcher />
           </div>
 
           <div className="flex items-center justify-between space-x-4">

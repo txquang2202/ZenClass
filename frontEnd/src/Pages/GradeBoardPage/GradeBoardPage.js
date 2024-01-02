@@ -5,10 +5,13 @@ import {
   editClassGrade,
   addGradeToClass,
   deleteAllGrade,
+  editStatusGrade,
 } from "../../services/gradeServices";
+
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { addGradeReviewByID } from "../../services/gradeReviewServices";
 import { toast } from "react-toastify";
+import UploadModal from "../../components/Modal/UploadModal";
 import Modal from "../../components/Modal/ClassDetailModal";
 import Papa from "papaparse";
 import { getClassByID } from "../../services/classServices";
@@ -38,8 +41,7 @@ const YourComponent = () => {
 
   const { isClassOwner, detailClass } = useClassDetailContext();
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-
-  const [isDragging, setIsDragging] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
 
   let data;
   if (token) data = jwtDecode(token);
@@ -59,9 +61,24 @@ const YourComponent = () => {
     explaination: "",
   });
 
+  const [status, setStatus] = useState({
+    statusGrade: false,
+  });
+  // const [error, setError] = useState(null);
+  const [importedData, setImportedData] = useState([]);
+
   // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      await editStatusGrade(id, token, {
+        statusGrade: true,
+      });
+    } catch (error) {
+      console.error("Error fetching review:", error);
+    }
+
     try {
       const title = detailClass.title;
       const content = `The teacher has just finished finalizing your grade in your ${title} class!`;
@@ -178,51 +195,6 @@ const YourComponent = () => {
   };
 
   // Import CSV
-  const handleDragEnter = () => {
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-
-    if (file) {
-      handleFile(file);
-      setIsDragging(false);
-    }
-  };
-
-  // const handleDragOver = (event) => {
-  //   event.preventDefault();
-  // };
-
-  const handleFile = (file) => {
-    if (file.type !== "text/csv") {
-      toast.error("Unsupported file type. Please select a CSV file.");
-      return;
-    }
-
-    Papa.parse(file, {
-      complete: (result) => {
-        const importedData = result.data;
-
-        if (!isValidCSVStructure(importedData)) {
-          toast.error(
-            "Invalid CSV file structure. Please check the file format."
-          );
-        } else {
-          updateStateWithImportedData(importedData);
-          toast.success("CSV file imported successfully");
-        }
-      },
-      header: true,
-    });
-  };
-
   const handleFileChange = (event) => {
     const fileInput = event.target;
     const file = fileInput.files[0];
@@ -240,6 +212,16 @@ const YourComponent = () => {
           // Assuming your CSV has a specific format
           // Update your state or perform other actions based on the parsed data
           const importedData = result.data;
+
+          // Remove the last row if it's empty
+          if (
+            importedData.length > 0 &&
+            Object.values(importedData[importedData.length - 1]).every(
+              (value) => value === ""
+            )
+          ) {
+            importedData.pop();
+          }
 
           if (!isValidCSVStructure(importedData)) {
             // Display an error toast for invalid CSV structure
@@ -278,15 +260,12 @@ const YourComponent = () => {
               return;
             }
 
-            // Example: Update state with the imported data
             updateStateWithImportedData(importedData);
-
-            toast.success("CSV file imported successfully");
           }
 
           resetFileInput(fileInput);
         },
-        header: true, // If your CSV has headers
+        header: true,
       });
     }
   };
@@ -313,9 +292,6 @@ const YourComponent = () => {
   };
 
   const isValidCSVStructure = (importedData) => {
-    // Customize this function based on the expected structure of your CSV file
-    // For example, check if the required columns exist
-    // You may need to modify this logic based on your specific use case
     const requiredColumns = ["Student ID", "Full Name", ...allTopics, "Total"];
 
     return (
@@ -326,8 +302,26 @@ const YourComponent = () => {
   };
 
   const updateStateWithImportedData = async (importedData) => {
-    // Update your state or perform other actions with the imported data
+    const updatedGrades = await Promise.all(
+      importedData.map(async (row) => {
+        const studentId = row["Student ID"];
+        const fullName = row["Full Name"];
+        const scores = allTopics.map((topic) => parseFloat(row[topic]) || 0);
 
+        return {
+          studentId,
+          fullName,
+          grades: allTopics.map((topic, index) => ({
+            topic,
+            score: scores[index],
+          })),
+        };
+      })
+    );
+    setImportedData(importedData);
+  };
+
+  const handleCheck = async () => {
     const updatedGrades = await Promise.all(
       importedData.map(async (row) => {
         const studentId = row["Student ID"];
@@ -347,9 +341,12 @@ const YourComponent = () => {
     try {
       await addGradeToClass(id, updatedGrades, token);
       setGrades(updatedGrades);
+      toast.success("CSV file imported successfully");
     } catch (error) {
+      // setError(error.response.data.message);
       toast.error(error.response.data.message);
     }
+    closeModal2();
   };
 
   // Modal
@@ -372,8 +369,16 @@ const YourComponent = () => {
     setIsModalOpen1(false);
   };
 
+  const openModal2 = () => {
+    setIsModalOpen2(true);
+  };
+
+  const closeModal2 = () => {
+    setImportedData([]);
+    setIsModalOpen2(false);
+  };
+
   // API getGrade
-  // Assuming you have a state variable to store the list of ratios
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -383,6 +388,10 @@ const YourComponent = () => {
 
         const response1 = await getClassByID(id, token);
         const classInfo = response1.data.classInfo;
+
+        setStatus({
+          statusGrade: classInfo.statusGrade || "",
+        });
 
         // Check if gradestructs is defined before extracting data
         if (classInfo.gradestructs && classInfo.gradestructs.length > 0) {
@@ -403,7 +412,7 @@ const YourComponent = () => {
     };
 
     fetchData();
-  }, [id, token]); // Include id and token as dependencies
+  }, [id, token]);
 
   // API Edit Grade
   const handleSave = async () => {
@@ -588,21 +597,12 @@ const YourComponent = () => {
           <div className="flex">
             <label
               htmlFor="test"
-              className={`flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-3 ${
-                isDragging
-                  ? "fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
-                  : ""
-              } mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer`}
+              className={`flex justify-end text-[#2E80CE] text-xs bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-3  mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer`}
             >
-              <div
+              <button
+                type="button"
+                onClick={openModal2}
                 className="w-full h-full flex  items-center justify-center"
-                onDrop={(e) => {
-                  e.preventDefault();
-                  handleDrop(e);
-                }}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
               >
                 <svg
                   class="w-3 h-3 me-1"
@@ -620,14 +620,8 @@ const YourComponent = () => {
                   />
                 </svg>
                 Import
-              </div>
+              </button>
             </label>
-            <input
-              id="test"
-              type="file"
-              hidden
-              onChange={(event) => handleFileChange(event)}
-            />
 
             <button
               type="button"
@@ -703,7 +697,9 @@ const YourComponent = () => {
               .map(
                 (student) =>
                   // Conditionally render the entire row
-                  (isClassOwner || data.userID === student.studentId) && (
+                  (isClassOwner ||
+                    (status.statusGrade === true &&
+                      data.userID === student.studentId)) && (
                     <tr key={student._id} className="text-center">
                       <td className="py-2 px-4 border-b">
                         {student.studentId}
@@ -855,7 +851,7 @@ const YourComponent = () => {
                 Explanation:
               </label>
               <textarea
-                id="explaination" // Thay đổi id thành "description"
+                id="explaination"
                 type="text"
                 placeholder="Write your explanation here..."
                 value={reviewData.explaination}
@@ -881,6 +877,89 @@ const YourComponent = () => {
             </button>
           </div>
         </Modal>
+
+        {/* Modal Import */}
+        <UploadModal show={isModalOpen2} handleClose={closeModal2}>
+          <h2 className="text-2xl font-semibold mb-2">Preview</h2>
+
+          <div className="flex  items-center justify-center mb-2">
+            <label
+              htmlFor="test"
+              className={`flex justify-end text-[#2E80CE] px-6 py-2 text-lg bg-white border border-[#2E80CE] focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full   mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer`}
+            >
+              <div className="w-full h-full flex  items-center justify-center">
+                <svg
+                  class="w-4 h-4 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 18 16"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                  />
+                </svg>
+                <input
+                  id="test"
+                  type="file"
+                  hidden
+                  onChange={(event) => handleFileChange(event)}
+                />
+                Import
+              </div>
+            </label>
+          </div>
+
+          <table className="min-w-full bg-white border border-gray-300 mb-6">
+            {/* Header */}
+            <thead>
+              <tr>
+                {importedData.length > 0 &&
+                  Object.keys(importedData[0]).map(
+                    (columnName, index) =>
+                      index < Object.keys(importedData[0]).length - 1 && (
+                        <th key={columnName} className="py-2 px-4 border-b">
+                          {columnName}
+                        </th>
+                      )
+                  )}
+              </tr>
+            </thead>
+            {/* Content */}
+            <tbody>
+              {importedData.map((row, rowIndex) => (
+                <tr key={rowIndex} className="text-center">
+                  {Object.values(row).map(
+                    (value, columnIndex) =>
+                      columnIndex < Object.keys(importedData[0]).length - 1 && (
+                        <td key={columnIndex} className="py-2 px-4 border-b">
+                          {value}
+                        </td>
+                      )
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-end">
+            <button
+              onClick={() => handleCheck()}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+            >
+              Check
+            </button>
+            <button
+              onClick={closeModal2}
+              className="border border-gray-300 px-4 py-2 rounded-md"
+            >
+              Cancel
+            </button>
+          </div>
+        </UploadModal>
       </div>
     </div>
   );

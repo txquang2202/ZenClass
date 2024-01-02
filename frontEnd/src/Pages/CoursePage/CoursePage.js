@@ -6,9 +6,12 @@ import { getCourseByUser } from "../../services/courseServices";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
 import { useCourseContext } from "../../context/CourseContext";
 function CoursePage() {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -42,7 +45,7 @@ function CoursePage() {
     <>
       <div>
         <h1 className="text-2xl font-semibold mb-4 text-[#10375c]">
-          My Courses
+          {t("My Courses")}
         </h1>
         {courses.length === 0 ? (
           <p className="text-gray-400 mb-10">No course available</p>
@@ -62,11 +65,11 @@ function CoursePage() {
                       </h2>
                       <hr className="border-t border-gray-200 dark:border-[#575F66] mb-3" />
                       <p className="text-[#575F66] font-sora text-base font-light leading-[28px]">
-                        Teacher:
+                        {t("Teacher")}:
                         <span className="text-[#2E80CE]"> {course.author}</span>
                       </p>
                       <p className="text-[#575F66] font-sora text-base font-light leading-[28px]">
-                        Class:
+                        {t("Class")}:
                         <span className="text-[#2E80CE]"> {course.class}</span>
                       </p>
                     </div>

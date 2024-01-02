@@ -1,4 +1,27 @@
 {
   "Get started": "Bắt đầu",
+
+  "Create Class": "Tạo lớp",
+  "Create New Class": "Tạo lớp",
+  "Title": "Tiêu đề",
+  "Class Name": "Tên lớp",
+  "Cancel": "Hủy",
+
+  "Join Class": "Tham gia lớp",
+  "Join a Class": "Tham gia lớp",
+  "Class Code": "Mã lớp",
+
+  "Main Page": "Trang chủ",
+  "Classes": "Lớp học",
+  "Courses": "Khóa học",
+  "My Classes": "Lớp học",
+  "My Courses": "Khóa học",
+
+  "Teacher": "Giáo viên",
+  "Class": "Lớp học",
+
+  "Notifications": "Thông báo",
+  "See all": "Xem thêm",
+
   "greet": "Bonjour, {{name}} !"
 }
