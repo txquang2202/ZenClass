@@ -263,9 +263,19 @@ const addStudent = async (req, res) => {
       fullName: student.fullname,
       grades: newGrades,
     });
-
-    await newGrade.save();
-
+    let existingCheck = false;
+    const existGrade = await Class.findOne({ _id: classId }, "grades");
+    if (existGrade.grades.length > 0) {
+      for (const gradeID of existGrade.grades) {
+        const grade = await Grade.findOne({ _id: gradeID });
+        if (grade.studentId === student.userID) {
+          existingCheck = true;
+        }
+      }
+    }
+    if (!existingCheck) {
+      await newGrade.save();
+    }
     const classGrades = await Class.findById(classId);
 
     if (!classGrades.grades.includes(newGrade._id)) {
@@ -422,10 +432,17 @@ const deleteStudentFromClass = async (req, res) => {
         { new: true }
       );
       const gradeToBeDeleted = await Class.findOne({ _id: classID }, "grades");
-      for (const gradeID of gradeToBeDeleted.grades) {
-        const grade = await Grade.findOne({ _id: gradeID });
-        if (grade.studentId === findUserID.userID) {
-          await Grade.findOneAndDelete({ _id: gradeID });
+
+      if (gradeToBeDeleted.grades.length > 0) {
+        for (const gradeID of gradeToBeDeleted.grades) {
+          const grade = await Grade.findOne({ _id: gradeID });
+          if (grade.studentId === findUserID.userID) {
+            await Grade.findOneAndDelete({ _id: gradeID });
+            await Class.updateOne(
+              { _id: classID },
+              { $pull: { grades: gradeID } }
+            );
+          }
         }
       }
 

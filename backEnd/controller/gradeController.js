@@ -345,7 +345,7 @@ const addGradeToClass = async (req, res) => {
         await classGrades.save();
       } else {
         return res.status(500).json({
-          message: "The student with id: ${errorStudent} has mismatch name!!!",
+          message: `The student with id: ${errorStudent} has mismatch name!!!`,
         });
       }
     } catch (error) {
