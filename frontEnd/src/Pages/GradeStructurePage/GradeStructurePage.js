@@ -6,22 +6,37 @@ import {
   editGradeStruct,
   deleteGradeStruct,
 } from "../../services/gradeStructureServices";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import TextField from "@mui/material/TextField";
+import { useDrag, useDrop } from "react-dnd";
 
-const GradeStructure = () => {
-  const navigate = useNavigate();
+const TYPE = "GRADE"; // Unique type for the drag-and-drop
+
+const DraggableRow = ({ grade, index, moveRow }) => {
+  const [, ref] = useDrag({
+    type: TYPE,
+    item: { index },
+  });
+
+  const [, drop] = useDrop({
+    accept: TYPE,
+    hover: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        moveRow(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
   const token = localStorage.getItem("token");
-  const { id } = useParams();
   const { grades, setGrades } = useContext(GradeContext);
-  const { isClassOwner } = useClassDetailContext();
+  const { isClassOwner, isClassOwner2 } = useClassDetailContext();
   const [newGrades, setNewGrades] = useState({
     topic: "",
     ratio: 0,
   });
   const [edit, setEdit] = useState(null);
-  const [sortOrder, setSortOrder] = useState("");
 
   // API delete grade
   const handleDelete = async (id) => {
@@ -94,6 +109,105 @@ const GradeStructure = () => {
     });
   };
 
+  const handleCancel = async (id) => {
+    try {
+      await deleteGradeStruct(id, token);
+      setGrades((prevGrades) => prevGrades.filter((grade) => grade.id !== id));
+      toast.success("Grade cancel successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+    setEdit(null);
+  };
+
+  return (
+    <tr ref={(node) => ref(drop(node))}>
+      <td className="py-2 px-4 border-b">
+        {edit === grade.id ? (
+          <TextField
+            id="outlined-text"
+            type="text"
+            placeholder="New topic"
+            value={newGrades.topic}
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            className="w-32"
+            onChange={(e) => handleTextFieldChange(e, "topic")}
+          />
+        ) : (
+          grade.topic
+        )}
+      </td>
+      <td className="py-2 px-4 border-b">
+        {edit === grade.id ? (
+          <TextField
+            id="outlined-number"
+            type="number"
+            value={newGrades.ratio}
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            className="w-20"
+            onChange={(e) => handleTextFieldChange(e, "ratio")}
+          />
+        ) : (
+          `${grade.ratio}%`
+        )}
+      </td>
+      {(isClassOwner || isClassOwner2) && (
+        <td className="py-2 px-4 border-b">
+          {edit === grade.id ? (
+            <>
+              <button
+                className="bg-blue-500 text-white py-1 px-2 mr-2"
+                onClick={() => handleSave(grade.id)}
+              >
+                Save
+              </button>
+              <button
+                className="bg-red-500 text-white py-1 px-2"
+                onClick={() => handleCancel(grade.id)}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="bg-blue-500 text-white py-1 px-2 mr-2 font-semibold font-sans rounded "
+                onClick={() => handleEdit(grade.id)}
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-500 text-white py-1 px-2 font-semibold font-sans rounded "
+                onClick={() => handleDelete(grade.id)}
+              >
+                Delete
+              </button>
+            </>
+          )}
+        </td>
+      )}
+    </tr>
+  );
+};
+
+const GradeStructure = () => {
+  const [sortOrder, setSortOrder] = useState("");
+  const token = localStorage.getItem("token");
+  const { id } = useParams();
+  const { grades, setGrades } = useContext(GradeContext);
+  const { isClassOwner, isClassOwner2 } = useClassDetailContext();
+  const [newGrades, setNewGrades] = useState({
+    topic: "",
+    ratio: 0,
+  });
+  const [edit, setEdit] = useState(null);
+
   // API add grade
   const handleAddGrade = async (e) => {
     e.preventDefault();
@@ -133,15 +247,14 @@ const GradeStructure = () => {
     }
   };
 
-  const handleCancel = async (id) => {
-    try {
-      await deleteGradeStruct(id, token);
-      setGrades((prevGrades) => prevGrades.filter((grade) => grade.id !== id));
-      toast.success("Grade cancel successfully");
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-    setEdit(null);
+  // SORT
+  const handleSortByRatio = () => {
+    const sortedGrades = [...grades].sort((a, b) => {
+      return sortOrder === "asc" ? a.ratio - b.ratio : b.ratio - a.ratio;
+    });
+
+    setGrades(sortedGrades);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
   // TOTAL
@@ -151,14 +264,13 @@ const GradeStructure = () => {
 
   const isTotalValid = calculateTotal() === 100;
 
-  // SORT
-  const handleSortByRatio = () => {
-    const sortedGrades = [...grades].sort((a, b) => {
-      return sortOrder === "asc" ? a.ratio - b.ratio : b.ratio - a.ratio;
-    });
-
-    setGrades(sortedGrades);
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  //
+  const moveRow = (dragIndex, hoverIndex) => {
+    const draggedGrade = grades[dragIndex];
+    const updatedGrades = [...grades];
+    updatedGrades.splice(dragIndex, 1);
+    updatedGrades.splice(hoverIndex, 0, draggedGrade);
+    setGrades(updatedGrades);
   };
 
   return (
@@ -179,92 +291,28 @@ const GradeStructure = () => {
               Ratio
               {sortOrder === "asc" ? " ▲" : " ▼"}
             </th>
-            {isClassOwner && <th className="py-2 px-4 border-b">Action</th>}
+            {(isClassOwner || isClassOwner2) && (
+              <th className="py-2 px-4 border-b">Action</th>
+            )}
           </tr>
         </thead>
 
         {/* CONTENT */}
         <tbody className="text-center">
           {/* GRADES */}
-          {grades.map((grade) => (
-            <tr key={grade.id}>
-              <td className="py-2 px-4 border-b">
-                {edit === grade.id ? (
-                  <TextField
-                    id="outlined-text"
-                    type="text"
-                    placeholder="New topic"
-                    value={newGrades.topic}
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    className="w-32"
-                    onChange={(e) => handleTextFieldChange(e, "topic")}
-                  />
-                ) : (
-                  grade.topic
-                )}
-              </td>
-              <td className="py-2 px-4 border-b">
-                {edit === grade.id ? (
-                  <TextField
-                    id="outlined-number"
-                    type="number"
-                    value={newGrades.ratio}
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    className="w-20"
-                    onChange={(e) => handleTextFieldChange(e, "ratio")}
-                  />
-                ) : (
-                  `${grade.ratio}%`
-                )}
-              </td>
-              {isClassOwner && (
-                <td className="py-2 px-4 border-b">
-                  {edit === grade.id ? (
-                    <>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 mr-2"
-                        onClick={() => handleSave(grade.id)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2"
-                        onClick={() => handleCancel(grade.id)}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 mr-2 font-semibold font-sans rounded "
-                        onClick={() => handleEdit(grade.id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 font-semibold font-sans rounded "
-                        onClick={() => handleDelete(grade.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
-              )}
-            </tr>
+          {grades.map((grade, index) => (
+            <DraggableRow
+              key={grade.id}
+              grade={grade}
+              index={index}
+              moveRow={moveRow}
+            />
           ))}
         </tbody>
       </table>
 
       {/* ADD GRADE */}
-      {isClassOwner && (
+      {(isClassOwner || isClassOwner2) && (
         <div className="text-center">
           <button
             type="button"

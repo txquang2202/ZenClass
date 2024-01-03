@@ -14,9 +14,11 @@ import {
   deleteTeacherFromClass,
 } from "../../services/classServices";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function PeoplePage() {
   const token = localStorage.getItem("token");
+  const { t } = useTranslation();
 
   const { id } = useParams();
   const Navigate = useNavigate();
@@ -42,6 +44,7 @@ function PeoplePage() {
   let data;
   if (token) data = jwtDecode(token);
   const [isClassOwner, setIsClassOwner] = useState(false);
+  const [isClassOwner2, setIsClassOwner2] = useState(false);
 
   useEffect(() => {
     const fetchingList = async () => {
@@ -79,9 +82,21 @@ function PeoplePage() {
           name: teacher.fullname,
         }));
 
+        // if (teacherData[0].id === data._id) {
+        //   setIsClassOwner(true);
+        // }
+
         if (teacherData[0].id === data._id) {
           setIsClassOwner(true);
+        } else {
+          for (const teacherID of teacherData) {
+            if (teacherID.id === data._id) {
+              console.log("cc");
+              setIsClassOwner2(true);
+            }
+          }
         }
+
         setTeachers(teacherData);
 
         const studentData = response.data.students.map((student) => ({
@@ -204,8 +219,8 @@ function PeoplePage() {
         {/* TEACHER */}
         <section>
           <div className="flex justify-between items-center">
-            <h2 className="text-4xl text-[#10375c]">Teacher</h2>
-            {isClassOwner && (
+            <h2 className="text-4xl text-[#10375c]">{t("Teacher")}</h2>
+            {(isClassOwner || isClassOwner2) && (
               <span className="">
                 <PersonAddAltIcon
                   className=" cursor-pointer hover:text-blue-400"
@@ -245,8 +260,8 @@ function PeoplePage() {
         {/* STUDENT */}
         <section className="mt-12">
           <div className="flex justify-between items-center">
-            <h2 className="text-4xl text-[#10375c]">Students</h2>
-            {isClassOwner && (
+            <h2 className="text-4xl text-[#10375c]">{t("Students")}</h2>
+            {(isClassOwner || isClassOwner2) && (
               <span className="">
                 <PersonAddAltIcon
                   className="cursor-pointer hover:text-blue-400"
@@ -270,7 +285,7 @@ function PeoplePage() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                 </div>
-                {isClassOwner && (
+                {(isClassOwner || isClassOwner2) && (
                   <span className="">
                     <RemoveCircleOutlineIcon
                       className="text-gray-300 cursor-pointer hover:text-blue-400"

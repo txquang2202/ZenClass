@@ -27,6 +27,7 @@ export const ClassDetailProvider = ({ children }) => {
   let dataUser;
   if (token) dataUser = jwtDecode(token);
   const [isClassOwner, setIsClassOwner] = useState(false);
+  const [isClassOwner2, setIsClassOwner2] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,7 +54,12 @@ export const ClassDetailProvider = ({ children }) => {
         });
         if (data.teachers[0]._id === dataUser._id) {
           setIsClassOwner(true);
-          // console.log(isClassOwner);
+        } else {
+          for (const teacherID of data.teachers) {
+            if (teacherID._id === dataUser._id) {
+              setIsClassOwner2(true);
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -65,7 +71,9 @@ export const ClassDetailProvider = ({ children }) => {
   }, [navigate, token, id1, location.pathname]);
 
   return (
-    <ClassDetailContext.Provider value={{ detailClass, isClassOwner }}>
+    <ClassDetailContext.Provider
+      value={{ detailClass, isClassOwner, isClassOwner2 }}
+    >
       {children}
     </ClassDetailContext.Provider>
   );

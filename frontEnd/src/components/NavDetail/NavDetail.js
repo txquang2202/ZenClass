@@ -4,6 +4,7 @@ import { getClassByID } from "../../services/classServices";
 import { jwtDecode } from "jwt-decode";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { Menu, MenuItem } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 function NavDetail(props) {
   const [activeLink, setActiveLink] = useState("general");
@@ -12,6 +13,7 @@ function NavDetail(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { t } = useTranslation();
 
   let dataUser;
   if (token) dataUser = jwtDecode(token);
@@ -61,7 +63,7 @@ function NavDetail(props) {
               }`}
               onClick={() => handleLinkClick("general")}
             >
-              General
+              {t("General")}
             </Link>
           </li>
           <li class="-mb-px mr-16">
@@ -74,7 +76,7 @@ function NavDetail(props) {
               }`}
               onClick={() => handleLinkClick("people")}
             >
-              People
+              {t("People")}
             </Link>
           </li>
           <li class="-mb-px mr-16">
@@ -86,7 +88,7 @@ function NavDetail(props) {
               }`}
               onClick={() => handleLinkClick("grade")}
             >
-              <div onClick={handleMenu}>Grade</div>
+              <div onClick={handleMenu}>{t("Grade")}</div>
             </Link>
             <Menu
               id="simple-menu"
@@ -109,7 +111,7 @@ function NavDetail(props) {
                     activeLink === "grade-board" ? "text-[#2E80CE] " : "p-1"
                   }`}
                 >
-                  Grade Board
+                  {t("Grade Board")}
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
@@ -121,7 +123,7 @@ function NavDetail(props) {
                       : "p-1"
                   }`}
                 >
-                  Grade Structure
+                  {t("Grade Structure")}
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
@@ -133,7 +135,7 @@ function NavDetail(props) {
                       : "p-1"
                   }`}
                 >
-                  Grade Review
+                  {t("Grade Review")}
                 </Link>
               </MenuItem>
             </Menu>

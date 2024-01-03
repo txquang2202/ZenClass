@@ -39,7 +39,7 @@ const YourComponent = () => {
     direction: "ascending",
   });
 
-  const { isClassOwner, detailClass } = useClassDetailContext();
+  const { isClassOwner, isClassOwner2, detailClass } = useClassDetailContext();
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
 
@@ -587,7 +587,7 @@ const YourComponent = () => {
         </div>
       </div>
       {/* IMPORT / EXPORT */}
-      {isClassOwner && (
+      {(isClassOwner || isClassOwner2) && (
         <div className="flex justify-between items-center">
           <div>
             <button className="text-red-500" onClick={handleDeleteGrade}>
@@ -698,6 +698,7 @@ const YourComponent = () => {
                 (student) =>
                   // Conditionally render the entire row
                   (isClassOwner ||
+                    isClassOwner2 ||
                     (status.statusGrade === true &&
                       data.userID === student.studentId)) && (
                     <tr key={student._id} className="text-center">
@@ -714,7 +715,7 @@ const YourComponent = () => {
                         {calculateWeightedTotal(student.grades)}
                       </td>
                       <td className="py-2 px-4 border-b">
-                        {isClassOwner ? (
+                        {isClassOwner || isClassOwner2 ? (
                           <button
                             className="bg-blue-500 text-white py-1 px-2 font-semibold font-sans rounded"
                             onClick={() => openModal(student)}
@@ -741,7 +742,7 @@ const YourComponent = () => {
         </table>
 
         {/* Submit */}
-        {isClassOwner && (
+        {(isClassOwner || isClassOwner2) && (
           <div className="text-center">
             <button
               type="button"
