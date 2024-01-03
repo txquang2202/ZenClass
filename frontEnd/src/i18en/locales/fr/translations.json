@@ -20,8 +20,40 @@
   "Teacher": "Giáo viên",
   "Class": "Lớp học",
 
+  "No class available": "Hiện tại không có lớp",
+  "No course available": "Hiện tại không có khóa học",
+  "Loading": "Đang tải",
+
   "Notifications": "Thông báo",
   "See all": "Xem thêm",
+  "No notifications": "Không có thông báo",
+  "Delete all": "Xóa tất cả",
+
+  "Profile": "Trang cá nhân",
+  "Logout": "Đăng xuất",
+
+  "Login": "Đăng nhập",
+  "Sign Up": "Đăng kí",
+
+  "General": "Chung",
+  "Class ID": "Mã lớp",
+  "Copy": "Sao chép",
+  "Upcoming events": "Sự kiện sắp tới",
+  "There are no upcoming events": "Không có sự kiện nào",
+  "No homework available": "Không có bài tập nào",
+  "Edit Class": "Chỉnh sửa lớp",
+  "Save": "Lưu",
+  "Delete class": "Xóa lớp",
+  "Add Homework": "Thêm bài tập",
+  "Description": "Thông tin mô tả",
+
+  "People": "Mọi người",
+  "Students": "Sinh viên",
+  
+  "Grade": "Điểm",
+  "Grade Board": "Bảng điểm",
+  "Grade Structure": "Cấu trúc điểm",
+  "Grade Review": "Phúc khảo",
 
   "greet": "Bonjour, {{name}} !"
 }

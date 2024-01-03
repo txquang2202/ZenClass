@@ -11,6 +11,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
+import { useTranslation } from "react-i18next";
 
 function ListHomeWork(props) {
   const [homeworks, setHomeWorks] = useState([]);
@@ -27,7 +28,8 @@ function ListHomeWork(props) {
   if (token) data = jwtDecode(token);
   const [loading, setLoading] = useState(true);
 
-  const { isClassOwner } = useClassDetailContext();
+  const { isClassOwner, isClassOwner2 } = useClassDetailContext();
+  const { t } = useTranslation();
 
   // API create homeworks
   const handleCreateHomework = async () => {
@@ -135,7 +137,7 @@ function ListHomeWork(props) {
   return (
     <div className="col-span-3 grid grid-flow-row auto-rows-max gap-4">
       <div className="text-center">
-        {isClassOwner ? (
+        {isClassOwner || isClassOwner2 ? (
           <button
             onClick={openModal1}
             className="btn border-2 border-gray-300 bg-white text-gray-400 px-3 py-1 lg:px-4 lg:py-1 rounded-full text-2xl cursor-pointer hover:bg-gray-100 drop-shadow-md "
@@ -147,7 +149,7 @@ function ListHomeWork(props) {
         )}
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <p>{t("Loading")}...</p>
       ) : (
         <>
           {homeworks.length > 0 ? (
@@ -174,7 +176,9 @@ function ListHomeWork(props) {
               </div>
             ))
           ) : (
-            <p className="text-gray-400 mb-10">No homework available...</p>
+            <p className="text-gray-400 mb-10">
+              {t("No homework available")}...
+            </p>
           )}
         </>
       )}
@@ -182,11 +186,11 @@ function ListHomeWork(props) {
       {/* Modal Post */}
       <Modal show={isModalOpen1} handleClose={closeModal1}>
         <h2 className="text-2xl font-semibold mb-4 text-[#10375c]">
-          Add Homework
+          {t("Add Homework")}
         </h2>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">
-            Title:
+            {t("Title")}:
           </label>
           <input
             type="text"
@@ -198,7 +202,7 @@ function ListHomeWork(props) {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">
-            Description:
+            {t("Description")}:
           </label>
           <textarea
             id="description" // Thay đổi id thành "description"
@@ -215,13 +219,13 @@ function ListHomeWork(props) {
             onClick={handleCreateHomework}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
-            Add Homework
+            {t("Add Homework")}
           </button>
           <button
             onClick={closeModal1}
             className="border border-gray-300 px-4 py-2 rounded-md"
           >
-            Cancel
+            {t("Cancel")}
           </button>
         </div>
       </Modal>

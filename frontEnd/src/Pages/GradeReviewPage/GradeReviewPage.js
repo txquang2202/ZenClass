@@ -41,7 +41,7 @@ function GradeReviewPage(props) {
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
 
-  const { isClassOwner, detailClass } = useClassDetailContext();
+  const { isClassOwner, isClassOwner2, detailClass } = useClassDetailContext();
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
@@ -315,7 +315,7 @@ function GradeReviewPage(props) {
         {reviews
           .filter(
             (item) =>
-              (isClassOwner || data.userID === item.userID) &&
+              (isClassOwner || isClassOwner2 || data.userID === item.userID) &&
               (item.fullname
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase()) ||
@@ -327,7 +327,9 @@ function GradeReviewPage(props) {
           )
           .map(
             (item, index) =>
-              (isClassOwner || data.userID === item.userID) && (
+              (isClassOwner ||
+                isClassOwner2 ||
+                data.userID === item.userID) && (
                 <div
                   key={index}
                   className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"

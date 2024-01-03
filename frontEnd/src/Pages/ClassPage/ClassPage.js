@@ -15,11 +15,11 @@ const ClassPage = () => {
           {t("My Classes")}
         </h1>
         {loading ? (
-          <p>Loading...</p>
+          <p>{t("Loading")}...</p>
         ) : (
           <>
             {classes.length === 0 ? (
-              <p className="text-gray-400 mb-10">No class available</p>
+              <p className="text-gray-400 mb-10">{t("No class available")}</p>
             ) : (
               <Grid
                 container

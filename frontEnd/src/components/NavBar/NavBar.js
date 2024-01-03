@@ -5,6 +5,7 @@ import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
 import LanguageSwitcher from "../SwitchLanguage/SwitchLanguage";
+import { useTranslation } from "react-i18next";
 
 const getUser = () => {
   const data = localStorage.getItem("user");
@@ -20,6 +21,7 @@ const getUser = () => {
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(getUser());
+  const { t } = useTranslation();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,10 +122,9 @@ const Navbar = () => {
                   className="mt-12"
                 >
                   <Link to={`/profile/${user._id}`}>
-                    <MenuItem>Profile</MenuItem>
+                    <MenuItem>{t("Profile")}</MenuItem>
                   </Link>
-                  <MenuItem onClick={handleClose}>Settings</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
                 </Menu>
               </>
             ) : (
@@ -132,13 +133,13 @@ const Navbar = () => {
                   to="/signin"
                   className="text-white  font-sans font-semibold"
                 >
-                  Login
+                  {t("Login")}
                 </Link>
                 <Link
                   to="/signup"
                   className="text-white bg-[#2E80CE] px-4 py-2 rounded-full  font-sans font-semibold"
                 >
-                  Sign Up
+                  {t("Sign Up")}
                 </Link>
               </>
             )}

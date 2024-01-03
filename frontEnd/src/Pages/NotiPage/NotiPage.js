@@ -8,10 +8,14 @@ import {
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function NotiPage(props) {
   const { menuItemsData, setMenuItemsData } = useNotificationContext();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleDeleteAllNoti = async () => {
     const isConfirmed = window.confirm(
@@ -53,13 +57,18 @@ function NotiPage(props) {
     }
   };
 
+  const handleNavigate = (link) => {
+    const path = link;
+    navigate(path);
+  };
+
   return (
     <>
       <section className="feature pt-[34px] pb-[170px]">
         <div className="container lg:max-w-[calc(100%-50rem)] mx-auto rounded-lg p-6 shadow-[0_4px_9px_-4px_#3b71ca]  ">
           <div className="flex justify-start">
             <h2 className="section-heading font-semibold text-3xl leading-[1.2] tracking-tight text-[#10375c]">
-              Notifications
+              {t("Notifications")}
             </h2>
           </div>
           <hr className="text-gray-200 h-1 mt-6" />
@@ -69,6 +78,7 @@ function NotiPage(props) {
                 <div
                   key={item.id}
                   className="flex rounded-lg justify-between items-center gap-6 p-4 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleNavigate(item.link)}
                 >
                   <div className="flex">
                     <Avatar
@@ -99,13 +109,13 @@ function NotiPage(props) {
               ))
             ) : (
               <div className="text-center text-gray-500 mb-2">
-                No notifications...
+                {t("No notifications")}...
               </div>
             )}
           </div>
-          <div>
-            <button className="text-red-500" onClick={handleDeleteAllNoti}>
-              Delete all
+          <div className="mt-3">
+            <button className="text-red-500 " onClick={handleDeleteAllNoti}>
+              {t("Delete all")}
             </button>
           </div>
         </div>
