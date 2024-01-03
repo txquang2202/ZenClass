@@ -256,7 +256,7 @@ function GradeReviewPage(props) {
 
   const handleNewCommentChange = (e, reviewId) => {
     const { value } = e.target;
-    console.log(`Review ID: ${reviewId}, Content: ${value}`);
+    //console.log(`Review ID: ${reviewId}, Content: ${value}`);
 
     setNewComment((prevNewComment) => ({
       ...prevNewComment,

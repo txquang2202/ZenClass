@@ -23,7 +23,7 @@ const getAllNotifications = async (req, res) => {
 const addNotification = async (req, res) => {
   try {
     const classID = req.params.id;
-    console.log(classID);
+    //console.log(classID);
     const { content, avt, date, link, userID } = req.body;
     const teacher = await User.findOne({ userID: userID });
     //const findStudentToAdd

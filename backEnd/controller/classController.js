@@ -277,11 +277,13 @@ const addStudent = async (req, res) => {
       await newGrade.save();
     }
     const classGrades = await Class.findById(classId);
-
-    if (!classGrades.grades.includes(newGrade._id)) {
-      classGrades.grades.push(newGrade._id);
-      await classGrades.save();
+    if (!existingCheck) {
+      if (!classGrades.grades.includes(newGrade._id)) {
+        classGrades.grades.push(newGrade._id);
+        await classGrades.save();
+      }
     }
+
     return res.redirect(
       `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
     );
