@@ -299,7 +299,7 @@ const addGradeToClass = async (req, res) => {
       }
       if (errorStudent) {
         return res.status(400).json({
-          message: `The student with id: ${errorStudent.userID} has a mismatched full`,
+          message: `The student with id: ${errorStudent.userID} has a mismatched fullname`,
           errorStudent: errorStudent,
         });
       }
