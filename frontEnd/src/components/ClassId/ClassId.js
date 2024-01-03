@@ -11,6 +11,7 @@ function ClassId(props) {
   const navigate = useNavigate();
   const [detailClass, setDetailClass] = useState({});
   const [isClassOwner, setIsClassOwner] = useState(false);
+  const [isClassOwner2, setIsClassOwner2] = useState(false);
   let dataUser;
   if (token) dataUser = jwtDecode(token);
   // APIgetClass
@@ -23,9 +24,14 @@ function ClassId(props) {
         setDetailClass({
           id: data._id || "",
         });
-
         if (data.teachers[0]._id === dataUser._id) {
           setIsClassOwner(true);
+        } else {
+          for (const teacherID of data.teachers) {
+            if (teacherID._id === dataUser._id) {
+              setIsClassOwner2(true);
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -54,7 +60,7 @@ function ClassId(props) {
 
   return (
     <div>
-      {isClassOwner ? (
+      {isClassOwner || isClassOwner2 ? (
         <section className="border p-4 rounded-lg flex flex-col">
           <h2 className="font-semibold">Class ID</h2>
 
