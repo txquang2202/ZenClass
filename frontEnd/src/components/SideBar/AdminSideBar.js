@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 
 function SideBar() {
   const { id } = useParams();
@@ -42,20 +42,6 @@ function SideBar() {
               <SchoolIcon className="w-full h-full" />
             </span>
             <span className="mt-1">Classes</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={`/managecourse`}
-            className={`flex flex-col items-center text-gray-700  text-xs ${
-              activeLink === "courses" ? "text-blue-300" : ""
-            }`}
-            onClick={() => handleLinkClick("courses")}
-          >
-            <span className="w-8 h-8">
-              <AutoStoriesIcon className="w-full h-full" />
-            </span>
-            <span className="mt-1">Courses</span>
           </Link>
         </li>
       </ul>

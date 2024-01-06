@@ -5,7 +5,6 @@ import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
 
-
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(false);
@@ -68,35 +67,31 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(false);
     setAnchorEl(null);
     Navigate("/");
   };
   return (
     <nav className="bg-[#10375C] pt-3 pb-2 font-sans sticky top-0 z-10 ">
-      <div className="container w-full lg:max-w-[calc(100%-7rem)] mx-auto">
+      <div className="container w-full lg:max-w-[calc(100%-15rem)] mx-auto">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-white text-lg">
+          <Link
+            to={`/manageusers`}
+            className="text-white text-lg font-sans font-semibold flex gap-3 items-center mr-5"
+          >
+            <img
+              src={`${process.env.PUBLIC_URL}/assets/icons/class.ico`}
+              alt="ZenClass"
+              width="50"
+              height="60"
+            />
             ZenClass
           </Link>
-          <div className="flex items-center space-x-4 gap-12">
-            <Link to={`/manageusers`} className="text-white">
-              Home
-            </Link>
-            <Link to="#!" className="text-white">
-              About
-            </Link>
-            <Link to="#!" className="text-white">
-              Services
-            </Link>
-            <Link to="#!" className="text-white">
-              Contact
-            </Link>
-          </div>
+          <div className="flex items-center space-x-4 gap-12"></div>
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <Noti />
                 <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
@@ -123,7 +118,7 @@ const Navbar = () => {
                   <Link to={`/profile/${id}`}>
                     <MenuItem>Profile</MenuItem>
                   </Link>
-                  <MenuItem onClick={handleClose}>Settings</MenuItem>
+
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
