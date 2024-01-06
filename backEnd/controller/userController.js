@@ -13,7 +13,6 @@ const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const lastUser = await User.findOne({}, {}, { sort: { userID: -1 } });
-    console.log(lastUser.userID);
     const newUserID = lastUser ? Number(lastUser.userID) + 1 : 20127001;
 
     const hashedPassword = await bcrypt.hash(password, 10);

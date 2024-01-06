@@ -143,14 +143,19 @@ const createUserwithFile = async (req, res) => {
 
     const username = newUser.username;
     const email = newUser.email;
+    const userID = newUser.userID;
     const existUsername = await User.findOne({ username });
     const existEmail = await User.findOne({ email });
+    const existStudentID = await User.findOne({ userID });
 
     if (existUsername) {
       return res.status(400).json({ message: "Username already taken!" });
     }
     if (existEmail) {
       return res.status(400).json({ message: "Email already taken!" });
+    }
+    if (existStudentID) {
+      return res.status(400).json({ message: "StudentID already taken!" });
     }
 
     await newUser.save();

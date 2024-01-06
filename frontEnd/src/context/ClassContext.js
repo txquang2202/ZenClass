@@ -21,15 +21,11 @@ export const ClassProvider = ({ children }) => {
         let token;
         token = localStorage.getItem("token");
         if (token) data = jwtDecode(token);
-<<<<<<< HEAD
-        console.log(data);
-=======
         else {
           navigate("/signin", { replace: true });
           return;
         }
         //console.log(data);
->>>>>>> 14ccf6bd4ef7bd8962d15ae5d8030aab893fd8fb
         const response = await getAllClasses(data._id, token);
         const classesData = response.data.classInfo;
         if (classesData) {
