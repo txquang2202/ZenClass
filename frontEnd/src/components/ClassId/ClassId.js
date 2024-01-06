@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getClassByID } from "../../services/classServices";
 import ClipboardJS from "clipboard";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 
 function ClassId(props) {
   const { id } = useParams();
@@ -11,8 +12,10 @@ function ClassId(props) {
   const navigate = useNavigate();
   const [detailClass, setDetailClass] = useState({});
   const [isClassOwner, setIsClassOwner] = useState(false);
+  const [isClassOwner2, setIsClassOwner2] = useState(false);
   let dataUser;
   if (token) dataUser = jwtDecode(token);
+  const { t } = useTranslation();
   // APIgetClass
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,9 +26,14 @@ function ClassId(props) {
         setDetailClass({
           id: data._id || "",
         });
-
         if (data.teachers[0]._id === dataUser._id) {
           setIsClassOwner(true);
+        } else {
+          for (const teacherID of data.teachers) {
+            if (teacherID._id === dataUser._id) {
+              setIsClassOwner2(true);
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -54,9 +62,9 @@ function ClassId(props) {
 
   return (
     <div>
-      {isClassOwner ? (
+      {isClassOwner || isClassOwner2 ? (
         <section className="border p-4 rounded-lg flex flex-col">
-          <h2 className="font-semibold">Class ID</h2>
+          <h2 className="font-semibold">{t("Class ID")}</h2>
 
           <p
             ref={textRef}
@@ -68,7 +76,7 @@ function ClassId(props) {
             onClick={handleCopyClick}
             className="ml-auto text-blue-400 cursor-pointer copy-button"
           >
-            Copy
+            {t("Copy")}
           </button>
         </section>
       ) : (

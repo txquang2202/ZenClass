@@ -32,7 +32,8 @@ import {
   getAllClass,
   changeStatusClass,
   deleteListclasssByIds,
-  getclassbyurl
+  getclassbyurl,
+  checkInClass,
 } from "../controller/classController.js";
 import {
   getCourseByUser,
@@ -72,6 +73,7 @@ import {
   editClassGrade,
   addGradeToClass,
   deleteAllGrade,
+  editStatusGrade,
 } from "../controller/gradeController.js";
 
 import {
@@ -133,6 +135,7 @@ const initApi = (app) => {
   router.post("/changeinforuser", changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
   //class APIs
+  router.get("/getAllclass", getAllClass);
   router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
@@ -157,6 +160,7 @@ const initApi = (app) => {
   router.post("/changeStatusListClass", changeStatusClass);
   router.post("/deleteListclass", deleteListclasssByIds);
   router.post("/getclass", getclassbyurl);
+  router.post("/checkInClass/:id", checkInClass);
   //coureseAPIS
   router.get("/getCourseByUser/:id", authenticateToken, getCourseByUser);
   router.get("/getCourseByID/:id", authenticateToken, getCourseByID);
@@ -183,6 +187,7 @@ const initApi = (app) => {
   //Grade
   router.get("/getAllGradeClass/:id", authenticateToken, getAllGradeByClass);
   router.put("/editClassGrade/:id", authenticateToken, editClassGrade);
+  router.put("/editStatusGrade/:id", editStatusGrade);
   router.post("/addGradeToClass/:id", authenticateToken, addGradeToClass);
   router.delete("/deleteAllGrade/:id", deleteAllGrade);
   // router.post("/addComments", authenticateToken, addComment);

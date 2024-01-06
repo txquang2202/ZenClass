@@ -12,6 +12,7 @@ const classSchema = new mongoose.Schema({
   grades: [{ type: Schema.Types.ObjectId, ref: "grades" }],
   notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }],
   status: String,
+  statusGrade: { type: Boolean, default: false },
 });
 
 const Class = mongoose.model("classes", classSchema);

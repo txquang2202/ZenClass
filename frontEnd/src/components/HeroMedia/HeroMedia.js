@@ -9,13 +9,14 @@ import { jwtDecode } from "jwt-decode";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import Modal from "../../components/Modal/ClassDetailModal";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function HeroMedia() {
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const [detailClass, setDetailClass] = useState({});
   const [formData, setFormData] = useState({
     title: "",
@@ -26,6 +27,7 @@ function HeroMedia() {
   let dataUser;
   if (token) dataUser = jwtDecode(token);
   const [isClassOwner, setIsClassOwner] = useState(false);
+  const { t } = useTranslation();
 
   // Modal
   const openModal = () => {
@@ -145,11 +147,11 @@ function HeroMedia() {
       </section>
       {/* Modal Edit */}
       <Modal show={isModalOpen} handleClose={closeModal}>
-        <h2 className="text-2xl font-semibold mb-4">Edit Class</h2>
+        <h2 className="text-2xl font-semibold mb-4">{t("Edit Class")}</h2>
         <form>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
-              Title:
+              {t("Title")}:
             </label>
             <input
               type="text"
@@ -161,7 +163,7 @@ function HeroMedia() {
           </div>
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-600">
-              Class Name:
+              {t("Class Name")}:
             </label>
             <input
               type="text"
@@ -174,7 +176,7 @@ function HeroMedia() {
         </form>
 
         <button onClick={() => handleDeleteClass(id)} className="text-red-400">
-          Delete class
+          {t("Delete class")}
         </button>
 
         <div className="flex justify-end">
@@ -182,13 +184,13 @@ function HeroMedia() {
             onClick={handleEditClass}
             className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
           >
-            Save
+            {t("Save")}
           </button>
           <button
             onClick={closeModal}
             className="border border-gray-300 px-4 py-2 rounded-md"
           >
-            Cancel
+            {t("Cancel")}
           </button>
         </div>
       </Modal>

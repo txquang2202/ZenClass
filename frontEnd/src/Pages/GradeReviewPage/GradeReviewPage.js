@@ -3,6 +3,7 @@ import { Avatar } from "@material-ui/core";
 import SendIcon from "@mui/icons-material/Send";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import {
   getAllGradeReviews,
   deleteReviewByID,
@@ -40,13 +41,12 @@ function GradeReviewPage(props) {
     avt: "/path/to/default/avatar.jpg", // replace with actual default avatar path
   });
 
-  const { isClassOwner, detailClass } = useClassDetailContext();
+  const { isClassOwner, isClassOwner2, detailClass } = useClassDetailContext();
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
   const myAvtPath = `/assets/imgs/${user.img}`;
-
   // API get Review
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,6 +85,22 @@ function GradeReviewPage(props) {
       try {
         let approve = 1;
         // 1 = approve #1 = reject
+
+        const currentDate = new Date();
+        const title = detailClass.title;
+        const content = `Your grade review request in class ${title} has been approved!!`;
+        const link = "/home/classes/detail/grade-board/" + detailClass.id;
+        if (isClassOwner) {
+          await addNotification(
+            detailClass.id,
+            token,
+            content,
+            avtPath,
+            currentDate,
+            link,
+            data.userID
+          );
+        }
         await deleteReviewByID(id, approve, token);
         setReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
@@ -104,6 +120,21 @@ function GradeReviewPage(props) {
       try {
         let approve = 0;
         // 1 = approve #1 = reject
+        const currentDate = new Date();
+        const title = detailClass.title;
+        const content = `Your grade review request in class ${title} has been rejected`;
+        const link = "/home/classes/detail/grade-board/" + detailClass.id;
+        if (isClassOwner) {
+          await addNotification(
+            detailClass.id,
+            token,
+            content,
+            avtPath,
+            currentDate,
+            link,
+            data.userID
+          );
+        }
         await deleteReviewByID(id, approve, token);
         setReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
@@ -225,7 +256,7 @@ function GradeReviewPage(props) {
 
   const handleNewCommentChange = (e, reviewId) => {
     const { value } = e.target;
-    console.log(`Review ID: ${reviewId}, Content: ${value}`);
+    //console.log(`Review ID: ${reviewId}, Content: ${value}`);
 
     setNewComment((prevNewComment) => ({
       ...prevNewComment,
@@ -284,7 +315,7 @@ function GradeReviewPage(props) {
         {reviews
           .filter(
             (item) =>
-              (isClassOwner || data.userID === item.userID) &&
+              (isClassOwner || isClassOwner2 || data.userID === item.userID) &&
               (item.fullname
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase()) ||
@@ -296,7 +327,9 @@ function GradeReviewPage(props) {
           )
           .map(
             (item, index) =>
-              (isClassOwner || data.userID === item.userID) && (
+              (isClassOwner ||
+                isClassOwner2 ||
+                data.userID === item.userID) && (
                 <div
                   key={index}
                   className="container w-[700px] mx-auto rounded-lg shadow-[0_4px_9px_-4px_#3b71ca] mb-10"
@@ -319,14 +352,18 @@ function GradeReviewPage(props) {
                           </span>
                         </div>
                       </div>
-                      <CheckCircleOutlineIcon
-                        onClick={() => handleRejectReview(item.id)}
-                        className="text-red-300 cursor-pointer hover:text-blue-500"
-                      />
-                      <CheckCircleOutlineIcon
-                        onClick={() => handleApproveReview(item.id)}
-                        className="text-blue-300 cursor-pointer hover:text-blue-500"
-                      />
+                      {(isClassOwner || isClassOwner2) && (
+                        <div>
+                          <CheckCircleOutlineIcon
+                            onClick={() => handleApproveReview(item.id)}
+                            className="text-blue-300 cursor-pointer hover:text-blue-500"
+                          />
+                          <CancelOutlinedIcon
+                            onClick={() => handleRejectReview(item.id)}
+                            className="text-red-300 cursor-pointer hover:text-red-500"
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="mt-3">
                       <table className="min-w-full bg-white border border-gray-300">

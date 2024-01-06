@@ -15,7 +15,6 @@ const registerUser = (username, email, password) => {
   });
 };
 const getComments = () => {
-  console.log("có tằng gọi comment");
   return axios.get("/api/v1/getComments");
 };
 const resetPassword = (data) => {

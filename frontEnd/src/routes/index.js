@@ -27,6 +27,7 @@ import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import BlockPage from "../Pages/BlockPage/BlockPage";
 import NotiLayout from "../layouts/NotiLayout/NotiLayout";
 import GradeReviewPage from "../Pages/GradeReviewPage/GradeReviewPage";
+import ChatPage from "../Pages/ChatPage/ChatPage";
 
 import { jwtDecode } from "jwt-decode";
 import { getUserID } from "../services/userServices";
@@ -128,6 +129,12 @@ const routes = [
   {
     path: "/home/classes/detail/grade-board/:id",
     page: GradeBoardPage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/chat/:id",
+    page: ChatPage,
     layout: DetailLayout,
     isProtected: true,
   },

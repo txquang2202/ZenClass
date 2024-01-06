@@ -23,7 +23,7 @@ const createToken = (user) => {
       },
       secretKey,
       {
-        // expiresIn: "1h",
+        expiresIn: "3h",
         algorithm: "HS256",
       }
     );
@@ -44,7 +44,7 @@ const authenticateToken = (req, res, next) => {
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) {
       console.error("Error verifying token:", err);
-      return res.sendStatus(403);
+      return res.status(600).json("You are not authorized to access this!!");
     }
 
     req.user = user;

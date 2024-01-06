@@ -23,6 +23,7 @@ const getAllNotifications = async (req, res) => {
 const addNotification = async (req, res) => {
   try {
     const classID = req.params.id;
+    //console.log(classID);
     const { content, avt, date, link, userID } = req.body;
     const teacher = await User.findOne({ userID: userID });
     //const findStudentToAdd
@@ -36,6 +37,7 @@ const addNotification = async (req, res) => {
     await newNoti.save();
 
     const classNoti = await Class.findById(classID);
+    //console.log(classNoti);
     for (const studentID of classNoti.students) {
       const student = await User.findOne({ _id: studentID });
       student.notifications.push(newNoti._id);

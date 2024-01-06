@@ -68,7 +68,7 @@ function ResponsiveDrawer(props) {
   const handleAvatarChange = (e) => {
     const file = e?.target?.files[0];
     const file1 = e?.target?.files[0];
-    console.log(file1);
+    // console.log(file1);
     if (file && file1) {
       setAvatar(file);
       setavatarPreview(URL.createObjectURL(file1));

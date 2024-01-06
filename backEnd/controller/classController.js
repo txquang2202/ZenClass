@@ -263,15 +263,27 @@ const addStudent = async (req, res) => {
       fullName: student.fullname,
       grades: newGrades,
     });
-
-    await newGrade.save();
-
-    const classGrades = await Class.findById(classId);
-
-    if (!classGrades.grades.includes(newGrade._id)) {
-      classGrades.grades.push(newGrade._id);
-      await classGrades.save();
+    let existingCheck = false;
+    const existGrade = await Class.findOne({ _id: classId }, "grades");
+    if (existGrade.grades.length > 0) {
+      for (const gradeID of existGrade.grades) {
+        const grade = await Grade.findOne({ _id: gradeID });
+        if (grade.studentId === student.userID) {
+          existingCheck = true;
+        }
+      }
     }
+    if (!existingCheck) {
+      await newGrade.save();
+    }
+    const classGrades = await Class.findById(classId);
+    if (!existingCheck) {
+      if (!classGrades.grades.includes(newGrade._id)) {
+        classGrades.grades.push(newGrade._id);
+        await classGrades.save();
+      }
+    }
+
     return res.redirect(
       `${process.env.BASE_URL}/home/classes/detail/people/${classId}?okay=Joining class successfully!!!`
     );
@@ -422,10 +434,17 @@ const deleteStudentFromClass = async (req, res) => {
         { new: true }
       );
       const gradeToBeDeleted = await Class.findOne({ _id: classID }, "grades");
-      for (const gradeID of gradeToBeDeleted.grades) {
-        const grade = await Grade.findOne({ _id: gradeID });
-        if (grade.studentId === findUserID.userID) {
-          await Grade.findOneAndDelete({ _id: gradeID });
+
+      if (gradeToBeDeleted.grades.length > 0) {
+        for (const gradeID of gradeToBeDeleted.grades) {
+          const grade = await Grade.findOne({ _id: gradeID });
+          if (grade.studentId === findUserID.userID) {
+            await Grade.findOneAndDelete({ _id: gradeID });
+            await Class.updateOne(
+              { _id: classID },
+              { $pull: { grades: gradeID } }
+            );
+          }
         }
       }
 
@@ -578,7 +597,6 @@ const getClassByID = async (req, res) => {
     res.status(500).send("Error while fetching class info");
   }
 };
-
 const getAllClass = async (req, res) => {
   try {
     const classes = await Class.find();
@@ -593,8 +611,6 @@ const getAllClass = async (req, res) => {
     res.status(500).json({ error: "Error while fetching Class" });
   }
 };
-
-
 const changeStatusClass = async (req, res) => {
   try {
     const classIds = req.body;
@@ -633,15 +649,20 @@ const changeStatusClass = async (req, res) => {
       .send(`Error while updating users' status: ${error.message}`);
   }
 };
-
 const deleteListclasssByIds = async (req, res) => {
   try {
     const listIdDelete = req.body;
 
     for (const classID of listIdDelete) {
       const deletedClass = await Class.findById(classID);
-      const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
-      const deletedReview = await Class.findOne({ _id: classID }, "gradereviews");
+      const deletedHomeWork = await Class.findOne(
+        { _id: classID },
+        "homeworks"
+      );
+      const deletedReview = await Class.findOne(
+        { _id: classID },
+        "gradereviews"
+      );
 
       if (!deletedClass) {
         // Nếu không tìm thấy lớp, tiếp tục với lớp tiếp theo
@@ -676,7 +697,7 @@ const deleteListclasssByIds = async (req, res) => {
 };
 const getclassbyurl = async (req, res) => {
   try {
-    const classId = req.body; 
+    const classId = req.body;
 
     const classinfo = await Class.find({ _id: { $in: classId } });
 
@@ -684,13 +705,35 @@ const getclassbyurl = async (req, res) => {
       return res.status(404).json({ message: "Class not found!" });
     }
     res.json({ message: "Class retrieved successfully", classinfo });
-
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while getting Class");
   }
 };
+const checkInClass = async (req, res) => {
+  try {
+    const classID = req.params.id;
+    const userID = req.body.userID;
+    const findClass = await Class.findOne({ _id: classID });
+
+    if (!findClass) {
+      return res.status(404).json({ message: "Class not found!!" });
+    }
+
+    const isStudent = findClass.students.includes(userID);
+    const isTeacher = findClass.teachers.includes(userID);
+    if (!isStudent && !isTeacher) {
+      return res
+        .status(404)
+        .json({ message: "You haven't joined this class yet!!!!" });
+    }
+    res.json({ message: "Passed" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error: " + error.message);
+  }
+};
+
 export {
   getclassbyurl,
   deleteListclasssByIds,
@@ -708,4 +751,5 @@ export {
   deleteStudentFromClass,
   deleteTeacherFromClass,
   joinByCode,
+  checkInClass,
 };

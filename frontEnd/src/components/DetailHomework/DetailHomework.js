@@ -27,7 +27,7 @@ function DetailHomework() {
   const parts = location.pathname.split("/");
   finalId = parts[parts.length - 1];
 
-  const { detailClass, isClassOwner } = useClassDetailContext();
+  const { detailClass, isClassOwner, isClassOwner2 } = useClassDetailContext();
 
   // Get API detailClas
   useEffect(() => {
@@ -116,7 +116,7 @@ function DetailHomework() {
             </h2>
 
             <span className="text-end">
-              {isClassOwner && (
+              {(isClassOwner || isClassOwner2) && (
                 <DriveFileRenameOutlineIcon
                   className="text-[#10375c] cursor-pointer hover:text-blue-400"
                   onClick={openModal}

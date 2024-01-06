@@ -161,8 +161,8 @@ const SignIn = ({ handleChange }) => {
         </Grid>
         <form>
           <TextField
-            label="Username"
-            placeholder="Enter username"
+            label="Username or email"
+            placeholder="Enter username or email"
             variant="standard"
             fullWidth
             required

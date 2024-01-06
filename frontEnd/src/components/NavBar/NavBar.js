@@ -5,6 +5,8 @@ import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
 import LanguageSwitcher from "../SwitchLanguage/SwitchLanguage";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const getUser = () => {
   const data = localStorage.getItem("user");
@@ -20,6 +22,7 @@ const getUser = () => {
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, setUser] = useState(getUser());
+  const { t } = useTranslation();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,9 +47,13 @@ const Navbar = () => {
           const session = jwtDecode(token);
           const response = await getUserID(session._id, token);
           const userData = response.data.user;
-          //localStorage.setItem("token", token);
+          if (userData.role === 3) {
+            toast.error("You do not have permission to access this!!!");
+            navigate("/manageusers");
+          }
           localStorage.setItem("user", JSON.stringify(userData));
         }
+
         const data = localStorage.getItem("user");
         if (data !== null) {
           const user = JSON.parse(data);
@@ -77,7 +84,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link
               to="/home"
-              className="text-white text-lg font-sans font-semibold flex gap-3 items-center"
+              className="text-white text-lg font-sans font-semibold flex gap-3 items-center mr-5"
             >
               <img
                 src={`${process.env.PUBLIC_URL}/assets/icons/class.ico`}
@@ -87,6 +94,7 @@ const Navbar = () => {
               />
               ZenClass
             </Link>
+            <LanguageSwitcher />
           </div>
 
           <div className="flex items-center justify-between space-x-4">
@@ -119,10 +127,9 @@ const Navbar = () => {
                   className="mt-12"
                 >
                   <Link to={`/profile/${user._id}`}>
-                    <MenuItem>Profile</MenuItem>
+                    <MenuItem>{t("Profile")}</MenuItem>
                   </Link>
-                  <MenuItem onClick={handleClose}>Settings</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
                 </Menu>
               </>
             ) : (
@@ -131,13 +138,13 @@ const Navbar = () => {
                   to="/signin"
                   className="text-white  font-sans font-semibold"
                 >
-                  Login
+                  {t("Login")}
                 </Link>
                 <Link
                   to="/signup"
                   className="text-white bg-[#2E80CE] px-4 py-2 rounded-full  font-sans font-semibold"
                 >
-                  Sign Up
+                  {t("Sign Up")}
                 </Link>
               </>
             )}

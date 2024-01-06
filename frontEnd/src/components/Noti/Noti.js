@@ -5,6 +5,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { useNotificationContext } from "../../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 
 function Noti(props) {
   const { menuItemsData } = useNotificationContext();
@@ -13,6 +14,8 @@ function Noti(props) {
   const [hideBadge, setHideBadge] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -69,38 +72,47 @@ function Noti(props) {
         <div className="w-[350px]">
           <header className="px-4 sticky top-0 bg-white z-10 pt-3 pb-3">
             <h3 className="text-base font-semibold text-[#10375c] ">
-              Notifications
+              {t("Notifications")}
             </h3>
           </header>
           <hr className="text-gray-200 h-1" />
           <div className="mt-2 px-2 space-y-4">
-            {menuItemsData.map((item) => (
-              <MenuItem key={item.id} onClick={() => handleNavigate(item.link)}>
-                <div className="flex rounded-lg">
-                  <Avatar
-                    alt={item.fullname}
-                    src={item.avt}
-                    className="ml-[-10px] mt-2 h-12 w-12"
-                  />
-                  <div className="ml-3">
-                    <span className="font-semibold">{item.fullname} </span>
-                    <p
-                      className="text-base inline overflow-hidden line-clamp-2"
-                      style={{
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        whiteSpace: "normal",
-                      }}
-                    >
-                      {item.content}
-                    </p>
-                    <span className="text-[#10375c] font-bold text-sm block mt-2">
-                      {item.date}
-                    </span>
+            {menuItemsData.length > 0 ? (
+              menuItemsData.map((item) => (
+                <MenuItem
+                  key={item.id}
+                  onClick={() => handleNavigate(item.link)}
+                >
+                  <div className="flex rounded-lg">
+                    <Avatar
+                      alt={item.fullname}
+                      src={item.avt}
+                      className="ml-[-10px] mt-2 h-12 w-12"
+                    />
+                    <div className="ml-3">
+                      <span className="font-semibold">{item.fullname} </span>
+                      <p
+                        className="text-base inline overflow-hidden line-clamp-2"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          whiteSpace: "normal",
+                        }}
+                      >
+                        {item.content}
+                      </p>
+                      <span className="text-[#10375c] font-bold text-sm block mt-2">
+                        {item.date}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </MenuItem>
-            ))}
+                </MenuItem>
+              ))
+            ) : (
+              <div className="text-center text-gray-500 mb-2">
+                {t("No notifications")}...
+              </div>
+            )}
           </div>
           <footer className=" py-2 mt-auto bg-white text-center sticky bottom-0 text-base">
             <Link
@@ -108,7 +120,7 @@ function Noti(props) {
               className="text-[#10375c] font-medium hover:underline"
               onClick={() => handleClose()}
             >
-              See all
+              {t("See all")}
             </Link>
           </footer>
         </div>

@@ -1,6 +1,10 @@
 import User from "../models/user.js";
 import Class from "../models/classes.js";
 import Comment from "../models/comments.js";
+import Grade from "../models/grades.js";
+import GradeStruct from "../models/gradestructs.js";
+import gradesReview from "../models/gradesReview.js";
+import Homework from "../models/homeworks.js";
 import env from "dotenv";
 import bcrypt from "bcryptjs";
 import {
@@ -10,18 +14,117 @@ import {
 } from "./authController.js";
 import { constants } from "crypto";
 env.config();
+const deleteClassbyID = async (classID) => {
+  try {
+    const deletedClass = await Class.findById(classID);
+    const deletedHomeWork = await Class.findOne({ _id: classID }, "homeworks");
+    const deletedReview = await Class.findOne({ _id: classID }, "gradereviews");
 
+    if (!deletedClass) {
+      return res.status(404).json({ message: "Class not found!" });
+    }
+
+    const students = deletedClass.students;
+    const teachers = deletedClass.teachers;
+
+    await User.updateMany(
+      { _id: { $in: [...students, ...teachers] } },
+      {
+        $pull: {
+          courses: classID,
+          classes: classID,
+        },
+      }
+    );
+
+    for (const homeworkID of deletedHomeWork.homeworks) {
+      const homework = await Homework.findOne({ _id: homeworkID });
+      if (homework) {
+        await Comment.deleteMany({ _id: { $in: homework.comments } });
+      }
+    }
+
+    for (const reviewID of deletedReview.gradereviews) {
+      const review = await gradesReview.findOne({ _id: reviewID });
+      if (review) {
+        await Comment.deleteMany({ _id: { $in: review.comments } });
+      }
+    }
+
+    await GradeStruct.deleteMany({ _id: { $in: deletedClass.gradestructs } });
+    await Grade.deleteMany({ _id: { $in: deletedClass.grades } });
+    await gradesReview.deleteMany({ _id: { $in: deletedClass.gradereviews } });
+    await Homework.deleteMany({ _id: { $in: deletedClass.homeworks } });
+    await Class.findByIdAndDelete(classID);
+
+    return { message: "Delete successfully!" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Error while deleting class" };
+  }
+};
+const deleteStudentFromClass = async (classID, personID) => {
+  try {
+    const findUserID = await User.findOne({ _id: personID });
+
+    const isStudentExists = await Class.exists({
+      _id: classID,
+      students: personID,
+    });
+
+    if (isStudentExists) {
+      await Class.findByIdAndUpdate(
+        classID,
+        {
+          $pull: {
+            students: personID,
+          },
+        },
+        { new: true }
+      );
+      await User.findOneAndUpdate(
+        { courses: classID },
+        {
+          $pull: {
+            courses: classID,
+          },
+        },
+        { new: true }
+      );
+      const gradeToBeDeleted = await Class.findOne({ _id: classID }, "grades");
+
+      if (gradeToBeDeleted.grades.length > 0) {
+        for (const gradeID of gradeToBeDeleted.grades) {
+          const grade = await Grade.findOne({ _id: gradeID });
+          if (grade.studentId === findUserID.userID) {
+            await Grade.findOneAndDelete({ _id: gradeID });
+            await Class.updateOne(
+              { _id: classID },
+              { $pull: { grades: gradeID } }
+            );
+          }
+        }
+      }
+
+      return { message: "Delete successfully!" };
+    } else {
+      res.status(404).json({ message: "Student not found in the class." });
+    }
+  } catch (error) {
+    console.error(error);
+    return { error: "Error while deleting student from class" };
+  }
+};
 const createUserwithFile = async (req, res) => {
   try {
     const user = req.body;
     const password = "111111";
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    
+
     // Generate a verification token
     const verificationToken = generateUniqueToken();
     const newUser = new User({
-      userID : user.userID,
+      userID: user.userID,
       username: user.username,
       password: hashedPassword,
       email: user.email,
@@ -37,9 +140,9 @@ const createUserwithFile = async (req, res) => {
       street: user.street || "",
       city: user.city || "",
     });
-    
+
     const username = newUser.username;
-    const email = newUser.email
+    const email = newUser.email;
     const existUsername = await User.findOne({ username });
     const existEmail = await User.findOne({ email });
 
@@ -57,7 +160,6 @@ const createUserwithFile = async (req, res) => {
     res.status(500).send("Đã xảy ra lỗi.");
   }
 };
-
 const changeInforUser = async (req, res) => {
   try {
     const user = req.body;
@@ -126,7 +228,6 @@ const getAllUsersComments = async (req, res) => {
     res.status(500).send("Error while fetching users");
   }
 };
-
 const deleteUsersbyID = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -143,26 +244,30 @@ const deleteUsersbyID = async (req, res) => {
     res.status(500).send("Error while fetching user profile");
   }
 };
-
 const deleteListUsersByIds = async (req, res) => {
   try {
     const listIdDelete = req.body;
-
     if (!listIdDelete || listIdDelete.length === 0) {
       return res
         .status(400)
         .json({ message: "No user IDs provided for deletion!" });
     }
 
+    const user = await User.findById(listIdDelete);
+    for (const classID of user.classes) {
+      await deleteClassbyID(classID);
+    }
+    for (const classID of user.courses) {
+      await deleteStudentFromClass(classID, user._id);
+    }
     const deletedUsers = await User.deleteMany({ _id: { $in: listIdDelete } });
-
     if (deletedUsers.deletedCount === 0) {
       return res
         .status(404)
         .json({ message: "No users found for the provided IDs!" });
     }
 
-    res.json({ message: "Users deleted successfully", deletedUsers });
+    res.json({ message: "Users deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while deleting users");
@@ -233,10 +338,9 @@ const blockUserbyID = async (req, res) => {
   }
 };
 
-
 const getUserbyID = async (req, res) => {
   try {
-    const userIds = req.body.userIds; 
+    const userIds = req.body.userIds;
 
     const users = await User.find({ _id: { $in: userIds } });
 
@@ -245,8 +349,6 @@ const getUserbyID = async (req, res) => {
     }
 
     res.json({ message: "Users retrieved successfully", users });
-    
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Error while getting users");
