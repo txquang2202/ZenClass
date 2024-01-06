@@ -103,12 +103,6 @@ const routes = [
     isProtected: true,
   },
   {
-    path: "/home/chat-groups/:id",
-    page: ChatPage,
-    layout: HomeLayout,
-    isProtected: true,
-  },
-  {
     path: "/home/notifications/:id",
     page: NotiPage,
     layout: NotiLayout,
@@ -135,6 +129,12 @@ const routes = [
   {
     path: "/home/classes/detail/grade-board/:id",
     page: GradeBoardPage,
+    layout: DetailLayout,
+    isProtected: true,
+  },
+  {
+    path: "/home/classes/detail/chat/:id",
+    page: ChatPage,
     layout: DetailLayout,
     isProtected: true,
   },

@@ -79,6 +79,7 @@ function NavDetail(props) {
               {t("People")}
             </Link>
           </li>
+
           <li class="-mb-px mr-16">
             <Link
               className={` ${
@@ -139,6 +140,19 @@ function NavDetail(props) {
                 </Link>
               </MenuItem>
             </Menu>
+          </li>
+          <li class="-mb-px mr-16">
+            <Link
+              to={`/home/classes/detail/chat/${id1}`}
+              className={` ${
+                activeLink === "chat"
+                  ? "bg-white inline-block border-l border-t border-r rounded-t py-1 px-4 text-[#2E80CE] font-medium "
+                  : "py-1 px-4"
+              }`}
+              onClick={() => handleLinkClick("chat")}
+            >
+              {t("Chat")}
+            </Link>
           </li>
         </ul>
         {/* </div> */}

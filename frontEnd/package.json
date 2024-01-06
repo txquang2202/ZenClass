@@ -64,7 +64,7 @@
     "reactjs-table-draggable": "^1.0.1",
     "redux": "^4.2.1",
     "socket.io": "^4.0.0",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.7.3",
     "styled-components": "^6.1.1",
     "swiper": "^11.0.4",
     "web-vitals": "^2.1.4",

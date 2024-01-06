@@ -7,10 +7,12 @@ import cors from "cors";
 import initApi from "./routes/api.js";
 import session from "express-session";
 import passport from "passport";
+import http from "http";
+import { Server as SocketIo } from "socket.io";
 import "./middleware/passport.js";
 
 const app = express();
-//environment
+// Environment
 env.config();
 
 app.use(cookieParser());
@@ -35,9 +37,9 @@ app.use(passport.authenticate("session"));
 
 const port = process.env.PORT;
 app.use("/assets", express.static("../frontend/assets"));
-//connect to database
+// Connect to database
 connect();
-//api routes
+// API routes
 app.get("/", (req, res) => {
   const welcomeHTML = `
       <!DOCTYPE html>
@@ -56,7 +58,33 @@ app.get("/", (req, res) => {
   res.send(welcomeHTML);
 });
 initApi(app);
-//Connect to server
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+
+// Connect to server
+const httpServer = http.createServer(app);
+const io = new SocketIo(httpServer, {
+  // Các tùy chọn của Socket.IO
+  cors: {
+    origin: "http://localhost:3000", // Thay đổi thành địa chỉ của front-end của bạn
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("Có người kết nối:" + socket.id);
+
+  // Lắng nghe sự kiện "chat message" từ client
+  socket.on("chat message", (message) => {
+    // Phát lại sự kiện "chat message" đến tất cả các client kết nối
+    io.emit("chat message", message);
+  });
+
+  // Ngắt kết nối khi client disconnects
+  socket.on("disconnect", () => {
+    console.log("Người dùng đã ngắt kết nối");
+  });
+});
+
+// Start server
+httpServer.listen(port, () => {
+  console.log(`Server and Socket.IO are listening on port ${port}`);
 });

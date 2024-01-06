@@ -352,16 +352,18 @@ function GradeReviewPage(props) {
                           </span>
                         </div>
                       </div>
-                      <div>
-                        <CheckCircleOutlineIcon
-                          onClick={() => handleApproveReview(item.id)}
-                          className="text-blue-300 cursor-pointer hover:text-blue-500"
-                        />
-                        <CancelOutlinedIcon
-                          onClick={() => handleRejectReview(item.id)}
-                          className="text-red-300 cursor-pointer hover:text-red-500"
-                        />
-                      </div>
+                      {(isClassOwner || isClassOwner2) && (
+                        <div>
+                          <CheckCircleOutlineIcon
+                            onClick={() => handleApproveReview(item.id)}
+                            className="text-blue-300 cursor-pointer hover:text-blue-500"
+                          />
+                          <CancelOutlinedIcon
+                            onClick={() => handleRejectReview(item.id)}
+                            className="text-red-300 cursor-pointer hover:text-red-500"
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="mt-3">
                       <table className="min-w-full bg-white border border-gray-300">

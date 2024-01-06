@@ -11,7 +11,6 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { Menu, MenuItem } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import ChatIcon from "@mui/icons-material/Chat";
 
 function SideBar() {
   const { id } = useParams();
@@ -96,7 +95,7 @@ function SideBar() {
   };
 
   return (
-    <div className="w-1/5 md:w-1/6 lg:w-1/12 p-4 rounded-lg border border-solid border-gray-200 pb-96 ">
+    <div className="w-1/5 md:w-1/6 lg:w-1/12 p-4 rounded-lg border border-solid border-gray-200 pb-72 ">
       <ul className="space-y-8 text-center">
         <li>
           <button
@@ -166,21 +165,6 @@ function SideBar() {
               <AutoStoriesIcon className="w-full h-full" />
             </span>
             <span className="mt-1">{t("Courses")}</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={`/home/chat-groups/c`}
-            className={`flex flex-col items-center text-gray-600  text-xs font-semibold font-sans`}
-            style={{
-              color: activeLink === "chat" ? "#2E80CE" : "",
-            }}
-            onClick={() => handleLinkClick("chat")}
-          >
-            <span className="w-8 h-8">
-              <ChatIcon className="w-full h-full" />
-            </span>
-            <span className="mt-1">{t("Chat")}</span>
           </Link>
         </li>
       </ul>
