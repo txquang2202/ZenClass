@@ -56,10 +56,17 @@ const handleRequestError = (error) => {
 };
 
 const handleResponseError = (error) => {
-  if (error.response.status === 600)
+  if (error.response.status === 600) {
     window.location.href =
       process.env.REACT_APP_BASE_URL +
       "/signin?message=Token expired please login again !!!";
+  } else if (error.response.status === 405) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href =
+      process.env.REACT_APP_BASE_URL +
+      "/signin?message=Your account has been changed or deleted !!!";
+  }
   //  console.error("Response error:", error);
   return Promise.reject(error);
 };

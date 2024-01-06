@@ -135,6 +135,7 @@ const initApi = (app) => {
   router.post("/changeinforuser", changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
   //class APIs
+  router.get("/getAllclass", getAllClass);
   router.get("/getClassID/:id", authenticateToken, getClassByID);
   router.post("/createClass", authenticateToken, createClass);
   router.delete("/deleteClass/:id", authenticateToken, deleteClassbyID);
