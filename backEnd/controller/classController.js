@@ -598,7 +598,6 @@ const getAllClass = async (req, res) => {
 const changeStatusClass = async (req, res) => {
   try {
     const classIds = req.body;
-    console.log(classIds);
     
     if (!classIds || classIds.length === 0) {
       return res

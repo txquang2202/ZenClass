@@ -21,7 +21,7 @@ export const ClassProvider = ({ children }) => {
         let token;
         token = localStorage.getItem("token");
         if (token) data = jwtDecode(token);
-        //console.log(data);
+        console.log(data);
         const response = await getAllClasses(data._id, token);
         const classesData = response.data.classInfo;
         if (classesData) {

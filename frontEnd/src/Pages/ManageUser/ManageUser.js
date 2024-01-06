@@ -344,7 +344,7 @@ function ManageUser() {
         }
       }
       
-      if(userfail){
+      if(userfail.length != 0){
         const updatedDataUsers = userfail.map(user => ({
           ...user,
           error: "Initialization error due to duplicate userID or username", 
@@ -517,6 +517,15 @@ function ManageUser() {
                   accept=".csv, .xlsx"
                   onChange={handleFile}
                 />
+                </ul>
+                <label className="block text-base font-normal text-red-600">
+                  Note:
+                </label>
+                <ul className="text-base pl-3 text-red-600">
+                  <li>
+                    - Only accept excel or csv files
+                  </li>
+                  
                 </ul>
               </div>
               <div className="flex justify-center">

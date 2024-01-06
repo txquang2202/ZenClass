@@ -153,7 +153,7 @@ const initApi = (app) => {
   );
   router.get("/getallclasses/:id", authenticateToken, getAllClasses);
   router.post("/joinbycode/:id", authenticateToken, joinByCode);
-
+  router.get("/getAllclass", getAllClass);
   router.post("/changeStatusListClass", changeStatusClass);
   router.post("/deleteListclass", deleteListclasssByIds);
   router.post("/getclass", getclassbyurl);
