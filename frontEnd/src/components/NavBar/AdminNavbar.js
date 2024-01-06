@@ -4,6 +4,7 @@ import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { getUserID } from "../../services/userServices";
 import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,7 +43,10 @@ const Navbar = () => {
         setId(session._id);
         const response = await getUserID(session._id, data);
         const userData = response.data.user;
-
+        if (userData.role === 0) {
+          toast.error("You do not have permission to access this!!!");
+          navigate("/home");
+        }
         if (userData) {
           setUser(true);
         }

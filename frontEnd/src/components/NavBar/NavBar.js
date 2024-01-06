@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import Noti from "../Noti/Noti";
 import LanguageSwitcher from "../SwitchLanguage/SwitchLanguage";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const getUser = () => {
   const data = localStorage.getItem("user");
@@ -46,9 +47,13 @@ const Navbar = () => {
           const session = jwtDecode(token);
           const response = await getUserID(session._id, token);
           const userData = response.data.user;
-          //localStorage.setItem("token", token);
+          if (userData.role === 3) {
+            toast.error("You do not have permission to access this!!!");
+            navigate("/manageusers");
+          }
           localStorage.setItem("user", JSON.stringify(userData));
         }
+
         const data = localStorage.getItem("user");
         if (data !== null) {
           const user = JSON.parse(data);
