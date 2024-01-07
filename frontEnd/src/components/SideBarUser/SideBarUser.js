@@ -5,10 +5,13 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { useParams } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { jwtDecode } from "jwt-decode";
 
 const Sidebar = () => {
   const { id } = useParams();
   const [activeLink, setActiveLink] = useState("profile");
+  const token = localStorage.getItem("token");
+  const userData = jwtDecode(token);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -26,19 +29,35 @@ const Sidebar = () => {
     <div className="bg-[#10375C] w-[200px] h-screen min-h-full">
       <ul className="py-4 font-bold">
         <li>
-          <Link
-            to={`/home`}
-            className="block py-6 px-8 text-white text-lg"
-            style={{
-              color: activeLink === "main" ? "#2E80CE" : "white",
-            }}
-            onClick={() => handleLinkClick("main")}
-          >
-            <span className="mr-3">
-              <HomeIcon className="text-white" />
-            </span>
-            Home
-          </Link>
+          {userData.role === 0 ? (
+            <Link
+              to={`/home`}
+              className="block py-6 px-8 text-white text-lg"
+              style={{
+                color: activeLink === "main" ? "#2E80CE" : "white",
+              }}
+              onClick={() => handleLinkClick("main")}
+            >
+              <span className="mr-3">
+                <HomeIcon className="text-white" />
+              </span>
+              Home
+            </Link>
+          ) : (
+            <Link
+              to={`/manageusers`}
+              className="block py-6 px-8 text-white text-lg"
+              style={{
+                color: activeLink === "main" ? "#2E80CE" : "white",
+              }}
+              onClick={() => handleLinkClick("main")}
+            >
+              <span className="mr-3">
+                <HomeIcon className="text-white" />
+              </span>
+              Home
+            </Link>
+          )}
         </li>
         <li>
           <Link
