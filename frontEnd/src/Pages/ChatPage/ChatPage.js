@@ -12,7 +12,7 @@ const ChatApp = () => {
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
-  const myAvtPath = `/assets/imgs/${user.img}`;
+  const myAvtPath = `${user.img}`;
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [username, setUsername] = useState(data.fullname); 

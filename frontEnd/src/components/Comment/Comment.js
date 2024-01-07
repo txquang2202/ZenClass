@@ -33,7 +33,7 @@ const ListComment = () => {
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
-  const myAvtPath = `/assets/imgs/${user.img}`;
+  const myAvtPath = `${user.img}`;
 
   // API getComment
   useEffect(() => {
@@ -46,7 +46,7 @@ const ListComment = () => {
             id: data._id || "",
             username: data.username || "",
             content: data.content || "",
-            avt: "/assets/imgs/" + data.avt,
+            avt: data.avt || "",
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
           }));
           setComments(mappedComment);

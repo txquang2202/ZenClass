@@ -69,7 +69,7 @@ export const NotificationProvider = ({ children }) => {
             id: data._id || "",
             fullname: data.fullname || "",
             content: data.content || "",
-            avt: "/assets/imgs/" + data.avt,
+            avt: data.avt + "",
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
             link: data.link || "",
           }));

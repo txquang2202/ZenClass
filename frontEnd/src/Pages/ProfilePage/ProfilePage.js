@@ -115,7 +115,7 @@ function ResponsiveDrawer(props) {
                         className="block cursor-pointer"
                       >
                         <Avatar
-                          src={avatarPreview || `/assets/imgs/${avatar}`}
+                          src={avatarPreview || `${avatar}`}
                           alt="Avatar"
                           className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
                         />

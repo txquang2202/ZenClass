@@ -106,7 +106,7 @@ const Navbar = () => {
                 </span>
                 <Avatar
                   alt="User Avatar"
-                  src={`/assets/imgs/${user.img}`}
+                  src={`${user.img}`}
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"

@@ -9,6 +9,14 @@ import {
 } from "./authController.js";
 env.config();
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: "dctioxmnj",
+  api_key: "912847464315517",
+  api_secret: "_HWS7oR9yP7ZplPqatYcPxiU3o0",
+});
+
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -98,31 +106,55 @@ const createUserOauth = async (username, email, password) => {
 
 const editUser = async (req, res) => {
   try {
-    const { fullname, birthdate, phone, gender, street, city, img } = req.body;
+    const { fullname, birthdate, phone, gender, street, city } = req.body;
     const userId = req.params.id;
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
+
+    // Update user properties
     user.fullname = fullname || user.fullname;
     user.birthdate = birthdate || user.birthdate;
     user.phone = phone || user.phone;
     user.gender = gender || user.gender;
     user.street = street || user.street;
     user.city = city || user.city;
+
+    // Check if there is a file in the request
     if (req.file) {
-      user.img = req.file.filename;
+      const localImagePath = req.file.path;
+
+      // Upload image to Cloudinary
+      cloudinary.uploader.upload(localImagePath, async (error, result) => {
+        if (error) {
+          console.error("Error uploading image to Cloudinary:", error);
+          return res
+            .status(500)
+            .json({ message: "Error while updating profile" });
+        }
+
+        // Save the secure URL of the image to user.img
+        user.img = result.secure_url;
+
+        // Save user information to the database
+        await user.save();
+
+        // Return the result
+        res.json({ message: "Profile updated successfully", user });
+      });
+    } else {
+      // If there is no image file, save user information to the database
+      await user.save();
+      res.json({ message: "Profile updated successfully", user });
     }
-
-    await user.save();
-
-    res.json({ message: "Profile updated successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error while updating profile");
+    res.status(500).json({ message: "Error while updating profile" });
   }
 };
+
 const getUserProfile = async (req, res) => {
   try {
     const userId = req.params.id;
