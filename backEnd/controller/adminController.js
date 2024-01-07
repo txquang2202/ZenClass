@@ -118,8 +118,11 @@ const deleteStudentFromClass = async (classID, personID) => {
 const createUserwithFile = async (req, res) => {
   try {
     const user = req.body;
-    const password = "111111";
+    const password = "1";
     const hashedPassword = await bcrypt.hash(password, 10);
+    if (user.birthdate === "Invalid date") {
+      return res.status(404).json({ message: "Invalid format" });
+    }
 
     // Generate a verification token
     const verificationToken = generateUniqueToken();

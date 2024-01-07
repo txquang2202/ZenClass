@@ -140,12 +140,10 @@ const editUser = async (req, res) => {
 
         // Save user information to the database
         await user.save();
-
-        // Return the result
         res.json({ message: "Profile updated successfully", user });
       });
     } else {
-      // If there is no image file, save user information to the database
+      // If no file is uploaded, save user information to the database
       await user.save();
       res.json({ message: "Profile updated successfully", user });
     }

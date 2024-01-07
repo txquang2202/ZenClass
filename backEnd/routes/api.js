@@ -126,12 +126,7 @@ const initApi = (app) => {
   //protected api
   router.get("/getallusers", authenticateToken, getAllUsers);
   router.get("/getprofile/:id", authenticateToken, getUserProfile);
-  router.put(
-    "/editprofile/:id",
-    authenticateToken,
-    upload.single("img"),
-    editUser
-  );
+  router.put("/editprofile/:id", authenticateToken, upload, editUser);
   router.post("/changeinforuser", changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
   //class APIs
