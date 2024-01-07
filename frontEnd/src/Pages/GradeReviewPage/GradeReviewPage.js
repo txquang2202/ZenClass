@@ -46,7 +46,7 @@ function GradeReviewPage(props) {
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
   const avtPath = `${user.img}`;
-  const myAvtPath = `/assets/imgs/${user.img}`;
+  const myAvtPath = `${user.img}`;
   // API get Review
   useEffect(() => {
     const fetchUserData = async () => {
@@ -57,7 +57,7 @@ function GradeReviewPage(props) {
           const mappedReview = ReviewData.map((data) => ({
             id: data._id || "",
             // avt: data.avt || "",
-            avt: "/assets/imgs/" + data.avt,
+            avt: data.avt || "",
             fullname: data.fullname || "",
             userID: data.userID || "",
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
@@ -158,7 +158,7 @@ function GradeReviewPage(props) {
             id: data._id || "",
             username: data.username || "",
             content: data.content || "",
-            avt: "/assets/imgs/" + data.avt,
+            avt: data.avt || "",
             date: format(new Date(data.date), "dd MMMM yyyy") || "",
           }));
           setComments((prevComments) => ({

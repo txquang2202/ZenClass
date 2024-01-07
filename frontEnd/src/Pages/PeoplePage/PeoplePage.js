@@ -78,7 +78,7 @@ function PeoplePage() {
 
         const teacherData = response.data.teachers.map((teacher) => ({
           id: teacher._id,
-          avatarSrc: "/assets/imgs/" + teacher.img,
+          avatarSrc: teacher.img || "",
           name: teacher.fullname,
         }));
 
@@ -101,7 +101,7 @@ function PeoplePage() {
 
         const studentData = response.data.students.map((student) => ({
           id: student._id,
-          avatarSrc: "/assets/imgs/" + student.img,
+          avatarSrc: student.img || "",
           name: student.fullname,
         }));
         setStudents(studentData);
