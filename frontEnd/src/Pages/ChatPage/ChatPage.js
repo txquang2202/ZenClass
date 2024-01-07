@@ -15,14 +15,14 @@ const ChatApp = () => {
   const myAvtPath = `${user.img}`;
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const [username, setUsername] = useState(data.fullname); 
+  const [username, setUsername] = useState(data.fullname);
   const [avatar, setAvatar] = useState(myAvtPath);
   const socketRef = useRef();
-  const isMessageInputEmpty = messageInput.trim() === ""; 
+  const isMessageInputEmpty = messageInput.trim() === "";
 
   useEffect(() => {
     // Khởi tạo socket khi component được mount
-    socketRef.current = io("http://localhost:8080");
+    socketRef.current = io(process.env.REACT_APP_BA_BASE_URL);
 
     // Lắng nghe sự kiện "chat message" từ máy chủ
     socketRef.current.on("chat message", (message) => {

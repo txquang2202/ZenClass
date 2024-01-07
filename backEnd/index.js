@@ -64,7 +64,7 @@ const httpServer = http.createServer(app);
 const io = new SocketIo(httpServer, {
   // Các tùy chọn của Socket.IO
   cors: {
-    origin: "http://localhost:3000", // Thay đổi thành địa chỉ của front-end của bạn
+    origin: process.env.BASE_URL,
     methods: ["GET", "POST"],
   },
 });

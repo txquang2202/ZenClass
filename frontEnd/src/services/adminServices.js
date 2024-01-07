@@ -38,21 +38,21 @@ const googleAuth = () => {
   return axios.get("/api/v1/auth/google");
 };
 const deleteUserbyID = (id) => {
-    return axios.post(`api/v1/deleteUser/${id}`);
-  };
+  return axios.post(`api/v1/deleteUser/${id}`);
+};
 const deleteListUserbyID = (listIdDelete) => {
-  return axios.post('http://localhost:8080/api/v1/deleteListUser',listIdDelete);
+  return axios.post("api/v1/deleteListUser", listIdDelete);
 };
 
 const changestatusbyListuser = (userIds) => {
-  return axios.post(`api/v1/changeStatusListUser`,userIds);
+  return axios.post(`api/v1/changeStatusListUser`, userIds);
 };
 
 const changeinforwithfile = (datalist) => {
-  return axios.post(`api/v1/changeinforuser`,datalist);
+  return axios.post(`api/v1/changeinforuser`, datalist);
 };
 const Createwithfile = (datalist) => {
-  return axios.post(`api/v1/registerwithfile`,datalist);
+  return axios.post(`api/v1/registerwithfile`, datalist);
 };
 const blockUserbyID = (id) => {
   return axios.post(`api/v1/blockUserbyID/${id}`);

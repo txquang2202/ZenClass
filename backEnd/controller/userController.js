@@ -12,9 +12,9 @@ env.config();
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
-  cloud_name: "dctioxmnj",
-  api_key: "912847464315517",
-  api_secret: "_HWS7oR9yP7ZplPqatYcPxiU3o0",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 const createUser = async (req, res) => {
