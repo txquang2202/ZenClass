@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 
 const ChatApp = () => {
   const token = localStorage.getItem("token");
@@ -11,14 +12,15 @@ const ChatApp = () => {
 
   const dataUser = localStorage.getItem("user");
   const user = JSON.parse(dataUser);
-  const avtPath = `${user.img}`;
+  // const avtPath = `${user.img}`;
   const myAvtPath = `${user.img}`;
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const [username, setUsername] = useState(data.fullname);
-  const [avatar, setAvatar] = useState(myAvtPath);
+  const [username] = useState(data.fullname);
+  const [avatar] = useState(myAvtPath);
   const socketRef = useRef();
   const isMessageInputEmpty = messageInput.trim() === "";
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Khởi tạo socket khi component được mount
@@ -59,7 +61,7 @@ const ChatApp = () => {
     <div className="flex flex-col justify-items-center h-[600px] rounded-lg ">
       <div className="flex flex-col h-[550px] bg-gray-50  rounded-lg w-2/3 mx-auto">
         <h2 className="text-3xl text-[#10375c] bg-white pb-2 font-bold">
-          Chat Group
+          {t("Chat Group")}
         </h2>
         <div className="flex-1 overflow-y-auto p-4">
           {messages.map((message, index) => (

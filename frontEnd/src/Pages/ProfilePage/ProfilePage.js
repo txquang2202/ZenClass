@@ -74,6 +74,7 @@ function ResponsiveDrawer(props) {
       setavatarPreview(URL.createObjectURL(file1));
     }
   };
+
   const handleEditProfile = async () => {
     try {
       const data = new FormData();
@@ -205,7 +206,7 @@ function ResponsiveDrawer(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      id="useid"
+                      id="useId"
                       type="text"
                       variant="outlined"
                       className="bg-gray-200"
@@ -255,6 +256,22 @@ function ResponsiveDrawer(props) {
                       className="bg-gray-200"
                       value={formData.mail}
                       disabled
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="phone"
+                      type="tel"
+                      variant="outlined"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                        if (e.target.value.length > 10) {
+                          e.target.value = e.target.value.slice(0, 10);
+                        }
+                      }}
                       fullWidth
                     />
                   </Grid>

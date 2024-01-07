@@ -52,5 +52,8 @@
   "Grade Structure": "Grade Structure",
   "Grade Review": "Grade Review",
 
+  "Chat": "Chat",
+  "Chat Group": "Chat Group",
+
   "greet": "Hello, {{name}}!"
 }

@@ -17,7 +17,7 @@ import {
   addNotification,
   addNotificationTeacher,
 } from "../../services/notificationServices";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useClassDetailContext } from "../../context/ClassDetailContext";
 import { format } from "date-fns";
 import { jwtDecode } from "jwt-decode";
@@ -27,7 +27,6 @@ import SearchIcon from "@mui/icons-material/Search";
 function GradeReviewPage(props) {
   const { id } = useParams();
   const token = localStorage.getItem("token");
-  const location = useLocation();
   const navigate = useNavigate();
 
   let data;

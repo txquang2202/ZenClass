@@ -49,11 +49,14 @@
 
   "People": "Mọi người",
   "Students": "Sinh viên",
-  
+
   "Grade": "Điểm",
   "Grade Board": "Bảng điểm",
   "Grade Structure": "Cấu trúc điểm",
   "Grade Review": "Phúc khảo",
+
+  "Chat": "Trò chuyện",
+  "Chat Group": "Nhóm chat",
 
   "greet": "Bonjour, {{name}} !"
 }

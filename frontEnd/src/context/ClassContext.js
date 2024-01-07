@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { getAllClasses } from "../services/classServices";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { changeLanguage } from "i18next";
+// import { changeLanguage } from "i18next";
 
 const ClassContext = createContext();
 

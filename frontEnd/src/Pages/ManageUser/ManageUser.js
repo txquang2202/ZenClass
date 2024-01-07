@@ -436,7 +436,7 @@ function ManageUser() {
         }
       }
 
-      if (userfail.length != 0) {
+      if (userfail.length !== 0) {
         const updatedDataUsers = userfail.map((user) => ({
           ...user,
           error: "Initialization error due to duplicate userID or username",

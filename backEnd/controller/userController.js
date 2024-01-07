@@ -113,12 +113,7 @@ const editUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
-    const findPhone = await User.findOne({ phone });
-    if (findPhone) {
-      return res
-        .status(404)
-        .json({ message: "The phone number has already taken!!" });
-    }
+
     // Update user properties
     user.fullname = fullname || user.fullname;
     user.birthdate = birthdate || user.birthdate;

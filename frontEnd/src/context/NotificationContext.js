@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAllNotifications } from "../services/notificationServices";
 import { jwtDecode } from "jwt-decode";
 import { format } from "date-fns";
