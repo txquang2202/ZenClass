@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -11,6 +11,7 @@ import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { getUserID, updateUser } from "../../services/userServices";
+import Modal from "../../components/Modal/ClassDetailModal";
 
 function ResponsiveDrawer(props) {
   const [formData, setFormData] = React.useState({
@@ -29,6 +30,7 @@ function ResponsiveDrawer(props) {
   const { id } = useParams();
   const todayDate = new Date().toISOString().split("T")[0];
   const token = localStorage.getItem("token");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -95,6 +97,15 @@ function ResponsiveDrawer(props) {
     }
   };
 
+  // Modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Box>
@@ -111,25 +122,12 @@ function ResponsiveDrawer(props) {
                 <div className="account-settings">
                   <div className="user-profile mx-0 mb-1 pb-1 text-center">
                     <div className="user-avatar mb-1">
-                      <label
-                        htmlFor="avatarInput"
-                        className="block cursor-pointer"
-                      >
-                        <Avatar
-                          src={avatarPreview || `${avatar}`}
-                          alt="Avatar"
-                          className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
-                        />
-
-                        <input
-                          type="file"
-                          accept="image/*"
-                          id="avatarInput"
-                          name="avatar"
-                          onChange={handleAvatarChange}
-                          className="hidden"
-                        />
-                      </label>
+                      <Avatar
+                        src={`${avatar}`}
+                        alt="Avatar"
+                        onClick={openModal}
+                        className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
+                      />
                     </div>
                     <Typography
                       variant="h6"
@@ -330,6 +328,48 @@ function ResponsiveDrawer(props) {
           </Grid>
         </Container>
       </Box>
+
+      {/* Modal Avatar */}
+      <Modal show={isModalOpen} handleClose={closeModal}>
+        <h2 className="text-2xl font-semibold mb-4 text-[#10375c]">
+          Change Avatar
+        </h2>
+        <form>
+          <div className="mb-4">
+            <label htmlFor="avatarInput" className="block cursor-pointer">
+              <Avatar
+                src={avatarPreview || `${avatar}`}
+                alt="AvatarTemp"
+                onClick={openModal}
+                className="w-[150px] h-[150px] object-cover mx-auto max-w-full max-h-full border-2 border-white-500 rounded-full shadow-md "
+              />
+              <input
+                type="file"
+                accept="image/*"
+                id="avatarInput"
+                name="avatar"
+                onChange={handleAvatarChange}
+                className="mt-2"
+              />
+            </label>
+          </div>
+        </form>
+
+        <div className="flex justify-end">
+          <button
+            onClick={handleEditProfile}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+          >
+            Save
+          </button>
+          <button
+            onClick={closeModal}
+            className="border border-gray-300 px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <ToastContainer
         position="bottom-right"
         autoClose={1500}

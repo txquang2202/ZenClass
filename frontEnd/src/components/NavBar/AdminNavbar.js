@@ -99,7 +99,7 @@ const Navbar = () => {
                 <span className="text-white cursor-pointer">{name}</span>
                 <Avatar
                   alt="User Avatar"
-                  src={`/assets/imgs/${avt}`}
+                  src={`${avt}`}
                   onClick={handleMenu}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
