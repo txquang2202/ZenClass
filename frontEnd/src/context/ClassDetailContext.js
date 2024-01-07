@@ -13,7 +13,7 @@ const checkInClassFunc = async (id, userID, navigate) => {
   try {
     await checkInClass(id, userID);
   } catch (error) {
-    toast.error("You haven't joined this class yet!!");
+    toast.error(error.response.data.message);
     navigate("/home", { replace: true });
   }
 };

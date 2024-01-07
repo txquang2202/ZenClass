@@ -614,7 +614,7 @@ const getAllClass = async (req, res) => {
 const changeStatusClass = async (req, res) => {
   try {
     const classIds = req.body;
-    
+
     if (!classIds || classIds.length === 0) {
       return res
         .status(400)
@@ -718,6 +718,11 @@ const checkInClass = async (req, res) => {
 
     if (!findClass) {
       return res.status(404).json({ message: "Class not found!!" });
+    }
+    if (findClass.status === "Inactive") {
+      return res.status(404).json({
+        message: "This class is currently inactive please try again later!!",
+      });
     }
 
     const isStudent = findClass.students.includes(userID);
