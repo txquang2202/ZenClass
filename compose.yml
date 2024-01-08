@@ -1,0 +1,18 @@
+version: "3"
+services:
+  backEnd:
+    build:
+      context: ./backEnd
+    environment:
+      NODE_ENV: ./backEnd/.env
+    ports:
+      - "8080:8080"
+    image: quangvip2002bp/react_project_backend:latest
+  frontEnd:
+    build:
+      context: ./frontEnd
+    environment:
+      NODE_ENV: ./frontEnd/.env
+    ports:
+      - "3000:3000"
+    image: quangvip2002bp/react_project_frontend:latest
