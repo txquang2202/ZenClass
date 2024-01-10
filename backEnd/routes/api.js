@@ -99,6 +99,7 @@ import {
 import "../middleware/passport.js";
 
 const router = express.Router();
+import uploadCloud from "../config/cloudinary.config.js";
 // @param {*} app: express app
 // middleware.js
 
@@ -126,6 +127,12 @@ const initApi = (app) => {
   //protected api
   router.get("/getallusers", authenticateToken, getAllUsers);
   router.get("/getprofile/:id", authenticateToken, getUserProfile);
+  router.put(
+    "/editprofile/:id",
+    authenticateToken,
+    uploadCloud.single("img"),
+    editUser
+  );
   router.put("/editprofile/:id", authenticateToken, upload, editUser);
   router.post("/changeinforuser", changeInforUser);
   router.post("/registerwithfile", createUserwithFile);
