@@ -16,4 +16,4 @@ Welcome to **ZenClass**! Zenclass is an innovative online learning platform desi
 ## Video Demo 📽️
 
 #### [Demo Video](https://www.youtube.com/watch?v=JCr9mzrOyOE)
-#### [Self assesment document](https://docs.google.com/document/d/1pdO04TK0IfsUZ1rl44RMO6QLtzIHF0WE/edit)
+#### [Self assesment document](https://drive.google.com/drive/folders/1c48rF64AdSYOvzMIgNaLJZ77OpfKIb6V)
